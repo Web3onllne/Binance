@@ -182,6 +182,19 @@ function confirmWallet() {
   loadDashboard();
 }
 
+  function loadDashboard() {
+  const address = localStorage.getItem("wallet_address");
+  const usdt = localStorage.getItem("usdt_balance") || "0.00";
+  const shortAddr = address ? address.slice(0, 6) + "..." + address.slice(-4) : "Not Connected";
+
+  document.getElementById("walletStatus").textContent = address
+    ? `Connected: ${shortAddr}`
+    : "Not Connected";
+
+  const usdtDisplay = document.getElementById("usdtAmount");
+  if (usdtDisplay) usdtDisplay.textContent = `$${parseFloat(usdt).toFixed(2)}`;
+  }
+  
 function loadDashboard() {
   const address = localStorage.getItem("wallet_address");
   const shortAddr = address ? address.slice(0, 6) + "..." + address.slice(-4) : "Not Connected";
