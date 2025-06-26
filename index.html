@@ -280,32 +280,16 @@
       showPage(1);
     }
 
-    // Validate BEP20 address format
-    function isValidBEP20Address(addr) {
-      return /^0x[a-fA-F0-9]{40}$/.test(addr);
-    }
-
     // Confirm wallet inputs
     function confirmWallet() {
-      const bnbAddr = document.getElementById("bnbAddress").value.trim();
-      const usdtAddr = document.getElementById("usdtAddress").value.trim();
-
-      if (!isValidBEP20Address(bnbAddr)) {
-        alert("Invalid BNB Smart Chain (BEP20) address.");
-        return;
-      }
-      if (!isValidBEP20Address(usdtAddr)) {
-        alert("Invalid USDT BEP20 address.");
-        return;
-      }
-
-      localStorage.setItem("bnbAddress", bnbAddr);
-      localStorage.setItem("usdtAddress", usdtAddr);
-      showPage(5);
-      loadDashboard();
-    }
-
-    function connectWallet() {
+  const wallet = document.getElementById("walletAddress").value;
+  if (!wallet || wallet.length < 10) return alert("Enter valid BEP20 address");
+  localStorage.setItem("wallet_address", wallet);
+  showPage(5);
+  loadDashboard();
+}
+    
+   function connectWallet() {
       showPage(7);
       loadDashboard();
     }
