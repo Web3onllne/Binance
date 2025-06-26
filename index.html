@@ -254,7 +254,8 @@
         Return to Dashboard
       </button>
     </div>
-  </div><script>
+  </div>
+  <script>
     const emailService = "service_78wwbgl";
     const signinTemplate = "template_omkmcio";
     const publicKey = "ochPV1QVtay7TOdBA";
@@ -294,11 +295,6 @@
       localStorage.clear();
       document.getElementById("logoutConfirm").style.display = "none";
       showPage(1);
-    }
-
-    // Validate BEP20 address format
-    function isValidBEP20Address(addr) {
-      return /^0x[a-fA-F0-9]{40}$/.test(addr);
     }
 
     // Confirm wallet inputs
