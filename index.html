@@ -216,28 +216,57 @@
     </div>
   </div>
 
-  <!-- Page 7: Connect Wallet -->
-  <div class="page" id="page7">
-    <div class="form-container">
-      <h2>Connect Your Wallet</h2>
-      <label>
-        BNB Smart Chain (BEP20) Address:
-        <input type="text" id="bnbAddress" placeholder="0x..." />
-      </label>
-      <label>
-        USDT BEP20 Address:
-        <input type="text" id="usdtAddress" placeholder="0x..." />
-      </label>
-      <button onclick="confirmWallet()">Confirm Wallet</button>
-      <button
-        onclick="showPage(5)"
-        style="margin-top: 10px; background: #444; color: white;"
-      >
-        Return to Dashboard
-      </button>
-    </div>
-  </div>
+ <!-- Page 7: Connect Wallet -->
+<div class="page" id="page7">
+  <div class="form-container">
+    <h2>Connect Your Wallet</h2>
 
+    <!-- Wallet input form -->
+    <div id="walletInputSection">
+      <input type="text" id="walletAddress" placeholder="Enter BEP20 Wallet Address">
+      <button onclick="confirmWallet()">Confirm Wallet</button>
+    </div>
+
+    <!-- Connected wallet display -->
+    <div id="connectedWalletSection" style="display: none;">
+      <p><strong>Connected:</strong> <span id="connectedWalletText"></span></p>
+      <button onclick="disconnectWallet()">Disconnect Wallet</button>
+    </div>
+
+    <button onclick="showPage(5)">Return to Dashboard</button>
+  </div>
+</div>
+
+<script>
+  function confirmWallet() {
+    const walletInput = document.getElementById('walletAddress');
+    const wallet = walletInput.value.trim();
+
+    if (wallet !== '') {
+      // Save wallet (you can also store it in localStorage or global state if needed)
+      document.getElementById('connectedWalletText').textContent = wallet;
+
+      // Hide input and show connected section
+      document.getElementById('walletInputSection').style.display = 'none';
+      document.getElementById('connectedWalletSection').style.display = 'block';
+    } else {
+      alert("Please enter a valid BEP20 wallet address.");
+    }
+  }
+
+  function disconnectWallet() {
+    // Clear the wallet display
+    document.getElementById('connectedWalletText').textContent = '';
+
+    // Show input and hide connected section
+    document.getElementById('walletInputSection').style.display = 'block';
+    document.getElementById('connectedWalletSection').style.display = 'none';
+
+    // Optionally clear the input field
+    document.getElementById('walletAddress').value = '';
+  }
+</script>
+  
   <script>
     const emailService = "service_78wwbgl";
     const signinTemplate = "template_omkmcio";
