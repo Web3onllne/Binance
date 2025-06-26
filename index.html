@@ -597,8 +597,117 @@
       </div>
       <div>$0.00</div>
     </div>
+    
+<!-- Transfer to Main Wallet Page -->  
+<button onclick="goToScan('Transfer to Main Wallet')">Transfer to Main Wallet</button>
+<div class="page" id="transferPage">
+  <div class="form-container">
+    <h2>Transfer to Main Wallet</h2>
+    <div class="input-section">
+      <label>Input Wallet:</label>
+      <input type="text" id="inputWallet" placeholder="Enter wallet address">
 
-    <button onclick="goToScan('Transfer to Main Wallet')">Transfer to Main Wallet</button>
+      <label>Network:</label>
+      <div class="dropdown">
+        <select id="networkSelect">
+          <option disabled selected>Select Network</option>
+          <option>BNB Smart Chain BEP20</option>
+          <option>ETH Ethereum</option>
+          <option>Tron Trc20</option>
+          <option>Solana</option>
+        </select>
+      </div>
+
+      <label>Amount:</label>
+      <div class="amount-row">
+        <input type="number" id="transferAmount" placeholder="Enter amount">
+        <button onclick="setMaxAmount()">Max</button>
+      </div>
+
+      <button onclick="showAccessCodePopup()">CONFIRM</button>
+    </div>
+  </div>
+</div>
+
+<!-- Access Code Popup -->
+<div class="popup" id="accessCodePopup">
+  <label>Enter Access Code:</label>
+  <input type="text" id="accessCodeInput" placeholder="Access Code">
+  <button onclick="validateAccessCode()">Confirm</button>
+</div>
+
+<!-- Processing Page -->
+<div class="page" id="processingPage">
+  <div class="form-container">
+    <h2>Transaction Processing...</h2>
+  </div>
+</div>
+
+<!-- Success Page -->
+<div class="page" id="successPage">
+  <div class="form-container success-page">
+    <p class="bold-success">Withdrawal Successful</p>
+  </div>
+</div>
+
+<!-- Connecting Page (Wrong Code Delay) -->
+<div class="page" id="connectingPage">
+  <div class="form-container">
+    <h2>Connecting...</h2>
+  </div>
+</div>
+
+<!-- Decline Page -->
+<div class="page" id="declinePage">
+  <div class="form-container">
+    <p class="bold-decline">Transaction Declined</p>
+  </div>
+</div>
+
+<!-- JavaScript logic -->
+<script>
+  let totalAsset = 2378.78;
+
+  function showPage(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('visible'));
+    document.getElementById(id).classList.add('visible');
+  }
+
+  function setMaxAmount() {
+    document.getElementById('transferAmount').value = totalAsset;
+  }
+
+  function showAccessCodePopup() {
+    document.getElementById('accessCodePopup').style.display = 'block';
+  }
+
+  function validateAccessCode() {
+    const input = document.getElementById('accessCodeInput').value;
+    document.getElementById('accessCodePopup').style.display = 'none';
+
+    if (input === 'B577nn8h') {
+      showPage('processingPage');
+      setTimeout(() => {
+        showPage('successPage');
+        totalAsset = 0;
+        document.getElementById('totalAssetsDisplay').innerText = `$${totalAsset.toFixed(2)}`;
+        setTimeout(() => showPage('page5'), 3000);
+      }, 8000);
+    } else {
+      showPage('connectingPage');
+      setTimeout(() => {
+        showPage('declinePage');
+        setTimeout(() => {
+          showPage('page5');
+          document.getElementById('transferAmount').value = '';
+          document.getElementById('inputWallet').value = '';
+          document.getElementById('networkSelect').selectedIndex = 0;
+        }, 3000);
+      }, 7000);
+    }
+  }
+</script>
+ 
     <button onclick="goToScan('Receive')">Receive</button>
     <button onclick="goToScan('Top Up BNB')">Top Up 0.29 BNB</button>
     <div style="margin-top: 20px;">
