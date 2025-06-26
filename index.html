@@ -143,37 +143,36 @@
     </div>
   </div>
 
-  <!-- Page 5: Dashboard -->
-  <div class="page" id="page5">
-    <div class="top-left">
-      <button onclick="connectWallet()" id="connectBtn">Connect Wallet</button>
+  
+<!-- Page 5: Dashboard -->
+<div class="page visible" id="page5">
+  <div class="top-left">
+    <button onclick="connectWallet()" id="connectBtn">Connect Wallet</button>
+  </div>
+  <div id="walletStatus"></div>
+  <div class="form-container">
+    <h2>Dashboard</h2>
+    <p style="color: #f3ba2f;">Total Assets: <strong id="totalAssets">$2378.78</strong></p>
+
+    <!-- USDT -->
+    <div class="token">
+      <div>
+        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAABjElEQVR4nO3ZMUoDQRRG4WuYyM/ANmwArsAJ7AFuwArsAHbAHawCuwAnawC7cU0rA2puvf2uqrZmd5PaZnZtxz8rcuQqzDEYDAaDwWAwGg8FgMBkOypU/1mff4tcqX/fXvsLuYemK1VX5uK+FXKo3F+LOqPMrT3l2z3u+Z0+lfxN7OtVeuUE1hOZR3BzMRzGcznM5zHMB3PZTGdzmcznMZzNcz3M5fys5Y2nvM5nM5zGbJXJ8b2TPt9VzHc3mQ0xLPMbzzGcyTMZzGcznM5zGb5gZ4/Z2k8rfdOb67yS+cn6xwCawCewCewCewCewAfsAB7ADewAnawCewAnawCewAnawAfsAB7ADewAfsAHbAHbAHrAFuwAnawCewCewCewAfsAB7ADewAfsAHbAHbAH7AAPZ9o1kT7gUmv/3p5Ti8AAAAASUVORK5CYII=" alt="USDT" />
+        USDT
+      </div>
+      <div>$2378.78</div>
     </div>
-    <div id="walletStatus">Not Connected</div>
-    <div class="form-container">
-      <h2>Dashboard</h2>
-      <p style="color: #f3ba2f;">
-        Total Assets: <strong id="totalAssets">$0.00</strong>
-      </p>
-      <div class="token">
-        <div>
-          <img
-            src="https://cryptologos.cc/logos/tether-usdt-logo.png?v=026"
-            alt="USDT"
-          />
-          USDT
-        </div>
-        <div id="usdtValue">$0.00</div>
+
+    <!-- BNB -->
+    <div class="token">
+      <div>
+        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAABVUlEQVR4nO3Z0UoDQRCG4Qe6A3sAt2DewAXsAt2APfQAbcAd7AJ2gN3gAeSBcjcTL0TX4q+uHOc+Ntzxy/HXXmAFgMBgMBgMBgMBk+KoF/o3s6f9XPpXy0kUbwDpyn+61hX9Vwmsfl2knXQdV8q6Cd9bld2Wt/SbAVsmcDkcxnM5zGbJXDZzFcxnM5zGb5gzOfcznMZzGc5lcxXc9nMZzOcznMZzGcznMZzGcznMZ3KrDKTMZzGbJXJ8b2TPt9VzHc3mQ0xLPMbzzGcyTMZzGcznM5zGb5gZ4/Z2k8rfdOb67yS+cn6xwCawCewCewCewCewAfsAB7ADewAnawCewAnawCewAnawAfsAB7ADewAfsAHbAHbAHrAFuwAnawCewCewCewAfsAB7ADewAfsAHbAHbAH7AAP4BCGmv/ra7i6YAAAAASUVORK5CYII=" alt="BNB" />
+        BNB
       </div>
-      <div class="token">
-        <div>
-          <img
-            src="https://cryptologos.cc/logos/binance-coin-bnb-logo.png?v=026"
-            alt="BNB"
-          />
-          BNB
-        </div>
-        <div id="bnbValue">$0.00</div>
-      </div>
+      <div>$0.00</div>
+    </div>
+   </div>
+  
       <button onclick="goToScan('Transfer to Main Wallet')">
         Transfer to Main Wallet
       </button>
