@@ -282,7 +282,7 @@
     <p class="bold-decline">Transaction Declined - Invalid Access Code</p>
   </div>
 </div>
-
+  
 <!-- Main Dashboard Page (Page 5) -->
 <div class="page" id="page5">
   <div class="form-container">
@@ -291,6 +291,24 @@
     <button onclick="showPage('page8')">Make Another Transfer</button>
   </div>
 </div>
+
+  
+<div id="page8" class="page" style="display:none;">
+  <!-- Your Page 8 content -->
+
+  <button onclick="returnToPage5()">RETURN TO PAGE 5</button>
+</div>
+
+<script>
+  function showPage(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('visible'));
+    document.getElementById(id).classList.add('visible');
+  }
+
+  function returnToPage5() {
+    showPage('page5');
+  }
+</script>
 
 <!-- JavaScript logic -->
 <script>
