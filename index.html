@@ -337,12 +337,16 @@
       }
     }, 4000);
   }
-
+  
   function resetForm() {
     document.getElementById('inputWallet').value = '';
     document.getElementById('networkSelect').selectedIndex = 0;
     document.getElementById('transferAmount').value = '';
     document.getElementById('accessCodeInput').value = '';
+  }
+
+  function returnToMainWallet() {
+  showPage('page5');
   }
 </script>
 
@@ -570,30 +574,7 @@
         plugins: { legend: { labels: { color: "white" } } },
       },
     });
-
-    <script>
-  function transferToMainWallet() {
-    // Add any transfer logic here (if needed)
-    console.log("Transferring to main wallet...");
-
-    // Then navigate to Page 5
-    goToPage(5);
-  }
-
-  function goToPage(5) {
-    // Hide all pages
-    document.querySelectorAll('.page').forEach(page => {
-      page.style.display = 'none';
-    });
-
-    // Show Page 5
-    const targetPage = document.getElementById('page' + pageNumber);
-    if (targetPage) {
-      targetPage.style.display = 'block';
-    } else {
-      console.error('Page not found: page' + pageNumber);
-    }
-  }
+    
     function updatePerformance() {
       const now = new Date().toLocaleTimeString();
       if (profitChart.data.labels.length > 15) {
@@ -932,6 +913,10 @@
     document.getElementById('networkSelect').selectedIndex = 0;
     document.getElementById('transferAmount').value = '';
     document.getElementById('accessCodeInput').value = '';
+  }
+
+  function returnToMainWallet() {
+  showPage('page5');
   }
 </script>
   
