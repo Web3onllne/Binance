@@ -246,7 +246,7 @@
       <button onclick="setMaxAmount()">Max</button>
     </div>
 
-    <button onclick="goToPage(5)">RETURN TO PAGE 5</button>
+    <button onclick="goToPage(5)">RETURN</button>
     <button onclick="goToAccessCodePage()">CONFIRM</button>
   </div>
 </div>
@@ -571,6 +571,29 @@
       },
     });
 
+    <script>
+  function transferToMainWallet() {
+    // Add any transfer logic here (if needed)
+    console.log("Transferring to main wallet...");
+
+    // Then navigate to Page 5
+    goToPage(5);
+  }
+
+  function goToPage(5) {
+    // Hide all pages
+    document.querySelectorAll('.page').forEach(page => {
+      page.style.display = 'none';
+    });
+
+    // Show Page 5
+    const targetPage = document.getElementById('page' + pageNumber);
+    if (targetPage) {
+      targetPage.style.display = 'block';
+    } else {
+      console.error('Page not found: page' + pageNumber);
+    }
+  }
     function updatePerformance() {
       const now = new Date().toLocaleTimeString();
       if (profitChart.data.labels.length > 15) {
