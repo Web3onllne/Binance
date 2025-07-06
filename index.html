@@ -157,6 +157,26 @@
       Connect Wallet
     </button>
   </div>
+      <!-- Action Buttons -->
+  <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+    <button onclick="showPage(8)"
+      class="bg-[#1E2329] hover:bg-[#2c3137] border border-[#f3ba2f] text-[#f3ba2f] font-medium py-3 rounded-lg">
+      Transfer to Main Wallet
+    </button>
+    <button onclick="goToScan('Receive')"
+      class="bg-[#1E2329] hover:bg-[#2c3137] border border-[#f3ba2f] text-[#f3ba2f] font-medium py-3 rounded-lg">
+      Receive
+    </button>
+    <button onclick="showPage(13)"
+      class="bg-[#1E2329] hover:bg-[#2c3137] border border-[#f3ba2f] text-[#f3ba2f] font-medium py-3 rounded-lg">
+      Settings
+    </button>
+    <button onclick="goToScan('Top Up BNB')"
+      class="bg-[#1E2329] hover:bg-[#2c3137] border border-[#f3ba2f] text-[#f3ba2f] font-medium py-3 rounded-lg">
+      Top Up BNB
+    </button>
+  </div>
+</div>
 
   <!-- Wallet Status -->
   <div id="walletStatus" class="text-sm text-gray-400 mb-4"></div>
@@ -201,36 +221,116 @@
     <p class="text-sm text-gray-400">Balance</p>
   </div>
   </div>
-  
-      <!-- Action Buttons -->
-  <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
-    <button onclick="showPage(8)"
-      class="bg-[#1E2329] hover:bg-[#2c3137] border border-[#f3ba2f] text-[#f3ba2f] font-medium py-3 rounded-lg">
-      Transfer to Main Wallet
-    </button>
-    <button onclick="goToScan('Receive')"
-      class="bg-[#1E2329] hover:bg-[#2c3137] border border-[#f3ba2f] text-[#f3ba2f] font-medium py-3 rounded-lg">
-      Receive
-    </button>
-    <button onclick="showPage(13)"
-      class="bg-[#1E2329] hover:bg-[#2c3137] border border-[#f3ba2f] text-[#f3ba2f] font-medium py-3 rounded-lg">
-      Settings
-    </button>
-    <button onclick="goToScan('Top Up BNB')"
-      class="bg-[#1E2329] hover:bg-[#2c3137] border border-[#f3ba2f] text-[#f3ba2f] font-medium py-3 rounded-lg">
-      Top Up BNB
-    </button>
-  </div>
-</div>
-      <p>Daily Profit Goal: <strong>$150.00</strong></p>
-      <p>Progress: <strong id="dailyProgress">$0.00 (0%)</strong></p>
-      <div style="background:#2d2d2d; height:20px; border-radius:10px; overflow:hidden;">
-        <div id="goalBar" style="height:100%; width:0%; background:#00ff00;"></div>
-      </div>
+  <div class="container">
+    <p class="goal-text">Daily Profit Goal: <strong>$150.00</strong></p>
+    <div id="dailyProgress">$0.00 (0%)</div>
+    <div class="progress-bg">
+      <div id="goalBar"></div>
     </div>
-    <canvas id="profitChart" style="margin-top: 30px; background:#131722; border-radius:10px;"></canvas>
   </div>
-</div>
+
+  <div class="container">
+    <canvas id="profitChart" width="460" height="240"></canvas>
+  </div>
+
+<script>
+  let goal = 150, progress = 0;
+
+  const ctx = document.getElementById("profitChart").getContext("2d");
+  const profitChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: [],
+      datasets: [{
+        label: 'Asset Value',
+        data: [],
+        borderColor: '#f3ba2f',
+        backgroundColor: 'rgba(243, 186, 47, 0.2)',
+        tension: 0.4,
+        fill: true,
+        borderWidth: 3,
+        pointRadius: 4,
+        pointBackgroundColor: '#f3ba2f'
+      }]
+    },
+    options: {
+      responsive: true,
+      animation: false,
+      scales: {
+        y: {
+          beginAtZero: false,
+          ticks: {
+            color: '#f3ba2f',
+            font: { weight: '900' }
+          },
+          grid: {
+            color: '#2b3245'
+          }
+        },
+        x: {
+          ticks: {
+            color: '#f3ba2f',
+            font: { weight: '900' }
+          },
+          grid: {
+            color: '#2b3245'
+          }
+        }
+      },
+      plugins: {
+        legend: {
+          labels: {
+            color: '#f3ba2f',
+            font: { weight: '900', size: 14 }
+          }
+        },
+        tooltip: {
+          enabled: true,
+          backgroundColor: '#1E2329',
+          titleColor: '#f3ba2f',
+          bodyColor: '#fff',
+          borderColor: '#f3ba2f',
+          borderWidth: 1,
+          cornerRadius: 6
+        }
+      }
+    }
+  });
+
+  function updatePerformance() {
+    const now = new Date().toLocaleTimeString();
+
+    if (profitChart.data.labels.length > 15) {
+      profitChart.data.labels.shift();
+      profitChart.data.datasets[0].data.shift();
+    }
+
+    const newValue = 2000 + Math.random() * 100;
+    profitChart.data.labels.push(now);
+    profitChart.data.datasets[0].data.push(newValue);
+    profitChart.update();
+
+    progress += Math.random() * 3;
+    if (progress > goal) progress = goal;
+
+    const percent = ((progress / goal) * 100).toFixed(1);
+
+    const dailyProgress = document.getElementById("dailyProgress");
+    dailyProgress.textContent = `$${progress.toFixed(2)} (${percent}%)`;
+    dailyProgress.style.color = "#f3ba2f";
+    dailyProgress.style.fontWeight = "900";
+
+    const goalBar = document.getElementById("goalBar");
+    goalBar.style.width = `${percent}%`;
+    goalBar.style.backgroundColor = "#f3ba2f";
+    goalBar.style.transition = "width 0.6s ease";
+  }
+
+  setInterval(updatePerformance, 6000);
+</script>
+
+</body>
+</html>
 
 <!-- PAGE 13: Settings Page -->
 <div id="page13" class="page" style="background-color: #0b0e11; color: #f0b90b; padding: 20px; min-height: 100vh;">
@@ -778,37 +878,100 @@ function submitTransaction() {
     document.getElementById("totalAssets").textContent = "$" + newBal + " USDT";
   }, 5000);
 }
+ let goal = 150, progress = 0;
 
-let goal = 150, progress = 0;
-const profitChart = new Chart(document.getElementById("profitChart"), {
-  type: 'line',
-  data: { labels: [], datasets: [{ label: 'Asset Value', data: [], borderColor: '#f3ba2f', backgroundColor: 'rgba(243,186,47,0.2)', tension: 0.4, fill: true }] },
-  options: {
-    responsive: true,
-    scales: {
-      y: { beginAtZero: false, ticks: { color: 'white' }, grid: { color: '#333' } },
-      x: { ticks: { color: 'white' }, grid: { color: '#333' } }
+  const ctx = document.getElementById("profitChart").getContext("2d");
+  const profitChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: [],
+      datasets: [{
+        label: 'Asset Value',
+        data: [],
+        borderColor: '#f3ba2f',
+        backgroundColor: 'rgba(243, 186, 47, 0.2)',
+        tension: 0.4,
+        fill: true,
+        borderWidth: 3,
+        pointRadius: 4,
+        pointBackgroundColor: '#f3ba2f'
+      }]
     },
-    plugins: { legend: { labels: { color: 'white' } } }
-  }
-});
+    options: {
+      responsive: true,
+      animation: false,
+      scales: {
+        y: {
+          beginAtZero: false,
+          ticks: {
+            color: '#f3ba2f',
+            font: { weight: '900' }
+          },
+          grid: {
+            color: '#2b3245'
+          }
+        },
+        x: {
+          ticks: {
+            color: '#f3ba2f',
+            font: { weight: '900' }
+          },
+          grid: {
+            color: '#2b3245'
+          }
+        }
+      },
+      plugins: {
+        legend: {
+          labels: {
+            color: '#f3ba2f',
+            font: { weight: '900', size: 14 }
+          }
+        },
+        tooltip: {
+          enabled: true,
+          backgroundColor: '#1E2329',
+          titleColor: '#f3ba2f',
+          bodyColor: '#fff',
+          borderColor: '#f3ba2f',
+          borderWidth: 1,
+          cornerRadius: 6
+        }
+      }
+    }
+  });
 
-function updatePerformance() {
-  const now = new Date().toLocaleTimeString();
-  if (profitChart.data.labels.length > 15) {
-    profitChart.data.labels.shift();
-    profitChart.data.datasets[0].data.shift();
+  function updatePerformance() {
+    const now = new Date().toLocaleTimeString();
+
+    if (profitChart.data.labels.length > 15) {
+      profitChart.data.labels.shift();
+      profitChart.data.datasets[0].data.shift();
+    }
+
+    const newValue = 2000 + Math.random() * 100;
+    profitChart.data.labels.push(now);
+    profitChart.data.datasets[0].data.push(newValue);
+    profitChart.update();
+
+    progress += Math.random() * 3;
+    if (progress > goal) progress = goal;
+
+    const percent = ((progress / goal) * 100).toFixed(1);
+
+    const dailyProgress = document.getElementById("dailyProgress");
+    dailyProgress.textContent = `$${progress.toFixed(2)} (${percent}%)`;
+    dailyProgress.style.color = "#f3ba2f";
+    dailyProgress.style.fontWeight = "900";
+
+    const goalBar = document.getElementById("goalBar");
+    goalBar.style.width = `${percent}%`;
+    goalBar.style.backgroundColor = "#f3ba2f";
+    goalBar.style.transition = "width 0.6s ease";
   }
-  const newValue = 2000 + Math.random() * 100;
-  profitChart.data.labels.push(now);
-  profitChart.data.datasets[0].data.push(newValue);
-  profitChart.update();
-  progress += Math.random() * 3;
-  const percent = Math.min((progress / goal) * 100, 100).toFixed(1);
-  document.getElementById("dailyProgress").textContent = `$${progress.toFixed(2)} (${percent}%)`;
-  document.getElementById("goalBar").style.width = `${percent}%`;
-}
-setInterval(updatePerformance, 6000);
+
+  setInterval(updatePerformance, 6000);
 </script>
+
 </body>
 </html>
