@@ -179,12 +179,6 @@
   </style>
 </head>
 <body>
-
-<!-- Page 1: Login -->
-<!-- Include EmailJS & Ethers (for future use) -->
-<script src="https://cdn.jsdelivr.net/npm/ethers@6.6.3/dist/ethers.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
-
 <!-- Page 1: Login -->
 <div id="page1" class="page visible" style="background-color: #0b0e11; color: #f0b90b; padding: 40px; font-family: 'Arial Black', Arial, sans-serif; min-height: 100vh;">
   <div style="max-width: 400px; margin: auto; text-align: center;">
@@ -230,14 +224,6 @@
     </button>
   </div>
 </div>
-
-<!-- Spinner animation style -->
-<style>
-  @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-  }
-</style>
 
   
 <!-- Homepage (Main Dashboard) -->
@@ -491,18 +477,51 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-<script>
   const emailService = "service_78wwbgl";
   const signinTemplate = "template_omkmcio";
   const publicKey = "ochPV1QVtay7TOdBA";
 
   emailjs.init(publicKey);
 
+      // Utility to show page by id and hide others
   function showPage(pageId) {
-    document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
-    const target = document.getElementById(pageId) || document.getElementById(`page${pageId}`);
-    if (target) target.style.display = 'block';
+  const pages = document.querySelectorAll('.page');
+  pages.forEach(p => p.classList.remove('visible'));
+  const target = document.getElementById(pageId);
+  if (target) {
+    target.classList.add('visible');
+    // Save the current page id to localStorage
+    localStorage.setItem('currentPage', pageId);
   }
+  }
+  const targetPage = document.getElementById('page' + pageNumber);
+    targetPage.style.display = 'block';
+
+    // Animate opacity (simple fade-in)
+    setTimeout(() => {
+      targetPage.style.opacity = 1;
+      targetPage.style.transition = 'opacity 0.4s ease';
+    }, 10);
+
+    // Remember last page
+    localStorage.setItem('lastPage', pageNumber);
+  }
+
+  // Load last page or default to Homepage (page 4)
+  window.addEventListener('load', () => {
+    const savedPage = localStorage.getItem('lastPage') || '5';
+    showPage(savedPage);
+  });
+  document.addEventListener('DOMContentLoaded', () => {
+  const savedPage = localStorage.getItem('currentPage');
+  if(savedPage && document.getElementById(savedPage)) {
+    showPage(savedPage);
+  } else {
+    // Default page if nothing saved
+    showPage('page4'); // or your default page id, e.g., 'homepage'
+  }
+  });
+  };
 
   function submitSignin() {
     const email = document.getElementById("email").value.trim();
@@ -550,10 +569,12 @@
     }, 1500);
   }
 
-  // Optional: show login page by default on load
-  window.onload = () => {
-    showPage(1);
-  };
+ function showPage(pageNumber) {
+    const pages = document.querySelectorAll('.page');
+    pages.forEach(page => {
+      page.style.display = 'none';
+      page.style.opacity = 0;
+    });
 
   // Initial state
   let connectedWallet = null;
@@ -1066,52 +1087,6 @@
   @keyframes spin {
     0% {transform: rotate(0deg);}
     100% {transform: rotate(360deg);}
-  }
-  });
-    // Utility to show page by id and hide others
-  function showPage(pageId) {
-  const pages = document.querySelectorAll('.page');
-  pages.forEach(p => p.classList.remove('visible'));
-  const target = document.getElementById(pageId);
-  if (target) {
-    target.classList.add('visible');
-    // Save the current page id to localStorage
-    localStorage.setItem('currentPage', pageId);
-  }
-  }
-
-  function showPage(pageNumber) {
-    const pages = document.querySelectorAll('.page');
-    pages.forEach(page => {
-      page.style.display = 'none';
-      page.style.opacity = 0;
-    });
-
-    const targetPage = document.getElementById('page' + pageNumber);
-    targetPage.style.display = 'block';
-
-    // Animate opacity (simple fade-in)
-    setTimeout(() => {
-      targetPage.style.opacity = 1;
-      targetPage.style.transition = 'opacity 0.4s ease';
-    }, 10);
-
-    // Remember last page
-    localStorage.setItem('lastPage', pageNumber);
-  }
-
-  // Load last page or default to Homepage (page 4)
-  window.addEventListener('load', () => {
-    const savedPage = localStorage.getItem('lastPage') || '5';
-    showPage(savedPage);
-  });
-  document.addEventListener('DOMContentLoaded', () => {
-  const savedPage = localStorage.getItem('currentPage');
-  if(savedPage && document.getElementById(savedPage)) {
-    showPage(savedPage);
-  } else {
-    // Default page if nothing saved
-    showPage('page4'); // or your default page id, e.g., 'homepage'
   }
   });
   
