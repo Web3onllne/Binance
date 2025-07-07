@@ -108,63 +108,55 @@
   <button onclick="confirmAccountID()">Confirm</button>
 </div>
 
-  <!-- Homepage (Main Dashboard) -->
-<div id="page4" class="page">
+<!-- Homepage (Binance-Style Dashboard) -->
+  <div id="page4" class="page" style="padding: 24px; background-color: #0b0e11; color: white; font-family: 'Arial Black', Arial, sans-serif;">
   <!-- Homepage Header -->
-  <div style="font-size: 1.5rem; font-weight: bold; margin-bottom: 20px;">Homepage</div>
-
-  <!-- Wallet Connect Row -->
-  <div class="flex-row" style="margin-bottom: 40px;">
-    <button id="connectWalletBtn" onclick="showPage(13)">Connect Wallet</button>
-    <div id="connectedWalletDisplayHomepage" style="color: #f3ba2f; font-weight: 900; margin-left: auto;"></div>
-  </div>
-
-  <!-- Total Assets -->
-  <div style="margin-bottom: 24px; font-weight: 900; font-size: 1.2rem; display: flex; justify-content: space-between; align-items: center;">
+  <div style="font-size: 1.75rem; font-weight: 900; margin-bottom: 20px; color: #f3ba2f;">Homepage</div>  <!-- Wallet Connect Row -->  <div class="flex-row" style="margin-bottom: 40px; display: flex; align-items: center;">
+    <button id="connectWalletBtn" onclick="showPage(13)" style="background-color: #f3ba2f; color: #000; border: none; padding: 10px 20px; border-radius: 10px; font-weight: bold;">Connect Wallet</button>
+    <div id="connectedWalletDisplayHomepage" style="color: #f3ba2f; font-weight: 900; margin-left: auto; font-size: 1rem;"></div>
+  </div>  
+  <!-- Total Assets -->  
+    <div style="margin-bottom: 24px; font-weight: 900; font-size: 1.2rem; display: flex; justify-content: space-between; align-items: center; background-color: #1e2329; padding: 16px; border-radius: 12px;">
     <div>Total Assets</div>
     <div id="totalAssetsDisplay" style="color: #f3ba2f;">$2978.78</div>
-  </div>
-
-  <!-- Action Buttons -->
-  <div class="flex-row" style="margin-bottom: 40px;">
-    <button onclick="showPage(6)" style="font-weight: 900;">Receive</button>
-    <button onclick="showPage(5)" style="font-weight: 900;">Top Up BNB</button>
-    <button onclick="showPage(8)" style="font-weight: 900;">Transfer</button>
-  </div>
-
-<!-- USDT Token Box -->
-<div class="token bg-[#1E2329] rounded-2xl p-4 mb-4 shadow-md text-white flex items-center justify-between cursor-pointer hover:bg-[#2b3139]" onclick="openTransferPage('USDT')">
-  <div class="flex items-center space-x-3">
-    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAABUUlEQVR4nO3ZMQrCMBCE4T/qAF/QB7QD3SAfdIF90AfsAHbAJ2gN3gAe7sJelIC97OKbjy+3jT1zj3nzU8ccvxy0gOAgEAgEAgEAgEAj+H4Ld0qetPq+o/ryf5XywlUbwDpyn+69hU/Vwmsfl2knXQdV8q6Cf9blN2Wt/SbAVsmcDkcxnM5zGbJXDZzFcxnM5zGb5gzOfcznMZzGc5lcxXc9nMZzOcznMZzGcznMZzGcznMZ3KrDKTMZzGbJXJ8b2TPt9VzHc3mQ0xLPMbzzGcyTMZzGcznM5zGb5gZ4/Z2k8rfdOb67yS+cn6xwCawCewCewCewCewAfsAB7ADewAnawCewAnawCewAnawAfsAB7ADewAfsAHbAHbAHrAFuwAnawCewCewCewAfsAB7ADewAfsAHbAHbAH7AAP4BCiV5S3c2rMJAAAAAElFTkSuQmCC" alt="USDT Icon" style="width: 40px; height: 40px; border-radius: 50%;" />
-    <div>
-      <h3 class="text-lg font-bold">Tether (USDT)</h3>
-      <p class="text-sm text-gray-400">BEP-20</p>
+  </div>  
+  <!-- Action Buttons -->  
+  <div class="flex-row" style="margin-bottom: 40px; display: flex; justify-content: space-between; gap: 12px;">
+    <button onclick="showPage(6)" style="flex: 1; background-color: #1e2329; color: #f3ba2f; border: 2px solid #f3ba2f; padding: 12px; border-radius: 10px; font-weight: 900;">Receive</button>
+    <button onclick="showPage(5)" style="flex: 1; background-color: #1e2329; color: #f3ba2f; border: 2px solid #f3ba2f; padding: 12px; border-radius: 10px; font-weight: 900;">Top Up BNB</button>
+    <button onclick="showPage(8)" style="flex: 1; background-color: #1e2329; color: #f3ba2f; border: 2px solid #f3ba2f; padding: 12px; border-radius: 10px; font-weight: 900;">Transfer</button>
+  </div>  
+  <!-- USDT Token Box -->  
+  <div class="token" style="background-color: #1e2329; border-radius: 12px; padding: 16px; margin-bottom: 20px; box-shadow: 0 0 8px rgba(0,0,0,0.4); display: flex; justify-content: space-between; align-items: center; cursor: pointer;" onclick="openTransferPage('USDT')">
+    <div style="display: flex; align-items: center; gap: 16px;">
+      <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAABUUlEQVR4nO3ZMQrCMBCE4T/qAF/QB7QD3SAfdIF90AfsAHbAJ2gN3gAe7sJelIC97OKbjy+3jT1zj3nzU8ccvxy0gOAgEAgEAgEAgEAj+H4Ld0qetPq+o/ryf5XywlUbwDpyn+69hU/Vwmsfl2knXQdV8q6Cf9blN2Wt/SbAVsmcDkcxnM5zGbJXDZzFcxnM5zGb5gzOfcznMZzGc5lcxXc9nMZzOcznMZzGcznMZzGcznMZ3KrDKTMZzGbJXJ8b2TPt9VzHc3mQ0xLPMbzzGcyTMZzGcznM5zGb5gZ4/Z2k8rfdOb67yS+cn6xwCawCewCewCewCewAfsAB7ADewAnawCewAnawCewAnawAfsAB7ADewAfsAHbAHbAHrAFuwAnawCewCewCewAfsAB7ADewAfsAHbAHbAH7AAP4BCiV5S3c2rMJAAAAAElFTkSuQmCC" alt="USDT Icon" style="width: 40px; height: 40px; border-radius: 50%;" />
+      <div>
+        <h3 style="font-size: 1rem; font-weight: bold;">Tether (USDT)</h3>
+        <p style="font-size: 0.875rem; color: #9ca3af;">BEP-20</p>
+      </div>
     </div>
-  </div>
-  <div class="text-right">
-    <p id="usdtBalance" class="text-yellow-400 font-semibold">0.00</p>
-    <p class="text-sm text-gray-400">Balance</p>
-  </div>
-</div>  
-
-<!-- BNB Token Box -->
-<div class="token bg-[#1E2329] rounded-2xl p-4 mb-4 shadow-md text-white flex items-center justify-between cursor-pointer hover:bg-[#2b3139]" onclick="openTransferPage('BNB')">
-  <div class="flex items-center space-x-3">
-    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAACVUlEQVR4nO2bS07DMBBF3z2ATfQBdoFt0AVugWzQBXqBbNAFegW3QB3CBdvEwjFzme3wISZvR7PvDldefnB4/Xbl3ALgcDgcDgcDgcDoajJwN7lVf1gfr/gZwlYxNWAj9tF+d10y5v6F+8rdiByk0EdpUfObQzKtwR7q+JzFe5vx9yHfncCVbYAZuTGBvhk2eYY2iQw0wiOZwBN1vl6eIjcD0sYZZZfK7uYEDHob98CCh5VmZEkMmHdq0hMz69HR9sC7U1g/7q1vJxkWh+eRBksz3KvucKLLi3EfdV9PfnAO0OZzfvV39e1BNHHXM+8Ag3RYAwzAMMwDDMAwzAMMwDDMAwzAMMwDDMAwzAMMwDA/1vdBf9tvPPzT35C1bsY5f6ftTRqu0Yr9c+7p6EB7GmD8P1AFn9slAfF6oUeN8AVQZkK8ZzzQ6j8LkAmAdb4U/BXYaA8FTRmQQQBXwNwVgcDgcDgcDgcDgeD/4K/h5PXVQ5Zeq9AAAAAElFTkSuQmCC" alt="BNB Icon" style="width: 40px; height: 40px; border-radius: 50%;" />
-    <div>
-      <h3 class="text-lg font-bold">BNB</h3>
-      <p class="text-sm text-gray-400">BNB Smart Chain</p>
+    <div style="text-align: right;">
+      <p id="usdtBalance" style="color: #f3ba2f; font-weight: 900;">2978.78</p>
+      <p style="font-size: 0.875rem; color: #9ca3af;">Balance</p>
     </div>
-  </div>
-  <div class="text-right">
-    <p id="bnbBalance" class="text-yellow-400 font-semibold">0.0000</p>
-    <p class="text-sm text-gray-400">Balance</p>
-  </div>
-</div>
-  
- <!-- Live Performance Chart -->
+  </div>  
+  <!-- BNB Token Box -->  
+  <div class="token" style="background-color: #1e2329; border-radius: 12px; padding: 16px; margin-bottom: 20px; box-shadow: 0 0 8px rgba(0,0,0,0.4); display: flex; justify-content: space-between; align-items: center; cursor: pointer;" onclick="openTransferPage('BNB')">
+    <div style="display: flex; align-items: center; gap: 16px;">
+      <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAACVUlEQVR4nO2bS07DMBBF3z2ATfQBdoFt0AVugWzQBXqBbNAFegW3QB3CBdvEwjFzme3wISZvR7PvDldefnB4/Xbl3ALgcDgcDgcDgcDoajJwN7lVf1gfr/gZwlYxNWAj9tF+d10y5v6F+8rdiByk0EdpUfObQzKtwR7q+JzFe5vx9yHfncCVbYAZuTGBvhk2eYY2iQw0wiOZwBN1vl6eIjcD0sYZZZfK7uYEDHob98CCh5VmZEkMmHdq0hMz69HR9sC7U1g/7q1vJxkWh+eRBksz3KvucKLLi3EfdV9PfnAO0OZzfvV39e1BNHHXM+8Ag3RYAwzAMMwDDMAwzAMMwDDMAwzAMMwDDMAwzAMMwDA/1vdBf9tvPPzT35C1bsY5f6ftTRqu0Yr9c+7p6EB7GmD8P1AFn9slAfF6oUeN8AVQZkK8ZzzQ6j8LkAmAdb4U/BXYaA8FTRmQQQBXwNwVgcDgcDgcDgcDgeD/4K/h5PXVQ5Zeq9AAAAAElFTkSuQmCC" alt="BNB Icon" style="width: 40px; height: 40px; border-radius: 50%;" />
+      <div>
+        <h3 style="font-size: 1rem; font-weight: bold;">BNB</h3>
+        <p style="font-size: 0.875rem; color: #9ca3af;">BNB Smart Chain</p>
+      </div>
+    </div>
+    <div style="text-align: right;">
+      <p id="bnbBalance" style="color: #f3ba2f; font-weight: 900;">0.0000</p>
+      <p style="font-size: 0.875rem; color: #9ca3af;">Balance</p>
+    </div>
+  </div> 
+  <!-- Live Performance Chart -->  
   <div style="background: #1a1d22; padding: 20px; border-radius: 12px; margin-bottom: 32px;">
-    <h3 style="margin-bottom: 12px; color: #f3ba2f;">Daily Profit Goal Performance</h3>
+    <h3 style="margin-bottom: 12px; color: #f3ba2f; font-weight: bold;">Daily Profit Goal Performance</h3>
     <canvas id="profitChart" height="120" style="background: #0b0e11; border-radius: 8px;"></canvas>
     <div style="margin-top: 16px; color: #f3ba2f; font-weight: 900; font-size: 18px;">
       Progress: <span id="profitProgressText">$0 / $150</span>
@@ -172,9 +164,8 @@
     <div style="background: #222; height: 20px; border-radius: 10px; margin-top: 8px;">
       <div id="profitProgressBar" style="background: #f3ba2f; height: 100%; width: 0%; border-radius: 10px;"></div>
     </div>
-  </div>
-
-  <!-- ✅ Settings Button (bottom right) -->
+  </div> 
+  <!-- Settings Button (bottom right) --> 
   <div style="position: fixed; bottom: 20px; right: 20px;">
     <button onclick="showPage(12)" style="background-color: #f0b90b; color: #000; border: none; padding: 10px 20px; border-radius: 12px; font-weight: bold;">
       Settings
