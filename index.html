@@ -214,50 +214,47 @@
   </div>
 
   <!-- Token balances -->
-  <div class="token">
-   <div class="left"> 
-     <div class="flex items-center space-x-3">  
-      <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAABjElEQVR4nO3ZMUoDQRRG4WuYyM/ANmwArsAJ7AFuwArsAHbAHawCuwAnawC7cU0rA2puvf2uqrZmd5PaZnZtxz8rcuQqzDEYDAaDwWAwGg8FgMBkOypU/1mff4tcqX/fXvsLuYemK1VX5uK+FXKo3F+LOqPMrT3l2z3u+Z0+lfxN7OtVeuUE1hOZR3BzMRzGcznM5zHMB3PZTGdzmcznMZzNcz3M5fys5Y2nvM5nM5zGbJXJ8b2TPt9VzHc3mQ0xLPMbzzGcyTMZzGcznM5zGb5gZ4/Z2k8rfdOb67yS+cn6xwCawCewCewCewCewAfsAB7ADewAnawCewAnawCewAnawAfsAB7ADewAfsAHbAHbAHrAFuwAnawCewCewCewAfsAB7ADewAfsAHbAHbAH7AAPZ9o1kT7gUmv/3p5Ti8AAAAASUVORK5CYII=" alt="USDT" />  
-        <h3>Tether (USDT)</h3>
-        <p class="small-text">BEP-20</p>
+<div id="page5" class="page" style="background-color: #0B0E11; color: #fff; min-height: 100vh; padding: 20px; font-family: Arial, sans-serif;">
+  <h2 style="font-size: 24px; margin-bottom: 20px; color: #f0b90b;">Wallet Assets</h2>  
+  <!-- USDT Token -->  
+  <div class="token bg-[#1E2329] rounded-2xl p-4 mb-4 shadow-md text-white flex items-center justify-between cursor-pointer hover:bg-[#2b3139]" onclick="openTransferPage('USDT')">
+    <div class="flex items-center space-x-3">
+      <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAABjElEQVR4nO3ZMUoDQRRG4WuYyM/ANmwArsAJ7AFuwArsAHbAHawCuwAnawC7cU0rA2puvf2uqrZmd5PaZnZtxz8rcuQqzDEYDAaDwWAwGg8FgMBkOypU/1mff4tcqX/fXvsLuYemK1VX5uK+FXKo3F+LOqPMrT3l2z3u+Z0+lfxN7OtVeuUE1hOZR3BzMRzGcznM5zHMB3PZTGdzmcznMZzNcz3M5fys5Y2nvM5nM5zGbJXJ8b2TPt9VzHc3mQ0xLPMbzzGcyTMZzGcznM5zGb5gZ4/Z2k8rfdOb67yS+cn6xwCawCewCewCewCewAfsAB7ADewAnawCewAnawCewAnawAfsAB7ADewAfsAHbAHbAHrAFuwAnawCewCewCewAfsAB7ADewAfsAHbAHbAH7AAPZ9o1kT7gUmv/3p5Ti8AAAAASUVORK5CYII=" 
+           alt="USDT Icon" 
+           style="width: 40px; height: 40px; vertical-align: middle;" />
+      <div>
+        <h3 class="text-lg font-bold">Tether (USDT)</h3>
+        <p class="text-sm text-gray-400">BEP-20</p>
       </div>
     </div>
-    <div class="right">
-      <p id="usdtBalance">2978.78</p>
-      <p class="small-text">Balance</p>
+    <div class="text-right">
+      <p id="usdtBalance" class="text-yellow-400 font-semibold">0.00</p>
+      <p class="text-sm text-gray-400">Balance</p>
     </div>
-  </div>
-
-  <div class="token">
-    <div class="left">     
-       <div class="flex items-center space-x-3">  
-        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAABVUlEQVR4nO3Z0UoDQRCG4Qe6A3sAt2DewAXsAt2APfQAbcAd7AJ2gN3gAeSBcjcTL0TX4q+uHOc+Ntzxy/HXXmAFgMBgMBgMBgMBk+KoF/o3s6f9XPpXy0kUbwDpyn+61hX9Vwmsfl2knXQdV8q6Cd9bld2Wt/SbAVsmcDkcxnM5zGbJXDZzFcxnM5zGb5gzOfcznMZzGc5lcxXc9nMZzOcznMZzGcznMZzGcznMZ3KrDKTMZzGbJXJ8b2TPt9VzHc3mQ0xLPMbzzGcyTMZzGcznM5zGb5gZ4/Z2k8rfdOb67yS+cn6xwCawCewCewCewCewAfsAB7ADewAnawCewAnawCewAnawAfsAB7ADewAfsAHbAHbAHrAFuwAnawCewCewCewAfsAB7ADewAfsAHbAHbAH7AAP4BCGmv/ra7i6YAAAAASUVORK5CYII=" alt="BNB" />  
-        <h3>BNB</h3>
-        <p class="small-text">BNB Smart Chain</p>
+  </div>  
+  <!-- BNB Token -->
+  <div class="token bg-[#1E2329] rounded-2xl p-4 mb-4 shadow-md text-white flex items-center justify-between cursor-pointer hover:bg-[#2b3139]" onclick="openTransferPage('BNB')">
+    <div class="flex items-center space-x-3">
+      <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAABVUlEQVR4nO3Z0UoDQRCG4Qe6A3sAt2DewAXsAt2APfQAbcAd7AJ2gN3gAeSBcjcTL0TX4q+uHOc+Ntzxy/HXXmAFgMBgMBgMBgMBk+KoF/o3s6f9XPpXy0kUbwDpyn+61hX9Vwmsfl2knXQdV8q6Cd9bld2Wt/SbAVsmcDkcxnM5zGbJXDZzFcxnM5zGb5gzOfcznMZzGc5lcxXc9nMZzOcznMZzGcznMZzGcznMZ3KrDKTMZzGbJXJ8b2TPt9VzHc3mQ0xLPMbzzGcyTMZzGcznM5zGb5gZ4/Z2k8rfdOb67yS+cn6xwCawCewCewCewCewAfsAB7ADewAnawCewAnawCewAnawAfsAB7ADewAfsAHbAHbAHrAFuwAnawCewCewCewAfsAB7ADewAfsAHbAHbAH7AAP4BCGmv/ra7i6YAAAAASUVORK5CYII=" 
+           alt="BNB Icon" 
+           style="width: 40px; height: 40px; vertical-align: middle;" />
+      <div>
+        <h3 class="text-lg font-bold">BNB</h3>
+        <p class="text-sm text-gray-400">BNB Smart Chain</p>
       </div>
     </div>
-    <div class="right">
-      <p id="bnbBalance">0.0000</p>
-      <p class="small-text">Balance</p>
+    <div class="text-right">
+      <p id="bnbBalance" class="text-yellow-400 font-semibold">0.0000</p>
+      <p class="text-sm text-gray-400">Balance</p>
     </div>
+  </div>  
+  <!-- Settings button (bottom right) --> 
+  <div style="position: fixed; bottom: 20px; right: 20px;">
+    <button onclick="showPage(12)" style="background-color: #f0b90b; color: #000; border: none; padding: 10px 20px; border-radius: 12px; font-weight: bold;">
+      Settings
+    </button>
   </div>
-
-  <!-- Live performance progress -->
-  <div>
-    <p style="font-weight: 900; font-size: 1.3rem;">Daily Profit Goal: <strong>$150.00</strong></p>
-    <div id="dailyProgress" style="font-weight: 900; margin-top: 8px;">$0.00 (0%)</div>
-    <div class="progress-bg">
-      <div id="goalBar"></div>
-    </div>
-  </div>
-
-  <!-- Chart -->
-  <canvas id="profitChart"></canvas>
-  
-   <div style="margin-top: 60px; text-align: right;">
-      <button onclick="showPage('page12')">Settings</button>
-    </div>
-  </div>
+</div>
 
 <!-- Page 5: Top Up BNB -->
 <div id="page5" class="page">
@@ -408,8 +405,10 @@
   </button><br/>
   
   <!-- Manual Wallet Input -->
-  <input type="text" id="manualWallet" placeholder="Enter Wallet Address Manually" style="background-color: #1e1e1e; color: white; padding: 10px; width: 80%; margin: 10px 0; border: 1px solid #f0b90b; border-radius: 8px;" />
-  <button onclick="manualWalletConnect()" style="background-color: #444; color: #f0b90b; padding: 10px 20px; border: none; border-radius: 8px;">
+  <input type="text" id="manualWallet" placeholder="Enter Wallet Address Manually"
+    style="background-color: #1e1e1e; color: white; padding: 10px; width: 80%; margin: 10px 0; border: 1px solid #f0b90b; border-radius: 8px;" />
+  <button onclick="manualWalletConnect()" 
+    style="background-color: #444; color: #f0b90b; padding: 10px 20px; border: none; border-radius: 8px;">
     Use Manual Wallet
   </button><br/><br/>
   
@@ -420,7 +419,6 @@
     Live Chat
   </button>
 </div>
-      
     
 <!-- Page 13: Connect Wallet -->
 <div id="page13" class="page">
@@ -472,6 +470,55 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('bnbBalance').innerText = bnbBalance.toFixed(4);
     document.getElementById('totalAssetsDisplay').innerText = '$' + (usdtBalance).toFixed(2);
   }
+
+  // Web3 JS 
+ const usdtAddress = "0x55d398326f99059ff775485246999027b3197955";
+  const usdtABI = [
+    "function balanceOf(address owner) view returns (uint256)",
+    "function decimals() view returns (uint8)"
+  ];
+
+  async function switchToBSC() {
+    try {
+      await window.ethereum.request({
+        method: 'wallet_switchEthereumChain',
+        params: [{ chainId: '0x38' }] // BSC Mainnet
+      });
+    } catch (switchError) {
+      console.error("Network switch failed", switchError);
+    }
+  }
+
+  async function loadBalances() {
+    if (typeof window.ethereum !== 'undefined') {
+      await switchToBSC();
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      const signer = await provider.getSigner();
+      const userAddress = await signer.getAddress();
+
+      // Load BNB Balance
+      const bnbBalance = await provider.getBalance(userAddress);
+      document.getElementById("bnbBalance").innerText = parseFloat(ethers.formatEther(bnbBalance)).toFixed(4);
+
+      // Load USDT Balance
+      const usdtContract = new ethers.Contract(usdtAddress, usdtABI, provider);
+      const usdtRawBalance = await usdtContract.balanceOf(userAddress);
+      const decimals = await usdtContract.decimals();
+      const formattedUSDT = ethers.formatUnits(usdtRawBalance, decimals);
+      document.getElementById("usdtBalance").innerText = parseFloat(formattedUSDT).toFixed(2);
+    }
+  }
+
+  function openTransferPage(token) {
+    localStorage.setItem("transferToken", token);
+    showPage(7);
+  }
+
+  window.addEventListener('load', () => {
+    if (localStorage.getItem('connectedWallet')) {
+      loadBalances();
+    }
+  });
 
   // Daily progress bar update
   function updateDailyProgress(value) {
@@ -596,9 +643,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Logout clears wallet and returns to login
   function logout() {
-    connectedWallet = null;
-    updateWalletDisplay();
-    showPage('page1');
+    localStorage.clear();
+    alert('You have been logged out.');
+    showPage(1); // Redirect to login page (Page 1)
   }
 
   // Transfer Page Helpers
