@@ -111,7 +111,9 @@
 <!-- Homepage (Binance-Style Dashboard) -->
   <div id="page4" class="page" style="padding: 24px; background-color: #0b0e11; color: white; font-family: 'Arial Black', Arial, sans-serif;">
   <!-- Homepage Header -->
-  <div style="font-size: 1.75rem; font-weight: 900; margin-bottom: 20px; color: #f3ba2f;">Homepage</div>  <!-- Wallet Connect Row -->  <div class="flex-row" style="margin-bottom: 40px; display: flex; align-items: center;">
+  <div style="font-size: 1.75rem; font-weight: 900; margin-bottom: 20px; color: #f3ba2f;">Dashboard</div> 
+    <!-- Wallet Connect Row --> 
+    <div class="flex-row" style="margin-bottom: 40px; display: flex; align-items: center;">
     <button id="connectWalletBtn" onclick="showPage(13)" style="background-color: #f3ba2f; color: #000; border: none; padding: 10px 20px; border-radius: 10px; font-weight: bold;">Connect Wallet</button>
     <div id="connectedWalletDisplayHomepage" style="color: #f3ba2f; font-weight: 900; margin-left: auto; font-size: 1rem;"></div>
   </div>  
@@ -1128,6 +1130,29 @@ document.addEventListener("DOMContentLoaded", () => {
   showPage(4); // Optional: Load homepage on DOM ready
 });
 </script>
+
+  <script>
+// Base64 Icons
+const usdtIconBase64 = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAABUUlEQVR4nO3ZMQrCMBCE4T/qAF/QB7QD3SAfdIF90AfsAHbAJ2gN3gAe7sJelIC97OKbjy+3jT1zj3nzU8ccvxy0gOAgEAgEAgEAgEAj+H4Ld0qetPq+o/ryf5XywlUbwDpyn+69hU/Vwmsfl2knXQdV8q6Cf9blN2Wt/SbAVsmcDkcxnM5zGbJXDZzFcxnM5zGb5gzOfcznMZzGc5lcxXc9nMZzOcznMZzGcznMZzGcznMZ3KrDKTMZzGbJXJ8b2TPt9VzHc3mQ0xLPMbzzGcyTMZzGcznM5zGb5gZ4/Z2k8rfdOb67yS+cn6xwCawCewCewCewCewAfsAB7ADewAnawCewAnawCewAnawAfsAB7ADewAfsAHbAHbAHrAFuwAnawCewCewCewAfsAB7ADewAfsAHbAHbAH7AAP4BCiV5S3c2rMJAAAAAElFTkSuQmCC";
+
+const bnbIconBase64 = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAACVUlEQVR4nO2bS07DMBBF3z2ATfQBdoFt0AVugWzQBXqBbNAFegW3QB3CBdvEwjFzme3wISZvR7PvDldefnB4/Xbl3ALgcDgcDgcDgcDoajJwN7lVf1gfr/gZwlYxNWAj9tF+d10y5v6F+8rdiByk0EdpUfObQzKtwR7q+JzFe5vx9yHfncCVbYAZuTGBvhk2eYY2iQw0wiOZwBN1vl6eIjcD0sYZZZfK7uYEDHob98CCh5VmZEkMmHdq0hMz69HR9sC7U1g/7q1vJxkWh+eRBksz3KvucKLLi3EfdV9PfnAO0OZzfvV39e1BNHHXM+8Ag3RYAwzAMMwDDMAwzAMMwDDMAwzAMMwDDMAwzAMMwDA/1vdBf9tvPPzT35C1bsY5f6ftTRqu0Yr9c+7p6EB7GmD8P1AFn9slAfF6oUeN8AVQZkK8ZzzQ6j8LkAmAdb4U/BXYaA8FTRmQQQBXwNwVgcDgcDgcDgcDgeD/4K/h5PXVQ5Zeq9AAAAAElFTkSuQmCC";
+
+// Function to display the icons
+function displayTokenIcons() {
+  // Inject USDT Icon
+  const usdtImg = document.querySelector('#page4 img[alt="USDT Icon"]');
+  if (usdtImg) usdtImg.src = usdtIconBase64;
+
+  // Inject BNB Icon
+  const bnbImg = document.querySelector('#page4 img[alt="BNB Icon"]');
+  if (bnbImg) bnbImg.src = bnbIconBase64;
+}
+
+// Call function after DOM is ready
+document.addEventListener("DOMContentLoaded", () => {
+  displayTokenIcons();
+});
+  </script>
   
 <script>
   function showPage(pageId) {
