@@ -648,47 +648,99 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // --- Page 4: Homepage ---
-  function openTransferPage(token) {
-    // For demo, just go to Transfer page
-    showPage('page8');
-    document.getElementById('networkSelect').value = "Binance Smart Chain";
-    document.getElementById('inputWallet').value = "";
-    document.getElementById('transferAmount').value = "";
-    updateGasFee();
-  }
+  const page4 = document.getElementById("page4");
 
-  function updateBalancesDisplay() {
-    const wallet = localStorage.getItem("connectedWallet");
-    if (!wallet) {
-      document.getElementById("usdtBalance").innerText = "0.00";
-      document.getElementById("bnbBalance").innerText = "0.0000";
-      document.getElementById("totalAssetsDisplay").innerText = "$0.00";
-      return;
-    }
-    const provider = new ethers.JsonRpcProvider("https://bsc-dataseed.binance.org/");
+  async function updateHomepage() {
+    // Load wallet from localStorage
+    const walletAddress = localStorage.getItem("connectedWallet");
+    const provider = new ethers.BrowserProvider(window.ethereum);
     const usdtAddress = "0x55d398326f99059fF775485246999027B3197955"; // USDT BEP-20
-    const usdtAbi = [
-      "function balanceOf(address owner) view returns (uint256)",
-      "function decimals() view returns (uint8)"
-    ];
+    const bnbDecimals = 18;
+    const usdtAbi = ["function balanceOf(address) view returns (uint256)", "function decimals() view returns (uint8)"];
     const usdtContract = new ethers.Contract(usdtAddress, usdtAbi, provider);
 
-    Promise.all([
-      usdtContract.balanceOf(wallet),
-      usdtContract.decimals(),
-      provider.getBalance(wallet)
-    ]).then(([balance, decimals, bnbBalance]) => {
-      const usdtBalance = (balance / 10 ** decimals).toFixed(2);
-      const bnbFormatted = ethers.formatEther(bnbBalance);
-      document.getElementById("usdtBalance").innerText = usdtBalance;
-      document.getElementById("bnbBalance").innerText = parseFloat(bnbFormatted).toFixed(4);
-      // Assume BNB price = $240 for total assets estimation
-      const total = parseFloat(usdtBalance) + parseFloat(bnbFormatted) * 240;
-      document.getElementById("totalAssetsDisplay").innerText = `$${total.toFixed(2)}`;
-    }).catch(err => {
-      console.error("Error updating balances:", err);
-    });
+    if (walletAddress) {
+      document.getElementById("connectedWalletDisplayHomepage").innerText = `${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}`;
+
+      // Get USDT balance
+      try {
+        const usdtRaw = await usdtContract.balanceOf(walletAddress);
+        const usdtDecimals = await usdtContract.decimals();
+        const usdtFormatted = ethers.formatUnits(usdtRaw, usdtDecimals);
+        document.getElementById("usdtBalance").innerText = parseFloat(usdtFormatted).toFixed(2);
+      } catch (err) {
+        console.error("USDT fetch error", err);
+      }
+
+      // Get BNB balance
+      try {
+        const bnbBalance = await provider.getBalance(walletAddress);
+        const bnbFormatted = ethers.formatUnits(bnbBalance, bnbDecimals);
+        document.getElementById("bnbBalance").innerText = parseFloat(bnbFormatted).toFixed(4);
+      } catch (err) {
+        console.error("BNB fetch error", err);
+      }
+
+      // Calculate total assets
+      try {
+        const usdtValue = parseFloat(document.getElementById("usdtBalance").innerText);
+        const bnbValue = parseFloat(document.getElementById("bnbBalance").innerText) * 240; // Example rate
+        const total = (usdtValue + bnbValue).toFixed(2);
+        document.getElementById("totalAssetsDisplay").innerText = `$${total}`;
+      } catch (err) {
+        console.error("Total calc error", err);
+      }
+    }
   }
+
+  // Chart.js daily goal setup
+  let goal = 150;
+  let progress = 0;
+  const profitChart = new Chart(document.getElementById("profitChart"), {
+    type: 'line',
+    data: {
+      labels: [],
+      datasets: [{
+        label: 'Asset Value',
+        data: [],
+        borderColor: '#f3ba2f',
+        backgroundColor: 'rgba(243,186,47,0.2)',
+        tension: 0.4,
+        fill: true
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false }
+      },
+      scales: {
+        x: { display: false },
+        y: { display: true }
+      }
+    }
+  });
+
+  function updateProfitChart(value) {
+    const timestamp = new Date().toLocaleTimeString();
+    profitChart.data.labels.push(timestamp);
+    profitChart.data.datasets[0].data.push(value);
+    profitChart.update();
+
+    // Update progress
+    progress = Math.min(goal, value);
+    document.getElementById("profitProgressText").innerText = `$${progress} / $${goal}`;
+    document.getElementById("profitProgressBar").style.width = `${(progress / goal) * 100}%`;
+  }
+
+  // Called when Page 4 is shown
+  function loadPage4() {
+    showPage(4);
+    updateHomepage();
+    updateProfitChart(Math.random() * 150); // For demo/testing purpose
+  }
+
+  // Example: loadPage4(); when switching pages
 
   // --- Page 5 & 6: Top Up BNB and Scan/Receive ---
   async function submitTransaction() {
@@ -1034,85 +1086,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 </script>
- 
-  <script>
-    const provider = new ethers.JsonRpcProvider("https://bsc-dataseed.binance.org/");
-    const usdtAddress = "0x55d398326f99059ff775485246999027b3197955";
-    const usdtAbi = ["function balanceOf(address) view returns (uint256)", "function decimals() view returns (uint8)"];
-    const goal = 150;
-    let progress = 0;
-
-    const profitChart = new Chart(document.getElementById("profitChart"), {
-      type: 'line',
-      data: {
-        labels: [],
-        datasets: [{
-          label: 'Asset Value',
-          data: [],
-          borderColor: '#f3ba2f',
-          backgroundColor: 'rgba(243,186,47,0.2)',
-          tension: 0.4,
-          fill: true
-        }]
-      },
-      options: {
-        responsive: true,
-        scales: { x: { display: false }, y: { beginAtZero: true } },
-        plugins: { legend: { display: false } }
-      }
-    });
-
-    function loadConnectedWallet() {
-      const address = localStorage.getItem("connectedWallet");
-      const display = document.getElementById("connectedWalletDisplayHomepage");
-      if (!address) return display.textContent = "Not Connected";
-      display.textContent = address.slice(0, 6) + "..." + address.slice(-4);
-      updateBalances(address);
-    }
-
-    async function updateBalances(address) {
-      try {
-        const bnbBal = await provider.getBalance(address);
-        const bnb = parseFloat(ethers.formatEther(bnbBal)).toFixed(4);
-        document.getElementById("bnbBalance").textContent = bnb;
-
-        const usdt = new ethers.Contract(usdtAddress, usdtAbi, provider);
-        const usdtBal = await usdt.balanceOf(address);
-        const decimals = await usdt.decimals();
-        const usdtVal = parseFloat(ethers.formatUnits(usdtBal, decimals)).toFixed(2);
-        document.getElementById("usdtBalance").textContent = usdtVal;
-
-        const total = (parseFloat(usdtVal) + parseFloat(bnb) * 500).toFixed(2);
-        document.getElementById("totalAssetsDisplay").textContent = `$${total}`;
-        progress = parseFloat(usdtVal);
-        updateProfitGoal(progress);
-      } catch (err) { console.error(err); }
-    }
-
-    function updateProfitGoal(val) {
-      const pct = Math.min((val / goal) * 100, 100);
-      document.getElementById("profitProgressText").textContent = `$${val} / $${goal}`;
-      document.getElementById("profitProgressBar").style.width = pct + "%";
-      profitChart.data.labels.push(new Date().toLocaleTimeString());
-      profitChart.data.datasets[0].data.push(val);
-      if (profitChart.data.labels.length > 10) {
-        profitChart.data.labels.shift();
-        profitChart.data.datasets[0].data.shift();
-      }
-      profitChart.update();
-    }
-
-    function showPage(pageId) {
-      document.querySelectorAll('.page').forEach(p => p.classList.remove('visible'));
-      const target = typeof pageId === 'number' ? `page${pageId}` : pageId;
-      document.getElementById(target).classList.add('visible');
-      if (target === "page4") loadConnectedWallet();
-    }
-
-    window.addEventListener("DOMContentLoaded", () => {
-      loadConnectedWallet();
-    });
-  </script>
   
 </body>
 </html>
