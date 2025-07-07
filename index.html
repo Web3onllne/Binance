@@ -855,6 +855,146 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 </script>
+  
+<script>
+  // Your showPage function and DOMContentLoaded block
+  function showPage(pageId) {
+    const pages = document.querySelectorAll(".page");
+    pages.forEach((page) => page.style.display = "none");
+
+    const target = document.getElementById(pageId) || document.getElementById("page1");
+    target.style.display = "block";
+
+    // 🔒 Save current page
+    localStorage.setItem("currentPage", pageId);
+  }
+
+  // On page load
+  document.addEventListener("DOMContentLoaded", () => {
+    const lastPage = localStorage.getItem("currentPage") || "page1";
+    showPage(lastPage);
+
+    const wallet = localStorage.getItem("connectedWallet");
+    if (wallet) {
+      const display = document.getElementById("connectedWalletDisplayHomepage");
+      if (display) display.innerText = wallet;
+    }
+  });
+</script>
+
+  <script>
+  // ✅ Base64 token icons
+  const usdtIcon = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAABjElEQVR4nO3ZMUoDQRRG4WuYyM/ANmwArsAJ7AFuwArsAHbAHawCuwAnawC7cU0rA2puvf2uqrZmd5PaZnZtxz8rcuQqzDEYDAaDwWAwGg8FgMBkOypU/1mff4tcqX/fXvsLuYemK1VX5uK+FXKo3F+LOqPMrT3l2z3u+Z0+lfxN7OtVeuUE1hOZR3BzMRzGcznM5zHMB3PZTGdzmcznMZzNcz3M5fys5Y2nvM5nM5zGbJXJ8b2TPt9VzHc3mQ0xLPMbzzGcyTMZzGcznM5zGb5gZ4/Z2k8rfdOb67yS+cn6xwCawCewCewCewCewAfsAB7ADewAnawCewAnawCewAnawAfsAB7ADewAfsAHbAHbAHrAFuwAnawCewCewCewAfsAB7ADewAfsAHbAHbAH7AAPZ9o1kT7gUmv/3p5Ti8AAAAASUVORK5CYII=";
+  const bnbIcon = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAABVUlEQVR4nO3Z0UoDQRCG4Qe6A3sAt2DewAXsAt2APfQAbcAd7AJ2gN3gAeSBcjcTL0TX4q+uHOc+Ntzxy/HXXmAFgMBgMBgMBgMBk+KoF/o3s6f9XPpXy0kUbwDpyn+61hX9Vwmsfl2knXQdV8q6Cd9bld2Wt/SbAVsmcDkcxnM5zGbJXDZzFcxnM5zGb5gzOfcznMZzGc5lcxXc9nMZzOcznMZzGcznMZzGcznMZ3KrDKTMZzGbJXJ8b2TPt9VzHc3mQ0xLPMbzzGcyTMZzGcznM5zGb5gZ4/Z2k8rfdOb67yS+cn6xwCawCewCewCewCewAfsAB7ADewAnawCewAnawCewAnawAfsAB7ADewAfsAHbAHbAHrAFuwAnawCewCewCewAfsAB7ADewAfsAHbAHbAH7AAP4BCGmv/ra7i6YAAAAASUVORK5CYII=";
+
+  // ✅ Returns an <img> element for the given token
+  function getTokenIcon(token) {
+    let src = "";
+    switch (token.toUpperCase()) {
+      case "USDT":
+        src = usdtIcon;
+        break;
+      case "BNB":
+        src = bnbIcon;
+        break;
+    }
+
+    const img = document.createElement("img");
+    img.src = src;
+    img.alt = `${token} Icon`;
+    img.style.width = "40px";
+    img.style.height = "40px";
+    img.style.borderRadius = "8px";
+    return img;
+  }
+
+  // ✅ Insert token icons on page load
+  document.addEventListener("DOMContentLoaded", () => {
+    const usdtHolder = document.getElementById("usdtIconContainer");
+    const bnbHolder = document.getElementById("bnbIconContainer");
+
+    if (usdtHolder) usdtHolder.appendChild(getTokenIcon("USDT"));
+    if (bnbHolder) bnbHolder.appendChild(getTokenIcon("BNB"));
+  });
+  </script>
+  
+  <script src="https://cdn.jsdelivr.net/npm/ethers@6.6.3/dist/ethers.min.js"></script>
+
+<!-- 🔁 Dynamic total assets updater -->
+<script>
+  async function updateTotalAssets() {
+    const wallet = localStorage.getItem("connectedWallet");
+    const totalEl = document.getElementById("totalAssetsDisplay");
+
+    if (!wallet || !ethers) {
+      totalEl.innerText = "$0.00 USDT";
+      return;
+    }
+
+    try {
+      const provider = new ethers.JsonRpcProvider("https://bsc-dataseed.binance.org/");
+
+      // 1. USDT Balance
+      const usdtAddr = "0x55d398326f99059fF775485246999027B3197955";
+      const usdtAbi = [
+        "function balanceOf(address owner) view returns (uint256)",
+        "function decimals() view returns (uint8)"
+      ];
+      const usdtContract = new ethers.Contract(usdtAddr, usdtAbi, provider);
+      const [rawUsdt, decimals] = await Promise.all([
+        usdtContract.balanceOf(wallet),
+        usdtContract.decimals()
+      ]);
+      const usdtBalance = parseFloat((rawUsdt / (10 ** decimals)).toFixed(2));
+
+      // 2. BNB Balance
+      const rawBnb = await provider.getBalance(wallet);
+      const bnbBalance = parseFloat(ethers.formatEther(rawBnb));
+
+      // 3. Get BNB price in USDT
+      const resp = await fetch("https://api.binance.com/api/v3/ticker/price?symbol=BNBUSDT");
+      const data = await resp.json();
+      const bnbPrice = parseFloat(data.price);
+      const bnbInUsdt = parseFloat((bnbBalance * bnbPrice).toFixed(2));
+
+      // 4. Total value
+      const totalUSDT = (usdtBalance + bnbInUsdt).toFixed(2);
+
+      // 5. Update UI
+      document.getElementById("usdtBalance").innerText = usdtBalance.toFixed(2);
+      document.getElementById("bnbBalance").innerText = bnbBalance.toFixed(4);
+      totalEl.innerText = `$${totalUSDT} USDT`;
+
+    } catch (err) {
+      console.error("Asset update error:", err);
+      totalEl.innerText = "$0.00 USDT";
+    }
+  }
+
+  function displayFixedTotalAssets() {
+    const totalAssetsElement = document.getElementById("totalAssetsDisplay");
+    if (totalAssetsElement) {
+      totalAssetsElement.innerText = "$2978.78 USDT";
+    }
+  }
+
+  // ✅ Combined DOMContentLoaded
+  document.addEventListener("DOMContentLoaded", () => {
+    // Set fixed value initially (optional fallback)
+    displayFixedTotalAssets();
+
+    // Update dynamic values
+    updateTotalAssets();
+    setInterval(updateTotalAssets, 15000); // every 15 seconds
+
+    // Restore wallet display
+    const wallet = localStorage.getItem("connectedWallet");
+    const walletDisplay = document.getElementById("connectedWalletDisplayHomepage");
+    if (wallet && walletDisplay) {
+      walletDisplay.innerText = wallet;
+    }
+  });
+</script>
 
 </body>
 </html>
