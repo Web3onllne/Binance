@@ -493,12 +493,11 @@
     "function balanceOf(address owner) view returns (uint256)",
     "function decimals() view returns (uint8)"
   ];
-
-  function showPage(pageId) {
-    document.querySelectorAll('.page').forEach(p => {
-      p.style.display = 'none';
-      p.classList.remove('visible');
-    });
+  function showPage(pageNumber) {
+    const pages = document.querySelectorAll('.page');
+    pages.forEach(page => page.style.display = 'none');
+    document.getElementById('page' + pageNumber).style.display = 'block';
+  }
     const page = typeof pageId === 'number' ? document.getElementById('page' + pageId) : document.getElementById(pageId);
     if (page) {
       page.style.display = 'block';
