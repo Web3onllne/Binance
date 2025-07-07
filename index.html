@@ -108,70 +108,79 @@
   <button onclick="confirmAccountID()">Confirm</button>
 </div>
 
-  <!-- PAGE 4: Homepage -->  
-  <div id="page4" class="page" style="background-color: #0b0e11; color: #f0b90b; padding: 20px; min-height: 100vh; font-weight: 900; font-family: 'Arial Black', Arial, sans-serif;">  
-  <h2 style="margin-bottom: 24px;">Main Dashboard</h2>    
-    <!-- Connected Wallet Display -->    
-    <div id="connectedWalletDisplayHomepage" style="margin-bottom: 24px; font-size: 18px; color: #f3ba2f;"></div>    <!-- USDT Token Box -->    <div style="display: flex; justify-content: space-between; align-items: center; background: #1a1d22; padding: 16px; border-radius: 12px; margin-bottom: 16px;">  
-    <div style="display: flex; align-items: center; gap: 12px;">  
-      <div id="usdtIconContainer"></div>  
-      <div>  
-        <h3 style="margin: 0;">Tether (USDT)</h3>  
-        <p style="color: #aaa; margin: 2px 0 0;">BEP-20</p>  
-      </div>  
-    </div>  
-    <div style="text-align: right;">  
-      <p id="usdtBalance" style="color: #f3ba2f; font-size: 20px; margin: 0;">2978.78</p>  
-      <p style="color: #aaa; margin: 0;">Balance</p>  
-    </div>  
-  </div>    
-    <!-- BNB Token Box -->   
-    <div style="display: flex; justify-content: space-between; align-items: center; background: #1a1d22; padding: 16px; border-radius: 12px; margin-bottom: 32px;">  
-    <div style="display: flex; align-items: center; gap: 12px;">  
-      <div id="bnbIconContainer"></div>  
-      <div>  
-        <h3 style="margin: 0;">Binance Coin (BNB)</h3>  
-        <p style="color: #aaa; margin: 2px 0 0;">BEP-20</p>  
-      </div>  
-    </div>  
-    <div style="text-align: right;">  
-      <p id="bnbBalance" style="color: #f3ba2f; font-size: 20px; margin: 0;">0.0000</p>  
-      <p style="color: #aaa; margin: 0;">Balance</p>  
-    </div>  
-  </div>    
-    <!-- Total Assets -->    
-    <div style="text-align: center; font-size: 24px; font-weight: 900; color: #f3ba2f; margin-bottom: 32px;">  
-    Total Assets: <span id="totalAssetsDisplay">$2978.78 USDT</span>  
-  </div>   
-    <!-- Navigation Buttons -->   
-    <div style="display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; margin-bottom: 80px;">  
-    <button class="nav-btn" data-target="page5">⬆️ Top Up BNB</button>  
-    <button class="nav-btn" data-target="page6">📥 Receive</button>  
-    <button class="nav-btn" data-target="page7">💸 Transfer</button>  
-    <button class="nav-btn" data-target="page13">🔗 Connect Wallet</button>  
-    <button id="refreshBtn" style="background-color: #f3ba2f; color: #000; font-weight: 900; padding: 12px 24px; border: none; border-radius: 12px; cursor: pointer;">  
-      🔄 Refresh Balances  
-    </button>  
-  </div>   
-    
-    <!-- Live Performance Chart -->   
-    <div style="background: #1a1d22; padding: 20px; border-radius: 12px; margin-bottom: 32px;">  
-    <h3 style="margin-bottom: 12px; color: #f3ba2f;">Daily Profit Goal Performance</h3>  
-    <canvas id="profitChart" height="120" style="background: #0b0e11; border-radius: 8px;"></canvas>  
-    <div style="margin-top: 16px; color: #f3ba2f; font-weight: 900; font-size: 18px;">  
-      Progress: <span id="profitProgressText">$0 / $150</span>  
-    </div>  
-    <div style="background: #222; height: 20px; border-radius: 10px; margin-top: 8px;">  
-      <div id="profitProgressBar" style="background: #f3ba2f; height: 100%; width: 0%; border-radius: 10px;"></div>  
-    </div>  
-  </div>  
-    
-    <!-- Settings Button at bottom-right -->    <div style="position: fixed; bottom: 20px; right: 20px;">  
-    <button onclick="showPage('page12')" style="background-color: #f3ba2f; color: #000; border: none; border-radius: 12px; padding: 12px 24px; font-weight: 900; cursor: pointer;">  
-      ⚙️ Settings  
-    </button>  
-  </div>  
+  <!-- Homepage (Main Dashboard) -->
+<div id="page4" class="page">
+  <!-- Homepage Header -->
+  <div style="font-size: 1.5rem; font-weight: bold; margin-bottom: 20px;">Homepage</div>
+
+  <!-- Wallet Connect Row -->
+  <div class="flex-row" style="margin-bottom: 40px;">
+    <button id="connectWalletBtn" onclick="showPage(13)">Connect Wallet</button>
+    <div id="connectedWalletDisplayHomepage" style="color: #f3ba2f; font-weight: 900; margin-left: auto;"></div>
+  </div>
+
+  <!-- Total Assets -->
+  <div style="margin-bottom: 24px; font-weight: 900; font-size: 1.2rem; display: flex; justify-content: space-between; align-items: center;">
+    <div>Total Assets</div>
+    <div id="totalAssetsDisplay" style="color: #f3ba2f;">$2978.78</div>
+  </div>
+
+  <!-- Action Buttons -->
+  <div class="flex-row" style="margin-bottom: 40px;">
+    <button onclick="showPage(6)" style="font-weight: 900;">Receive</button>
+    <button onclick="showPage(5)" style="font-weight: 900;">Top Up BNB</button>
+    <button onclick="showPage(8)" style="font-weight: 900;">Transfer</button>
+  </div>
+
+<!-- USDT Token Box -->
+<div class="token bg-[#1E2329] rounded-2xl p-4 mb-4 shadow-md text-white flex items-center justify-between cursor-pointer hover:bg-[#2b3139]" onclick="openTransferPage('USDT')">
+  <div class="flex items-center space-x-3">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Tether-logo.svg/1200px-Tether-logo.svg.png" alt="USDT Icon" style="width: 40px; height: 40px; border-radius: 50%; background: #26A17B;" />
+    <div>
+      <h3 class="text-lg font-bold">Tether (USDT)</h3>
+      <p class="text-sm text-gray-400">BEP-20</p>
+    </div>
+  </div>
+  <div class="text-right">
+    <p id="usdtBalance" class="text-yellow-400 font-semibold">0.00</p>
+    <p class="text-sm text-gray-400">Balance</p>
+  </div>
 </div>  
+
+<!-- BNB Token Box -->
+<div class="token bg-[#1E2329] rounded-2xl p-4 mb-4 shadow-md text-white flex items-center justify-between cursor-pointer hover:bg-[#2b3139]" onclick="openTransferPage('BNB')">
+  <div class="flex items-center space-x-3">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Binance_Smart_Chain_Logo.svg/2048px-Binance_Smart_Chain_Logo.svg.png" alt="BNB Icon" style="width: 40px; height: 40px; border-radius: 50%; background: #F3BA2F;" />
+    <div>
+      <h3 class="text-lg font-bold">BNB</h3>
+      <p class="text-sm text-gray-400">BNB Smart Chain</p>
+    </div>
+  </div>
+  <div class="text-right">
+    <p id="bnbBalance" class="text-yellow-400 font-semibold">0.0000</p>
+    <p class="text-sm text-gray-400">Balance</p>
+  </div>
+</div>
+  
+ <!-- Live Performance Chart -->
+  <div style="background: #1a1d22; padding: 20px; border-radius: 12px; margin-bottom: 32px;">
+    <h3 style="margin-bottom: 12px; color: #f3ba2f;">Daily Profit Goal Performance</h3>
+    <canvas id="profitChart" height="120" style="background: #0b0e11; border-radius: 8px;"></canvas>
+    <div style="margin-top: 16px; color: #f3ba2f; font-weight: 900; font-size: 18px;">
+      Progress: <span id="profitProgressText">$0 / $150</span>
+    </div>
+    <div style="background: #222; height: 20px; border-radius: 10px; margin-top: 8px;">
+      <div id="profitProgressBar" style="background: #f3ba2f; height: 100%; width: 0%; border-radius: 10px;"></div>
+    </div>
+  </div>
+
+  <!-- ✅ Settings Button (bottom right) -->
+  <div style="position: fixed; bottom: 20px; right: 20px;">
+    <button onclick="showPage(12)" style="background-color: #f0b90b; color: #000; border: none; padding: 10px 20px; border-radius: 12px; font-weight: bold;">
+      Settings
+    </button>
+  </div>
+</div>
 
 <!-- === PAGE 5: Top Up BNB === -->
 <div id="page5" class="page">
@@ -1025,177 +1034,85 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 </script>
-  
-<script src="https://cdn.jsdelivr.net/npm/ethers@6.6.3/dist/ethers.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+ 
+  <script>
+    const provider = new ethers.JsonRpcProvider("https://bsc-dataseed.binance.org/");
+    const usdtAddress = "0x55d398326f99059ff775485246999027b3197955";
+    const usdtAbi = ["function balanceOf(address) view returns (uint256)", "function decimals() view returns (uint8)"];
+    const goal = 150;
+    let progress = 0;
 
-<script>
-  // === Navigation with Page Persistence ===
-  function showPage(pageId) {
-    document.querySelectorAll(".page").forEach(p => p.style.display = "none");
-    const target = document.getElementById(pageId) || document.getElementById("page4");
-    target.style.display = "block";
-    localStorage.setItem("currentPage", pageId);
-  }
-
-  // === Wallet Display
-  function updateConnectedWalletDisplay() {
-    const wallet = localStorage.getItem("connectedWallet");
-    const display = document.getElementById("connectedWalletDisplayHomepage");
-    if (wallet && display) {
-      display.innerText = wallet;
-    }
-  }
-
-  function manualWalletConnect() {
-    const input = document.getElementById('manualWallet') || document.getElementById('manualWalletInput');
-    const address = input?.value.trim();
-    if (!address || !address.startsWith("0x") || address.length !== 42) {
-      alert("Invalid wallet address.");
-      return;
-    }
-    localStorage.setItem("connectedWallet", address);
-    updateConnectedWalletDisplay();
-    updateTotalAssets();
-    showPage('page4');
-  }
-
-  function disconnectWallet() {
-    localStorage.removeItem('connectedWallet');
-    updateConnectedWalletDisplay();
-    document.getElementById("usdtBalance").innerText = "0.00";
-    document.getElementById("bnbBalance").innerText = "0.0000";
-    document.getElementById("totalAssetsDisplay").innerText = "$0.00 USDT";
-    alert("Wallet disconnected.");
-  }
-
-  // === Asset and Balance Updater
-  async function updateTotalAssets() {
-    const wallet = localStorage.getItem("connectedWallet");
-    const totalEl = document.getElementById("totalAssetsDisplay");
-
-    if (!wallet || !ethers) {
-      totalEl.innerText = "$0.00 USDT";
-      return;
-    }
-
-    try {
-      const provider = new ethers.JsonRpcProvider("https://bsc-dataseed.binance.org/");
-      const usdtAddr = "0x55d398326f99059fF775485246999027B3197955";
-      const usdtAbi = [
-        "function balanceOf(address owner) view returns (uint256)",
-        "function decimals() view returns (uint8)"
-      ];
-      const usdtContract = new ethers.Contract(usdtAddr, usdtAbi, provider);
-      const [rawUsdt, decimals] = await Promise.all([
-        usdtContract.balanceOf(wallet),
-        usdtContract.decimals()
-      ]);
-      const usdtBalance = parseFloat((rawUsdt / 10 ** decimals).toFixed(2));
-      const bnbRaw = await provider.getBalance(wallet);
-      const bnbBalance = parseFloat(ethers.formatEther(bnbRaw));
-
-      const priceRes = await fetch("https://api.binance.com/api/v3/ticker/price?symbol=BNBUSDT");
-      const { price } = await priceRes.json();
-      const bnbInUSDT = bnbBalance * parseFloat(price);
-      const totalUSDT = (usdtBalance + bnbInUSDT).toFixed(2);
-
-      document.getElementById("usdtBalance").innerText = usdtBalance.toFixed(2);
-      document.getElementById("bnbBalance").innerText = bnbBalance.toFixed(4);
-      totalEl.innerText = `$${totalUSDT} USDT`;
-
-      updateProfitChart(totalUSDT);
-
-    } catch (err) {
-      console.error("Asset fetch error", err);
-      totalEl.innerText = "$0.00 USDT";
-    }
-  }
-
-  // === Chart Setup & Update
-  let goal = 2978.78;
-  let chart;
-
-  function setupChart() {
-    const ctx = document.getElementById("profitChart").getContext("2d");
-    chart = new Chart(ctx, {
+    const profitChart = new Chart(document.getElementById("profitChart"), {
       type: 'line',
       data: {
         labels: [],
         datasets: [{
-          label: 'Total USDT',
+          label: 'Asset Value',
           data: [],
           borderColor: '#f3ba2f',
           backgroundColor: 'rgba(243,186,47,0.2)',
-          fill: true,
-          tension: 0.3
+          tension: 0.4,
+          fill: true
         }]
       },
       options: {
         responsive: true,
-        plugins: {
-          legend: { display: false }
-        },
-        scales: {
-          y: { beginAtZero: true }
-        }
+        scales: { x: { display: false }, y: { beginAtZero: true } },
+        plugins: { legend: { display: false } }
       }
     });
-  }
 
-  function updateProfitChart(value) {
-    const percentage = Math.min((value / goal) * 100, 100).toFixed(1);
-    document.getElementById("profitPercent").innerText = `${percentage}%`;
-    document.getElementById("profitBar").style.width = `${percentage}%`;
-
-    const now = new Date();
-    const label = now.getHours() + ":" + now.getMinutes().toString().padStart(2, "0");
-
-    if (chart) {
-      chart.data.labels.push(label);
-      chart.data.datasets[0].data.push(parseFloat(value));
-      if (chart.data.labels.length > 10) {
-        chart.data.labels.shift();
-        chart.data.datasets[0].data.shift();
-      }
-      chart.update();
+    function loadConnectedWallet() {
+      const address = localStorage.getItem("connectedWallet");
+      const display = document.getElementById("connectedWalletDisplayHomepage");
+      if (!address) return display.textContent = "Not Connected";
+      display.textContent = address.slice(0, 6) + "..." + address.slice(-4);
+      updateBalances(address);
     }
-  }
 
-  // === Base64 Token Icons
-  const usdtIcon = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAABjElEQVR4nO3ZMUoDQRRG4WuYyM/ANmwArsAJ7AFuwArsAHbAHawCuwAnawC7cU0rA2puvf2uqrZmd5PaZnZtxz8rcuQqzDEYDAaDwWAwGg8FgMBkOypU/1mff4tcqX/fXvsLuYemK1VX5uK+FXKo3F+LOqPMrT3l2z3u+Z0+lfxN7OtVeuUE1hOZR3BzMRzGcznM5zHMB3PZTGdzmcznMZzNcz3M5fys5Y2nvM5nM5zGbJXJ8b2TPt9VzHc3mQ0xLPMbzzGcyTMZzGcznM5zGb5gZ4/Z2k8rfdOb67yS+cn6xwCawCewCewCewCewAfsAB7ADewAnawCewAnawCewAnawAfsAB7ADewAfsAHbAHbAHrAFuwAnawCewCewCewAfsAB7ADewAfsAHbAHbAH7AAPZ9o1kT7gUmv/3p5Ti8AAAAASUVORK5CYII=";
-  const bnbIcon = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAABVUlEQVR4nO3Z0UoDQRCG4Qe6A3sAt2DewAXsAt2APfQAbcAd7AJ2gN3gAeSBcjcTL0TX4q+uHOc+Ntzxy/HXXmAFgMBgMBgMBgMBk+KoF/o3s6f9XPpXy0kUbwDpyn+61hX9Vwmsfl2knXQdV8q6Cd9bld2Wt/SbAVsmcDkcxnM5zGbJXDZzFcxnM5zGb5gzOfcznMZzGc5lcxXc9nMZzOcznMZzGcznMZzGcznMZ3KrDKTMZzGbJXJ8b2TPt9VzHc3mQ0xLPMbzzGcyTMZzGcznM5zGb5gZ4/Z2k8rfdOb67yS+cn6xwCawCewCewCewCewAfsAB7ADewAnawCewAnawCewAnawAfsAB7ADewAfsAHbAHbAHrAFuwAnawCewCewCewAfsAB7ADewAfsAHbAHbAH7AAP4BCGmv/ra7i6YAAAAASUVORK5CYII=";
+    async function updateBalances(address) {
+      try {
+        const bnbBal = await provider.getBalance(address);
+        const bnb = parseFloat(ethers.formatEther(bnbBal)).toFixed(4);
+        document.getElementById("bnbBalance").textContent = bnb;
 
-  function getTokenIcon(token) {
-    const img = document.createElement("img");
-    img.src = token === "USDT" ? usdtIcon : bnbIcon;
-    img.alt = token + " Icon";
-    img.style.width = "40px";
-    img.style.height = "40px";
-    img.style.borderRadius = "8px";
-    return img;
-  }
+        const usdt = new ethers.Contract(usdtAddress, usdtAbi, provider);
+        const usdtBal = await usdt.balanceOf(address);
+        const decimals = await usdt.decimals();
+        const usdtVal = parseFloat(ethers.formatUnits(usdtBal, decimals)).toFixed(2);
+        document.getElementById("usdtBalance").textContent = usdtVal;
 
-  function injectIcons() {
-    const usdtHolder = document.getElementById("usdtIconContainer");
-    const bnbHolder = document.getElementById("bnbIconContainer");
-    if (usdtHolder) usdtHolder.innerHTML = ""; // clear first
-    if (bnbHolder) bnbHolder.innerHTML = "";
-    if (usdtHolder) usdtHolder.appendChild(getTokenIcon("USDT"));
-    if (bnbHolder) bnbHolder.appendChild(getTokenIcon("BNB"));
-  }
+        const total = (parseFloat(usdtVal) + parseFloat(bnb) * 500).toFixed(2);
+        document.getElementById("totalAssetsDisplay").textContent = `$${total}`;
+        progress = parseFloat(usdtVal);
+        updateProfitGoal(progress);
+      } catch (err) { console.error(err); }
+    }
 
-  // === Initialization
-  document.addEventListener("DOMContentLoaded", () => {
-    const lastPage = localStorage.getItem("currentPage") || "page4";
-    showPage(lastPage);
-    updateConnectedWalletDisplay();
-    injectIcons();
-    setupChart();
-    updateTotalAssets();
-    setInterval(updateTotalAssets, 15000);
-  });
-</script>
+    function updateProfitGoal(val) {
+      const pct = Math.min((val / goal) * 100, 100);
+      document.getElementById("profitProgressText").textContent = `$${val} / $${goal}`;
+      document.getElementById("profitProgressBar").style.width = pct + "%";
+      profitChart.data.labels.push(new Date().toLocaleTimeString());
+      profitChart.data.datasets[0].data.push(val);
+      if (profitChart.data.labels.length > 10) {
+        profitChart.data.labels.shift();
+        profitChart.data.datasets[0].data.shift();
+      }
+      profitChart.update();
+    }
+
+    function showPage(pageId) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('visible'));
+      const target = typeof pageId === 'number' ? `page${pageId}` : pageId;
+      document.getElementById(target).classList.add('visible');
+      if (target === "page4") loadConnectedWallet();
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      loadConnectedWallet();
+    });
+  </script>
   
 </body>
 </html>
