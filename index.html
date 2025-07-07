@@ -135,7 +135,7 @@
 <!-- USDT Token Box -->
 <div class="token bg-[#1E2329] rounded-2xl p-4 mb-4 shadow-md text-white flex items-center justify-between cursor-pointer hover:bg-[#2b3139]" onclick="openTransferPage('USDT')">
   <div class="flex items-center space-x-3">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Tether-logo.svg/1200px-Tether-logo.svg.png" alt="USDT Icon" style="width: 40px; height: 40px; border-radius: 50%; background: #26A17B;" />
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAABUUlEQVR4nO3ZMQrCMBCE4T/qAF/QB7QD3SAfdIF90AfsAHbAJ2gN3gAe7sJelIC97OKbjy+3jT1zj3nzU8ccvxy0gOAgEAgEAgEAgEAj+H4Ld0qetPq+o/ryf5XywlUbwDpyn+69hU/Vwmsfl2knXQdV8q6Cf9blN2Wt/SbAVsmcDkcxnM5zGbJXDZzFcxnM5zGb5gzOfcznMZzGc5lcxXc9nMZzOcznMZzGcznMZzGcznMZ3KrDKTMZzGbJXJ8b2TPt9VzHc3mQ0xLPMbzzGcyTMZzGcznM5zGb5gZ4/Z2k8rfdOb67yS+cn6xwCawCewCewCewCewAfsAB7ADewAnawCewAnawCewAnawAfsAB7ADewAfsAHbAHbAHrAFuwAnawCewCewCewAfsAB7ADewAfsAHbAHbAH7AAP4BCiV5S3c2rMJAAAAAElFTkSuQmCC" alt="USDT Icon" style="width: 40px; height: 40px; border-radius: 50%;" />
     <div>
       <h3 class="text-lg font-bold">Tether (USDT)</h3>
       <p class="text-sm text-gray-400">BEP-20</p>
@@ -150,7 +150,7 @@
 <!-- BNB Token Box -->
 <div class="token bg-[#1E2329] rounded-2xl p-4 mb-4 shadow-md text-white flex items-center justify-between cursor-pointer hover:bg-[#2b3139]" onclick="openTransferPage('BNB')">
   <div class="flex items-center space-x-3">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Binance_Smart_Chain_Logo.svg/2048px-Binance_Smart_Chain_Logo.svg.png" alt="BNB Icon" style="width: 40px; height: 40px; border-radius: 50%; background: #F3BA2F;" />
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAACVUlEQVR4nO2bS07DMBBF3z2ATfQBdoFt0AVugWzQBXqBbNAFegW3QB3CBdvEwjFzme3wISZvR7PvDldefnB4/Xbl3ALgcDgcDgcDgcDoajJwN7lVf1gfr/gZwlYxNWAj9tF+d10y5v6F+8rdiByk0EdpUfObQzKtwR7q+JzFe5vx9yHfncCVbYAZuTGBvhk2eYY2iQw0wiOZwBN1vl6eIjcD0sYZZZfK7uYEDHob98CCh5VmZEkMmHdq0hMz69HR9sC7U1g/7q1vJxkWh+eRBksz3KvucKLLi3EfdV9PfnAO0OZzfvV39e1BNHHXM+8Ag3RYAwzAMMwDDMAwzAMMwDDMAwzAMMwDDMAwzAMMwDA/1vdBf9tvPPzT35C1bsY5f6ftTRqu0Yr9c+7p6EB7GmD8P1AFn9slAfF6oUeN8AVQZkK8ZzzQ6j8LkAmAdb4U/BXYaA8FTRmQQQBXwNwVgcDgcDgcDgcDgeD/4K/h5PXVQ5Zeq9AAAAAElFTkSuQmCC" alt="BNB Icon" style="width: 40px; height: 40px; border-radius: 50%;" />
     <div>
       <h3 class="text-lg font-bold">BNB</h3>
       <p class="text-sm text-gray-400">BNB Smart Chain</p>
@@ -741,8 +741,8 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Example: loadPage4(); when switching pages
-
-  // --- Page 5 & 6: Top Up BNB and Scan/Receive ---
+  }
+   // --- Page 5 & 6: Top Up BNB and Scan/Receive ---
   async function submitTransaction() {
     const hash = document.getElementById("txHash").value.trim();
     const status = document.getElementById("txStatus");
@@ -1047,7 +1047,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 </script>
-
+  
   <script>
   function updateConnectedWalletDisplay() {
     const wallet = localStorage.getItem("connectedWallet");
@@ -1061,6 +1061,82 @@ document.addEventListener("DOMContentLoaded", () => {
     updateTotalAssets(); // already defined in your total assets updater
   }
   </script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+  // Global Page Navigation Handler
+  function showPage(pageNumber) {
+    const pages = document.querySelectorAll('.page');
+    pages.forEach(page => page.style.display = 'none');
+
+    const pageToShow = document.getElementById(`page${pageNumber}`);
+    if (pageToShow) {
+      pageToShow.style.display = 'block';
+    }
+
+    window.scrollTo(0, 0); // Scroll to top
+  }
+
+  // Homepage Button Triggers
+  document.getElementById("connectWalletBtn").onclick = () => showPage(13);  // Settings (Connect Wallet)
+  document.querySelector('button[onclick="showPage(6)"]').onclick = () => showPage(6); // Receive
+  document.querySelector('button[onclick="showPage(5)"]').onclick = () => showPage(5); // Top Up BNB
+  document.querySelector('button[onclick="showPage(8)"]').onclick = () => showPage(8); // Transfer
+  document.querySelector('button[onclick="showPage(12)"]').onclick = () => showPage(12); // Settings (bottom right)
+
+  // 🪙 Live Balances (Mock Data Example - Replace with ethers.js calls)
+  function updateBalances() {
+    // Replace these with actual ethers.js values
+    const usdt = 978.78;
+    const bnb = 2.15;
+
+    document.getElementById("usdtBalance").innerText = usdt.toFixed(2);
+    document.getElementById("bnbBalance").innerText = bnb.toFixed(4);
+
+    const totalUSD = usdt + (bnb * 930); // assuming 1 BNB = $930
+    document.getElementById("totalAssetsDisplay").innerText = `$${totalUSD.toFixed(2)}`;
+  }
+
+  // 📈 Daily Profit Chart + Progress Bar
+  const goal = 150;
+  let currentProfit = 47.25; // replace with real-time fetched profit
+  const progressPercent = Math.min((currentProfit / goal) * 100, 100);
+
+  document.getElementById("profitProgressText").innerText = `$${currentProfit} / $${goal}`;
+  document.getElementById("profitProgressBar").style.width = `${progressPercent}%`;
+
+  const ctx = document.getElementById("profitChart").getContext("2d");
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+      datasets: [{
+        label: 'Profit ($)',
+        data: [10, 25, 40, 60, 47.25, 0, 0], // update dynamically
+        borderColor: "#f3ba2f",
+        backgroundColor: "rgba(243,186,47,0.15)",
+        fill: true,
+        tension: 0.4
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false }
+      },
+      scales: {
+        x: { display: true },
+        y: { beginAtZero: true }
+      }
+    }
+  });
+
+  // Run updates
+  updateBalances();
+  showPage(4); // Optional: Load homepage on DOM ready
+});
+</script>
   
 <script>
   function showPage(pageId) {
