@@ -855,32 +855,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 </script>
-  
-<script>
-  // Your showPage function and DOMContentLoaded block
-  function showPage(pageId) {
-    const pages = document.querySelectorAll(".page");
-    pages.forEach((page) => page.style.display = "none");
-
-    const target = document.getElementById(pageId) || document.getElementById("page1");
-    target.style.display = "block";
-
-    // 🔒 Save current page
-    localStorage.setItem("currentPage", pageId);
-  }
-
-  // On page load
-  document.addEventListener("DOMContentLoaded", () => {
-    const lastPage = localStorage.getItem("currentPage") || "page1";
-    showPage(lastPage);
-
-    const wallet = localStorage.getItem("connectedWallet");
-    if (wallet) {
-      const display = document.getElementById("connectedWalletDisplayHomepage");
-      if (display) display.innerText = wallet;
-    }
-  });
-</script>
 
   <script>
   // ✅ Base64 token icons
@@ -994,7 +968,33 @@ document.addEventListener("DOMContentLoaded", () => {
       walletDisplay.innerText = wallet;
     }
   });
-</script>
+  
+function showPage(pageId) {
+  const pages = document.querySelectorAll(".page");
+  pages.forEach(page => page.style.display = "none");
 
+  // Check if the page with id exists; else default to homepage (page4)
+  const target = document.getElementById(pageId);
+  if (target) {
+    target.style.display = "block";
+    localStorage.setItem("currentPage", pageId);
+  } else {
+    document.getElementById("page4").style.display = "block";
+    localStorage.setItem("currentPage", "page4");
+  }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  const lastPage = localStorage.getItem("currentPage") || "page4";
+  showPage(lastPage);
+
+  const wallet = localStorage.getItem("connectedWallet");
+  if (wallet) {
+    const display = document.getElementById("connectedWalletDisplayHomepage");
+    if (display) display.innerText = wallet;
+  }
+});
+</script>
+  
 </body>
 </html>
