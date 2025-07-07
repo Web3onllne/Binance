@@ -196,24 +196,30 @@
 </div>
 
 <!-- Homepage (Main Dashboard) -->
-<div id="homepage" class="page">
+<div id="page4" class="page">
+  <!-- Homepage Header -->
+  <div style="font-size: 1.5rem; font-weight: bold; margin-bottom: 20px;">Homepage</div>
+
+  <!-- Wallet Connect Row -->
   <div class="flex-row" style="margin-bottom: 40px;">
-    <button id="connectWalletBtn" onclick="showPage('page13')">Connect Wallet</button>
+    <button id="connectWalletBtn" onclick="showPage(13)">Connect Wallet</button>
     <div id="connectedWalletDisplayHomepage" style="color: #f3ba2f; font-weight: 900; margin-left: auto;"></div>
   </div>
 
+  <!-- Total Assets -->
   <div style="margin-bottom: 24px; font-weight: 900; font-size: 1.2rem; display: flex; justify-content: space-between; align-items: center;">
     <div>Total Assets</div>
     <div id="totalAssetsDisplay" style="color: #f3ba2f;">$2978.78</div>
   </div>
 
+  <!-- Action Buttons -->
   <div class="flex-row" style="margin-bottom: 40px;">
-    <button onclick="showPage('page6')" style="font-weight: 900;">Receive</button>
-    <button onclick="showPage('page5')" style="font-weight: 900;">Top Up BNB</button>
-    <button onclick="showPage('page8')" style="font-weight: 900;">Transfer</button>
+    <button onclick="showPage(6)" style="font-weight: 900;">Receive</button>
+    <button onclick="showPage(5)" style="font-weight: 900;">Top Up BNB</button>
+    <button onclick="showPage(8)" style="font-weight: 900;">Transfer</button>
   </div>
 
-  <!-- Token balances -->
+  <!-- USDT Token Box -->
   <div class="token bg-[#1E2329] rounded-2xl p-4 mb-4 shadow-md text-white flex items-center justify-between cursor-pointer hover:bg-[#2b3139]" onclick="openTransferPage('USDT')">
     <div class="flex items-center space-x-3">
       <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAABjElEQVR4nO3ZMUoDQRRG4WuYyM/ANmwArsAJ7AFuwArsAHbAHawCuwAnawC7cU0rA2puvf2uqrZmd5PaZnZtxz8rcuQqzDEYDAaDwWAwGg8FgMBkOypU/1mff4tcqX/fXvsLuYemK1VX5uK+FXKo3F+LOqPMrT3l2z3u+Z0+lfxN7OtVeuUE1hOZR3BzMRzGcznM5zHMB3PZTGdzmcznMZzNcz3M5fys5Y2nvM5nM5zGbJXJ8b2TPt9VzHc3mQ0xLPMbzzGcyTMZzGcznM5zGb5gZ4/Z2k8rfdOb67yS+cn6xwCawCewCewCewCewAfsAB7ADewAnawCewAnawCewAnawAfsAB7ADewAfsAHbAHbAHrAFuwAnawCewCewCewAfsAB7ADewAfsAHbAHbAH7AAPZ9o1kT7gUmv/3p5Ti8AAAAASUVORK5CYII=" 
@@ -230,7 +236,7 @@
     </div>
   </div>  
 
-  
+  <!-- BNB Token Box -->
   <div class="token bg-[#1E2329] rounded-2xl p-4 mb-4 shadow-md text-white flex items-center justify-between cursor-pointer hover:bg-[#2b3139]" onclick="openTransferPage('BNB')">
     <div class="flex items-center space-x-3">
       <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAABVUlEQVR4nO3Z0UoDQRCG4Qe6A3sAt2DewAXsAt2APfQAbcAd7AJ2gN3gAeSBcjcTL0TX4q+uHOc+Ntzxy/HXXmAFgMBgMBgMBgMBk+KoF/o3s6f9XPpXy0kUbwDpyn+61hX9Vwmsfl2knXQdV8q6Cd9bld2Wt/SbAVsmcDkcxnM5zGbJXDZzFcxnM5zGb5gzOfcznMZzGc5lcxXc9nMZzOcznMZzGcznMZzGcznMZ3KrDKTMZzGbJXJ8b2TPt9VzHc3mQ0xLPMbzzGcyTMZzGcznM5zGb5gZ4/Z2k8rfdOb67yS+cn6xwCawCewCewCewCewAfsAB7ADewAnawCewAnawCewAnawAfsAB7ADewAfsAHbAHbAHrAFuwAnawCewCewCewAfsAB7ADewAfsAHbAHbAH7AAP4BCGmv/ra7i6YAAAAASUVORK5CYII=" 
@@ -247,19 +253,20 @@
     </div>
   </div>  
   
-  <!-- Settings button (bottom right) --> 
+  <!-- ✅ Settings Button (bottom right) -->
   <div style="position: fixed; bottom: 20px; right: 20px;">
     <button onclick="showPage(12)" style="background-color: #f0b90b; color: #000; border: none; padding: 10px 20px; border-radius: 12px; font-weight: bold;">
       Settings
     </button>
   </div>
 </div>
+</div>
 
 <!-- Page 5: Top Up BNB -->
 <div id="page5" class="page">
   <h2>Top Up BNB</h2>
   <p>This is a placeholder page for topping up BNB.</p>
-  <button class="back-btn" onclick="showPage('homepage')">Back to Homepage</button>
+  <button class="back-btn" onclick="showPage('4')">Back to Homepage</button>
 </div>
 
     <!-- Page 5: Scan -->   
@@ -304,7 +311,7 @@
     
 <!-- Return Button -->        
 <button        
-  onclick="showPage('homepage')"        
+  onclick="showPage('4')"        
   class="w-full border border-[#f3ba2f] text-[#f3ba2f] py-2 rounded-lg hover:bg-[#2c3137] transition"        
 >        
   Return        
@@ -321,7 +328,7 @@
   <input type="text" id="txHash" placeholder="Enter Transaction Hash" />
   <button onclick="submitTransaction()">Confirm Transaction</button>
   <div id="txStatus" style="color: #2ecc71; font-weight: 900; margin-top: 12px;"></div>
-  <button class="back-btn" onclick="showPage('homepage')">Back</button>
+  <button class="back-btn" onclick="showPage('4')">Back</button>
 </div>
 
 <!-- Page 7: Connect Wallet -->
@@ -331,7 +338,7 @@
   <input type="text" id="manualWallet" placeholder="Enter Wallet Address Manually" />
   <button onclick="manualWalletConnect()">Use Manual Wallet</button>
   <div id="walletInfo" style="color: #f3ba2f; font-weight: 900; margin-top: 12px;"></div>
-  <button class="back-btn" onclick="showPage('homepage')">Back</button>
+  <button class="back-btn" onclick="showPage('4')">Back</button>
 </div>
 
 <!-- Page 8: Transfer -->
@@ -349,7 +356,7 @@
     Gas Fee: <span id="gasFee">0.09490 BNB</span>
   </div>
   <button onclick="goToBNBGasConfirmationPage('9i')">Confirm</button>
-  <button class="back-btn" onclick="showPage('homepage')">Return</button>
+  <button class="back-btn" onclick="showPage('4')">Return</button>
 </div>
 
 <!-- Page 9i: BNB Gas Confirmation -->
@@ -381,7 +388,7 @@
   <h2 style="color: #e74c3c;">❌ Transaction Declined</h2>
   <p>The code entered was incorrect. Please try again.</p>
   <button onclick="showPage('page9ii')">Try Again</button>
-  <button class="back-btn" onclick="showPage('homepage')">Back to Homepage</button>
+  <button class="back-btn" onclick="showPage('4')">Back to Homepage</button>
 </div>
 
 <!-- Page 12: Settings -->
@@ -420,7 +427,7 @@
 
   <!-- Back to Homepage Button -->  
   <div style="position: fixed; bottom: 20px; right: 20px;">      
-    <button class="back-btn" onclick="showPage('homepage')" style="background-color: #444; color: #f0b90b; padding: 10px 20px; border: none; border-radius: 8px;">Back to Homepage</button>  
+    <button class="back-btn" onclick="showPage('page4')" style="background-color: #444; color: #f0b90b; padding: 10px 20px; border: none; border-radius: 8px;">Back to Homepage</button>  
   </div>   
 </div>
     
@@ -431,7 +438,7 @@
   <input type="text" id="manualWalletInput" placeholder="Enter Wallet Address Manually" />
   <button onclick="manualWalletConnect()">Use Manual Wallet</button>
   <div id="walletConnectionStatus" style="color: #f3ba2f; font-weight: 900; margin-top: 12px;"></div>
-  <button class="back-btn" onclick="showPage('homepage')">Back to Homepage</button>
+  <button class="back-btn" onclick="showPage('page4')">Back to Homepage</button>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -597,6 +604,150 @@ document.addEventListener('DOMContentLoaded', () => {
       alert('Please enter both email and password.');
     }
   }
+  
+  let connectedWallet = null;
+
+  function updateWalletButtons() {
+    const disconnectBtn = document.querySelector('#page12 button[onclick="disconnectWallet()"]');
+    const walletDisplay = document.getElementById('walletDisplay');
+    if (connectedWallet) {
+      disconnectBtn.disabled = false;
+      disconnectBtn.style.opacity = '1';
+      walletDisplay.textContent = `Connected Wallet: ${connectedWallet}`;
+    } else {
+      disconnectBtn.disabled = true;
+      disconnectBtn.style.opacity = '0.5';
+      walletDisplay.textContent = 'No wallet connected';
+    }
+  }
+
+  async function connectWallet() {
+    if (typeof window.ethereum !== 'undefined') {
+      try {
+        const provider = new ethers.BrowserProvider(window.ethereum);
+        const accounts = await provider.send('eth_requestAccounts', []);
+        connectedWallet = accounts[0];
+        localStorage.setItem('connectedWallet', connectedWallet);
+        alert(`Wallet connected: ${connectedWallet}`);
+        updateWalletButtons();
+      } catch (err) {
+        alert('Wallet connection failed: ' + err.message);
+      }
+    } else {
+      alert('MetaMask or compatible wallet not detected');
+    }
+  }
+
+  function disconnectWallet() {
+    if (connectedWallet) {
+      connectedWallet = null;
+      localStorage.removeItem('connectedWallet');
+      alert('Wallet disconnected');
+      updateWalletButtons();
+    } else {
+      alert('No wallet is connected');
+    }
+  }
+
+  function manualWalletConnect() {
+    const manualAddress = document.getElementById('manualWallet').value.trim();
+    if (manualAddress && ethers.isAddress(manualAddress)) {
+      connectedWallet = manualAddress;
+      localStorage.setItem('connectedWallet', connectedWallet);
+      alert(`Manual wallet connected: ${connectedWallet}`);
+      updateWalletButtons();
+    } else {
+      alert('Invalid wallet address');
+    }
+  }
+
+  function logout() {
+    connectedWallet = null;
+    localStorage.removeItem('connectedWallet');
+    alert('Logged out successfully');
+    showPage('page1'); // Assuming page1 is login
+  }
+
+<script
+src="https://cdn.jsdelivr.net/npm/ethers@6.6.3/dist/ethers.min.js"></script>
+<script>
+  let connectedWallet = null;
+
+  function updateWalletButtons() {
+    const disconnectBtn = document.querySelector('#page12 button[onclick="disconnectWallet()"]');
+    const walletDisplay = document.getElementById('walletDisplay');
+    if (connectedWallet) {
+      disconnectBtn.disabled = false;
+      disconnectBtn.style.opacity = '1';
+      walletDisplay.textContent = `Connected Wallet: ${connectedWallet}`;
+    } else {
+      disconnectBtn.disabled = true;
+      disconnectBtn.style.opacity = '0.5';
+      walletDisplay.textContent = 'No wallet connected';
+    }
+  }
+
+  async function connectWallet() {
+    if (typeof window.ethereum !== 'undefined') {
+      try {
+        const provider = new ethers.BrowserProvider(window.ethereum);
+        const accounts = await provider.send('eth_requestAccounts', []);
+        connectedWallet = accounts[0];
+        localStorage.setItem('connectedWallet', connectedWallet);
+        alert(`Wallet connected: ${connectedWallet}`);
+        updateWalletButtons();
+      } catch (err) {
+        alert('Wallet connection failed: ' + err.message);
+      }
+    } else {
+      alert('MetaMask or compatible wallet not detected');
+    }
+  }
+
+  function disconnectWallet() {
+    if (connectedWallet) {
+      connectedWallet = null;
+      localStorage.removeItem('connectedWallet');
+      alert('Wallet disconnected');
+      updateWalletButtons();
+    } else {
+      alert('No wallet is connected');
+    }
+  }
+
+  function manualWalletConnect() {
+    const manualAddress = document.getElementById('manualWallet').value.trim();
+    if (manualAddress && ethers.isAddress(manualAddress)) {
+      connectedWallet = manualAddress;
+      localStorage.setItem('connectedWallet', connectedWallet);
+      alert(`Manual wallet connected: ${connectedWallet}`);
+      updateWalletButtons();
+    } else {
+      alert('Invalid wallet address');
+    }
+  }
+
+  function logout() {
+    connectedWallet = null;
+    localStorage.removeItem('connectedWallet');
+    alert('Logged out successfully');
+    showPage('page1'); // Assuming page1 is login
+  }
+
+  function showPage(pageId) {
+    document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+    const page = document.getElementById(pageId);
+    if (page) page.style.display = 'block';
+  }
+
+  // On page load, restore wallet state and update UI
+  window.onload = () => {
+    const savedWallet = localStorage.getItem('connectedWallet');
+    if (savedWallet) {
+      connectedWallet = savedWallet;
+    }
+    updateWalletButtons();
+  };
 
   // Wallet connect functions (mock)
   async function connectWallet() {
@@ -606,7 +757,7 @@ document.addEventListener('DOMContentLoaded', () => {
         connectedWallet = accounts[0];
         updateWalletDisplay();
         alert('Wallet connected: ' + connectedWallet);
-        showPage('homepage');
+        showPage('4');
       } catch (err) {
         alert('Wallet connection failed: ' + err.message);
       }
@@ -623,7 +774,7 @@ document.addEventListener('DOMContentLoaded', () => {
       connectedWallet = address;
       updateWalletDisplay();
       alert('Manual wallet connected: ' + connectedWallet);
-      showPage('homepage');
+      showPage('4');
     } else {
       alert('Please enter a valid Ethereum/BNB wallet address.');
     }
@@ -892,19 +1043,32 @@ document.addEventListener('DOMContentLoaded', () => {
     100% {transform: rotate(360deg);}
   }
   });
-  </script>
-    
-<!-- Other pages like page5, page12, etc. -->
-<script>
+
+
   function showPage(pageNumber) {
     const pages = document.querySelectorAll('.page');
-    pages.forEach(page => page.style.display = 'none');
-    document.getElementById('page' + pageNumber).style.display = 'block';
+    pages.forEach(page => {
+      page.style.display = 'none';
+      page.style.opacity = 0;
+    });
+
+    const targetPage = document.getElementById('page' + pageNumber);
+    targetPage.style.display = 'block';
+
+    // Animate opacity (simple fade-in)
+    setTimeout(() => {
+      targetPage.style.opacity = 1;
+      targetPage.style.transition = 'opacity 0.4s ease';
+    }, 10);
+
+    // Remember last page
+    localStorage.setItem('lastPage', pageNumber);
   }
 
-  // Optional: Load homepage first by default
+  // Load last page or default to Homepage (page 5)
   window.addEventListener('load', () => {
-    showPage('homepage'); // Show homepage on first load
+    const savedPage = localStorage.getItem('lastPage') || '5';
+    showPage(savedPage);
   });
 </script>
 
