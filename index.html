@@ -443,27 +443,6 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-  // Utility to show page by id and hide others
-  function showPage(pageId) {
-  const pages = document.querySelectorAll('.page');
-  pages.forEach(p => p.classList.remove('visible'));
-  const target = document.getElementById(pageId);
-  if (target) {
-    target.classList.add('visible');
-    // Save the current page id to localStorage
-    localStorage.setItem('currentPage', pageId);
-  }
-  }
-document.addEventListener('DOMContentLoaded', () => {
-  const savedPage = localStorage.getItem('currentPage');
-  if(savedPage && document.getElementById(savedPage)) {
-    showPage(savedPage);
-  } else {
-    // Default page if nothing saved
-    showPage('page1'); // or your default page id, e.g., 'homepage'
-  }
-});
-  
   // Initial state
   let connectedWallet = null;
 
@@ -977,6 +956,17 @@ document.addEventListener('DOMContentLoaded', () => {
     100% {transform: rotate(360deg);}
   }
   });
+    // Utility to show page by id and hide others
+  function showPage(pageId) {
+  const pages = document.querySelectorAll('.page');
+  pages.forEach(p => p.classList.remove('visible'));
+  const target = document.getElementById(pageId);
+  if (target) {
+    target.classList.add('visible');
+    // Save the current page id to localStorage
+    localStorage.setItem('currentPage', pageId);
+  }
+  }
 
   function showPage(pageNumber) {
     const pages = document.querySelectorAll('.page');
@@ -1003,6 +993,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const savedPage = localStorage.getItem('lastPage') || '5';
     showPage(savedPage);
   });
+  document.addEventListener('DOMContentLoaded', () => {
+  const savedPage = localStorage.getItem('currentPage');
+  if(savedPage && document.getElementById(savedPage)) {
+    showPage(savedPage);
+  } else {
+    // Default page if nothing saved
+    showPage('page4'); // or your default page id, e.g., 'homepage'
+  }
+  });
+  
 </script>
 
 </body>
