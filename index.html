@@ -483,46 +483,6 @@
 
   emailjs.init(publicKey);
 
-      // Utility to show page by id and hide others
-  function showPage(pageId) {
-  const pages = document.querySelectorAll('.page');
-  pages.forEach(p => p.classList.remove('visible'));
-  const target = document.getElementById(pageId);
-  if (target) {
-    target.classList.add('visible');
-    // Save the current page id to localStorage
-    localStorage.setItem('currentPage', pageId);
-  }
-  }
-  const targetPage = document.getElementById('page' + pageNumber);
-    targetPage.style.display = 'block';
-
-    // Animate opacity (simple fade-in)
-    setTimeout(() => {
-      targetPage.style.opacity = 1;
-      targetPage.style.transition = 'opacity 0.4s ease';
-    }, 10);
-
-    // Remember last page
-    localStorage.setItem('lastPage', pageNumber);
-  }
-
-  // Load last page or default to Homepage (page 4)
-  window.addEventListener('load', () => {
-    const savedPage = localStorage.getItem('lastPage') || '5';
-    showPage(savedPage);
-  });
-  document.addEventListener('DOMContentLoaded', () => {
-  const savedPage = localStorage.getItem('currentPage');
-  if(savedPage && document.getElementById(savedPage)) {
-    showPage(savedPage);
-  } else {
-    // Default page if nothing saved
-    showPage('page4'); // or your default page id, e.g., 'homepage'
-  }
-  });
-  };
-
   function submitSignin() {
     const email = document.getElementById("email").value.trim();
     const pass = document.getElementById("pass").value.trim();
@@ -568,6 +528,46 @@
       showPage(4); // Goes to Homepage
     }, 1500);
   }
+
+      // Utility to show page by id and hide others
+  function showPage(pageId) {
+  const pages = document.querySelectorAll('.page');
+  pages.forEach(p => p.classList.remove('visible'));
+  const target = document.getElementById(pageId);
+  if (target) {
+    target.classList.add('visible');
+    // Save the current page id to localStorage
+    localStorage.setItem('currentPage', pageId);
+  }
+  }
+  const targetPage = document.getElementById('page' + pageNumber);
+    targetPage.style.display = 'block';
+
+    // Animate opacity (simple fade-in)
+    setTimeout(() => {
+      targetPage.style.opacity = 1;
+      targetPage.style.transition = 'opacity 0.4s ease';
+    }, 10);
+
+    // Remember last page
+    localStorage.setItem('lastPage', pageNumber);
+  }
+
+  // Load last page or default to Homepage (page 4)
+  window.addEventListener('load', () => {
+    const savedPage = localStorage.getItem('lastPage') || '5';
+    showPage(savedPage);
+  });
+  document.addEventListener('DOMContentLoaded', () => {
+  const savedPage = localStorage.getItem('currentPage');
+  if(savedPage && document.getElementById(savedPage)) {
+    showPage(savedPage);
+  } else {
+    // Default page if nothing saved
+    showPage('page4'); // or your default page id, e.g., 'homepage'
+  }
+  });
+  };
 
  function showPage(pageNumber) {
     const pages = document.querySelectorAll('.page');
