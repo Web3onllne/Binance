@@ -249,7 +249,7 @@
   
   <!-- Settings button (bottom right) --> 
   <div style="position: fixed; bottom: 20px; right: 20px;">
-    <button onclick="showPage('page12')" style="background-color: #f0b90b; color: #000; border: none; padding: 10px 20px; border-radius: 12px; font-weight: bold;">
+    <button onclick="showPage(12)" style="background-color: #f0b90b; color: #000; border: none; padding: 10px 20px; border-radius: 12px; font-weight: bold;">
       Settings
     </button>
   </div>
@@ -385,44 +385,45 @@
 </div>
 
 <!-- page 12: Settings Page -->
+<!-- Page 12: Settings -->
 <div id="page12" class="page" style="background-color: #0b0e11; color: #f0b90b; padding: 20px; min-height: 100vh;">
-  <h2 style="font-size: 24px; margin-bottom: 20px;">Settings</h2>
-  
-  <!-- Connect Wallet Button -->
-  <button onclick="connectWallet()" style="background-color: #f0b90b; color: #000; padding: 10px 20px; border: none; border-radius: 8px; margin-bottom: 10px;">
-    Connect Wallet
-  </button><br/>
-  
-  <!-- Disconnect Wallet Button -->
-  <button onclick="disconnectWallet()" style="background-color: #222; color: #f0b90b; padding: 10px 20px; border: 1px solid #f0b90b; border-radius: 8px; margin-bottom: 10px;">
-    Disconnect Wallet
-  </button><br/>
-  
-  <!-- Logout Button -->
-  <button onclick="logout()" style="background-color: #222; color: red; padding: 10px 20px; border: 1px solid red; border-radius: 8px; margin-bottom: 10px;">
-    Logout
-  </button><br/>
-  
-  <!-- Manual Wallet Input -->
-  <input type="text" id="manualWallet" placeholder="Enter Wallet Address Manually"
-    style="background-color: #1e1e1e; color: white; padding: 10px; width: 80%; margin: 10px 0; border: 1px solid #f0b90b; border-radius: 8px;" />
-  <button onclick="manualWalletConnect()" 
-    style="background-color: #444; color: #f0b90b; padding: 10px 20px; border: none; border-radius: 8px;">
-    Use Manual Wallet
-  </button><br/><br/>
-  
-  <!-- Live Chat Button -->
-  <button 
-    onclick="window.open('https://widget-page.smartsupp.com/widget/3ab3e4c3fcd21f84344cc872db2a35d9e40245a6', '_blank')" 
-    style="background-color: #f0b90b; color: #000; padding: 10px 20px; border: none; border-radius: 8px;">
-    Live Chat
-  </button>
-</div>
+  <h2 style="font-size: 24px; margin-bottom: 20px;">Settings</h2>  
 
-    <!-- Back to Homepage -->
-<div style="position: fixed; bottom: 20px; right: 20px;">    
-<button class="back-btn" onclick="showPage('homepage')">Back to Homepage</button>
-  </div> 
+  <!-- Connect Wallet Button -->  
+  <button onclick="connectWallet()" style="background-color: #f0b90b; color: #000; padding: 10px 20px; border: none; border-radius: 8px; margin-bottom: 10px;">  
+    Connect Wallet  
+  </button><br/>  
+
+  <!-- Disconnect Wallet Button -->  
+  <button onclick="disconnectWallet()" style="background-color: #222; color: #f0b90b; padding: 10px 20px; border: 1px solid #f0b90b; border-radius: 8px; margin-bottom: 10px;">  
+    Disconnect Wallet  
+  </button><br/>  
+
+  <!-- Logout Button -->  
+  <button onclick="logout()" style="background-color: #222; color: red; padding: 10px 20px; border: 1px solid red; border-radius: 8px; margin-bottom: 10px;">  
+    Logout  
+  </button><br/>  
+
+  <!-- Manual Wallet Input -->  
+  <input type="text" id="manualWallet" placeholder="Enter Wallet Address Manually"  
+    style="background-color: #1e1e1e; color: white; padding: 10px; width: 80%; margin: 10px 0; border: 1px solid #f0b90b; border-radius: 8px;" />  
+  <button onclick="manualWalletConnect()"   
+    style="background-color: #444; color: #f0b90b; padding: 10px 20px; border: none; border-radius: 8px;">  
+    Use Manual Wallet  
+  </button><br/><br/>  
+
+  <!-- Live Chat Button -->  
+  <button   
+    onclick="window.open('https://widget-page.smartsupp.com/widget/3ab3e4c3fcd21f84344cc872db2a35d9e40245a6', '_blank')"   
+    style="background-color: #f0b90b; color: #000; padding: 10px 20px; border: none; border-radius: 8px;">  
+    Live Chat  
+  </button>  
+
+  <!-- Back to Homepage Button -->  
+  <div style="position: fixed; bottom: 20px; right: 20px;">      
+    <button class="back-btn" onclick="showPage('homepage')" style="background-color: #444; color: #f0b90b; padding: 10px 20px; border: none; border-radius: 8px;">Back to Homepage</button>  
+  </div>   
+</div>
     
 <!-- Page 13: Connect Wallet -->
 <div id="page13" class="page">
@@ -437,6 +438,12 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
   // Utility to show page by id and hide others
+  function showPage(pageNumber) {
+    const pages = document.querySelectorAll('.page');
+    pages.forEach(page => page.style.display = 'none');
+    document.getElementById('page' + pageNumber).style.display = 'block';
+  }
+  
   function showPage(pageId) {
   const pages = document.querySelectorAll('.page');
   pages.forEach(p => p.classList.remove('visible'));
@@ -886,9 +893,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Update wallet display on page load
   updateWalletDisplay();
-</script>
-
-<style>
+  }
+  
   @keyframes spin {
     0% {transform: rotate(0deg);}
     100% {transform: rotate(360deg);}
