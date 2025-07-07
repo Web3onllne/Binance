@@ -384,7 +384,6 @@
   <button class="back-btn" onclick="showPage('homepage')">Back to Homepage</button>
 </div>
 
-<!-- page 12: Settings Page -->
 <!-- Page 12: Settings -->
 <div id="page12" class="page" style="background-color: #0b0e11; color: #f0b90b; padding: 20px; min-height: 100vh;">
   <h2 style="font-size: 24px; margin-bottom: 20px;">Settings</h2>  
@@ -438,12 +437,6 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
   // Utility to show page by id and hide others
-  function showPage(pageNumber) {
-    const pages = document.querySelectorAll('.page');
-    pages.forEach(page => page.style.display = 'none');
-    document.getElementById('page' + pageNumber).style.display = 'block';
-  }
-  
   function showPage(pageId) {
   const pages = document.querySelectorAll('.page');
   pages.forEach(p => p.classList.remove('visible'));
@@ -885,7 +878,6 @@ document.addEventListener('DOMContentLoaded', () => {
     statusDiv.style.color = '#2ecc71';
     statusDiv.innerText = 'Transaction confirmed successfully!';
   }
-
   // Live chat open
   function openLiveChat(){
     window.open('https://widget-page.smartsupp.com/widget/3ab3e4c3fcd21f84344cc872db2a35d9e40245a6', '_blank');
@@ -899,7 +891,24 @@ document.addEventListener('DOMContentLoaded', () => {
     0% {transform: rotate(0deg);}
     100% {transform: rotate(360deg);}
   }
-</style>
+  });
+  </script>
     
+<!-- Other pages like page5, page12, etc. -->
+<script>
+  function showPage(pageNumber) {
+    const pages = document.querySelectorAll('.page');
+    pages.forEach(page => page.style.display = 'none');
+    document.getElementById('page' + pageNumber).style.display = 'block';
+  }
+
+  // Optional: Load homepage first by default
+  window.addEventListener('load', () => {
+    showPage('homepage'); // Show homepage on first load
+  });
+</script>
+
 </body>
-</html>
+  </html>
+    
+
