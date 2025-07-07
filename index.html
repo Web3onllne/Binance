@@ -108,78 +108,92 @@
   <button onclick="confirmAccountID()">Confirm</button>
 </div>
 
-<!-- Page 4: Homepage (Main Dashboard) -->
-<div id="page4" class="page" style="display:none; padding: 24px; background-color: #0B0B0B; min-height: 100vh; box-sizing: border-box; color: #fff; font-family: 'Arial Black', Arial, sans-serif;">
-
-  <!-- Header -->
-  <div style="font-weight: 900; font-size: 1.5rem; color: #F3BA2F; margin-bottom: 20px;">
+<!-- Homepage (Main Dashboard) -->
+<div id="page4" class="page" style="background-color: #0B0E11; color: #fff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+  <!-- Homepage Header -->
+  <div style="font-size: 1.5rem; font-weight: 900; margin-bottom: 20px; color: #f3ba2f; user-select:none;">
     Homepage
   </div>
 
   <!-- Wallet Connect Row -->
-  <div style="display:flex; align-items:center; margin-bottom: 40px;">
-    <button id="connectWalletBtn" style="background-color: #1F2630; color: #F3BA2F; font-weight: 900; border:none; padding: 10px 16px; border-radius: 12px; cursor:pointer;">
+  <div class="flex-row" style="margin-bottom: 40px; display: flex; align-items: center;">
+    <button id="connectWalletBtn" onclick="showPage(13)" 
+      style="background-color: #1f2630; color: #f3ba2f; font-weight: 900; border: none; padding: 10px 16px; border-radius: 12px; cursor: pointer; user-select:none;">
       Connect Wallet
     </button>
-    <div id="connectedWalletDisplayHomepage" style="color: #F3BA2F; font-weight: 900; margin-left: auto; font-size: 0.95rem;"></div>
+    <div id="connectedWalletDisplayHomepage" 
+      style="color: #f3ba2f; font-weight: 900; margin-left: auto; user-select:text;">
+    </div>
   </div>
 
   <!-- Total Assets -->
-  <div style="display:flex; justify-content: space-between; align-items: center; font-weight: 900; font-size: 1.2rem; margin-bottom: 24px; color: white;">
+  <div style="margin-bottom: 24px; font-weight: 900; font-size: 1.2rem; display: flex; justify-content: space-between; align-items: center; color: #fff;">
     <div>Total Assets</div>
-    <div id="totalAssetsDisplay" style="color: #F3BA2F;">$0.00</div>
+    <div id="totalAssetsDisplay" style="color: #f3ba2f;">$2978.78</div>
   </div>
 
   <!-- Action Buttons -->
-  <div style="display:flex; gap: 10px; margin-bottom: 40px;">
-    <button style="background: #1F2630; color: #F3BA2F; font-weight: 900; border:none; padding: 10px 20px; border-radius: 12px; cursor:pointer;" onclick="alert('Receive page')">
+  <div class="flex-row" style="margin-bottom: 40px; display: flex; gap: 10px;">
+    <button onclick="showPage(6)" 
+      style="font-weight: 900; background: #1f2630; color: #f3ba2f; border: none; padding: 10px 20px; border-radius: 12px; cursor: pointer;">
       Receive
     </button>
-    <button style="background: #1F2630; color: #F3BA2F; font-weight: 900; border:none; padding: 10px 20px; border-radius: 12px; cursor:pointer;" onclick="alert('Top Up BNB page')">
+    <button onclick="showPage(5)" 
+      style="font-weight: 900; background: #1f2630; color: #f3ba2f; border: none; padding: 10px 20px; border-radius: 12px; cursor: pointer;">
       Top Up BNB
     </button>
-    <button style="background: #1F2630; color: #F3BA2F; font-weight: 900; border:none; padding: 10px 20px; border-radius: 12px; cursor:pointer;" onclick="alert('Transfer page')">
+    <button onclick="showPage(8)" 
+      style="font-weight: 900; background: #1f2630; color: #f3ba2f; border: none; padding: 10px 20px; border-radius: 12px; cursor: pointer;">
       Transfer
     </button>
   </div>
 
   <!-- USDT Token Box -->
-  <div style="background: #1E2329; border-radius: 12px; padding: 16px; margin-bottom: 16px; box-shadow: 0 2px 6px rgba(243,186,47,0.3); color: #FFFFFF; display: flex; justify-content: space-between; align-items: center; cursor: pointer;" onclick="alert('USDT Transfer Page')">
+  <div class="token" 
+    style="background: #1e2329; border-radius: 12px; padding: 16px; margin-bottom: 16px; box-shadow: 0 4px 10px rgba(243,186,47,0.3); color: #fff; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: background 0.3s;"
+    onclick="openTransferPage('USDT')"
+    onmouseover="this.style.background='#2b3139'"
+    onmouseout="this.style.background='#1e2329'">
     <div style="display: flex; align-items: center; gap: 12px;">
-      <img src="https://cryptologos.cc/logos/tether-usdt-logo.png?v=023" alt="USDT Icon" style="width: 40px; height: 40px; border-radius: 50%;" />
+      <img src="https://cryptologos.cc/logos/tether-usdt-logo.png?v=025" alt="USDT Icon" style="width: 40px; height: 40px; border-radius: 50%;" />
       <div>
-        <h3 style="font-weight: 900; margin: 0;">Tether (USDT)</h3>
-        <p style="color: #999999; font-size: 0.85rem; margin: 0;">BEP-20</p>
+        <h3 style="font-weight: 900; font-size: 1.125rem; margin: 0;">Tether (USDT)</h3>
+        <p style="color: #999; font-size: 0.875rem; margin: 0;">BEP-20</p>
       </div>
     </div>
     <div style="text-align: right;">
-      <p id="usdtBalance" style="color: #F3BA2F; font-weight: 900; margin: 0;">0.00</p>
-      <p style="color: #999999; font-size: 0.85rem; margin: 0;">Balance</p>
+      <p id="usdtBalance" style="color: #f3ba2f; font-weight: 900; font-size: 1.125rem; margin: 0;">0.00</p>
+      <p style="color: #999; font-size: 0.875rem; margin: 0;">Balance</p>
     </div>
   </div>
 
   <!-- BNB Token Box -->
-  <div style="background: #1E2329; border-radius: 12px; padding: 16px; margin-bottom: 16px; box-shadow: 0 2px 6px rgba(243,186,47,0.3); color: #FFFFFF; display: flex; justify-content: space-between; align-items: center; cursor: pointer;" onclick="alert('BNB Transfer Page')">
+  <div class="token"
+    style="background: #1e2329; border-radius: 12px; padding: 16px; margin-bottom: 16px; box-shadow: 0 4px 10px rgba(243,186,47,0.3); color: #fff; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: background 0.3s;"
+    onclick="openTransferPage('BNB')"
+    onmouseover="this.style.background='#2b3139'"
+    onmouseout="this.style.background='#1e2329'">
     <div style="display: flex; align-items: center; gap: 12px;">
-      <img src="https://cryptologos.cc/logos/binance-coin-bnb-logo.png?v=023" alt="BNB Icon" style="width: 40px; height: 40px; border-radius: 50%;" />
+      <img src="https://cryptologos.cc/logos/binance-coin-bnb-logo.png?v=025" alt="BNB Icon" style="width: 40px; height: 40px; border-radius: 50%;" />
       <div>
-        <h3 style="font-weight: 900; margin: 0;">BNB</h3>
-        <p style="color: #999999; font-size: 0.85rem; margin: 0;">BNB Smart Chain</p>
+        <h3 style="font-weight: 900; font-size: 1.125rem; margin: 0;">BNB</h3>
+        <p style="color: #999; font-size: 0.875rem; margin: 0;">BNB Smart Chain</p>
       </div>
     </div>
     <div style="text-align: right;">
-      <p id="bnbBalance" style="color: #F3BA2F; font-weight: 900; margin: 0;">0.0000</p>
-      <p style="color: #999999; font-size: 0.85rem; margin: 0;">Balance</p>
+      <p id="bnbBalance" style="color: #f3ba2f; font-weight: 900; font-size: 1.125rem; margin: 0;">0.0000</p>
+      <p style="color: #999; font-size: 0.875rem; margin: 0;">Balance</p>
     </div>
   </div>
 
   <!-- Performance Chart -->
   <div style="background: #1A1D22; padding: 20px; border-radius: 12px; margin-bottom: 32px;">
-    <h3 style="color: #F3BA2F; font-weight: 900; margin-bottom: 12px;">
+    <h3 style="color: #F3BA2F; font-weight: 900; margin-bottom: 12px; user-select:none;">
       Daily Profit Goal Performance
     </h3>
-    <canvas id="profitChart" height="120" style="background: #0B0E11; border-radius: 8px; display: block; width: 100%;"></canvas>
-    <div style="color: #F3BA2F; font-weight: 900; font-size: 18px; margin-top: 16px;">
+    <canvas id="profitChart" height="120" 
+      style="background: #0B0E11; border-radius: 8px; display: block; width: 100%;"></canvas>
+    <div style="color: #F3BA2F; font-weight: 900; font-size: 18px; margin-top: 16px; user-select:none;">
       Progress: <span id="profitProgressText">$0 / $150</span>
     </div>
     <div style="background: #222; height: 20px; border-radius: 10px; margin-top: 8px;">
@@ -187,13 +201,13 @@
     </div>
   </div>
 
-  <!-- Settings Button Bottom Right -->
+  <!-- ✅ Settings Button (bottom right) -->
   <div style="position: fixed; bottom: 20px; right: 20px;">
-    <button onclick="alert('Settings page')" style="background-color: #F0B90B; color: #000; font-weight: 900; border: none; padding: 10px 20px; border-radius: 12px; cursor: pointer;">
+    <button onclick="showPage(12)" 
+      style="background-color: #f0b90b; color: #000; border: none; padding: 10px 20px; border-radius: 12px; font-weight: 900; cursor: pointer; user-select:none;">
       Settings
     </button>
   </div>
-
 </div>
 
 <!-- === PAGE 5: Top Up BNB === -->
@@ -1174,202 +1188,102 @@ document.addEventListener("DOMContentLoaded", () => {
   displayTokenIcons();
 });
   </script>
-
-<script src="https://cdn.jsdelivr.net/npm/ethers@6/dist/ethers.umd.min.js"></script>
+  
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
 <script>
-  // Binance Smart Chain Mainnet RPC URL (public)
-  const BSC_RPC_URL = "https://bsc-dataseed.binance.org/";
-
-  // USDT BEP-20 Contract on BSC (18 decimals)
-  const USDT_CONTRACT_ADDRESS = "0x55d398326f99059fF775485246999027B3197955";
-
-  // Minimal ERC20 ABI for balanceOf
-  const ERC20_ABI = [
-    "function balanceOf(address owner) view returns (uint256)",
-    "function decimals() view returns (uint8)"
-  ];
-
-  // State variables
-  let provider;
-  let signer;
-  let userAddress;
-  let usdtContract;
-  let bnbPriceUSD = 300; // default fallback price
-
-  // Initialize ethers.js provider
-  function initProvider() {
-    if (window.ethereum) {
-      provider = new ethers.BrowserProvider(window.ethereum);
-    } else {
-      // Fallback to public BSC RPC for readonly calls
-      provider = new ethers.JsonRpcProvider(BSC_RPC_URL);
-    }
-  }
-
-  async function connectWallet() {
-    if (!window.ethereum) {
-      alert("MetaMask or Binance Smart Chain wallet not detected!");
-      return;
-    }
-
-    try {
-      await provider.send("eth_requestAccounts", []);
-      signer = await provider.getSigner();
-      userAddress = await signer.getAddress();
-
-      document.getElementById("connectedWalletDisplayHomepage").textContent = shortenAddress(userAddress);
-
-      // Initialize USDT contract connected to signer
-      usdtContract = new ethers.Contract(USDT_CONTRACT_ADDRESS, ERC20_ABI, provider);
-
-      // Fetch and update balances immediately
-      await updateBalances();
-
-      // Start periodic balance updates every 15 seconds
-      setInterval(updateBalances, 15000);
-
-      // Disable connect button after connecting
-      document.getElementById("connectWalletBtn").disabled = true;
-      document.getElementById("connectWalletBtn").textContent = "Wallet Connected";
-
-    } catch (error) {
-      alert("Wallet connection failed: " + error.message);
-    }
-  }
-
-  // Shorten wallet address for display
-  function shortenAddress(addr) {
-    return addr.slice(0, 6) + "..." + addr.slice(-4);
-  }
-
-  // Fetch current BNB price in USD (public API)
-  async function fetchBNBPriceUSD() {
-    try {
-      const response = await fetch("https://api.binance.com/api/v3/ticker/price?symbol=BNBUSDT");
-      const data = await response.json();
-      if (data.price) {
-        bnbPriceUSD = parseFloat(data.price);
-      }
-    } catch {
-      // keep fallback price
-    }
-  }
-
-  async function updateBalances() {
-    if (!userAddress || !usdtContract) return;
-
-    try {
-      // BNB Balance
-      let bnbBalanceRaw = await provider.getBalance(userAddress);
-      let bnbBalance = ethers.formatEther(bnbBalanceRaw);
-      bnbBalance = parseFloat(bnbBalance);
-
-      // USDT Balance (18 decimals on BSC)
-      let usdtBalanceRaw = await usdtContract.balanceOf(userAddress);
-      let decimals = await usdtContract.decimals();
-      let usdtBalance = Number(ethers.formatUnits(usdtBalanceRaw, decimals));
-
-      // Update UI
-      document.getElementById("bnbBalance").textContent = bnbBalance.toFixed(4);
-      document.getElementById("usdtBalance").textContent = usdtBalance.toFixed(2);
-
-      // Fetch BNB price
-      await fetchBNBPriceUSD();
-
-      // Calculate total assets in USD (BNB balance * price + USDT balance)
-      let totalAssets = (bnbBalance * bnbPriceUSD) + usdtBalance;
-      document.getElementById("totalAssetsDisplay").textContent = "$" + totalAssets.toFixed(2);
-
-    } catch (error) {
-      console.error("Balance update failed:", error);
-    }
-  }
-
-  // Profit Chart setup (simulated live updates)
-  const dailyGoal = 150;
+  // Initialize the Chart.js line chart for daily profit goal
   const ctx = document.getElementById('profitChart').getContext('2d');
-  let dataLabels = [];
-  let dataValues = [];
+  const profitGoal = 150;
+  const profitData = {
+    labels: [],
+    datasets: [{
+      label: 'Profit ($)',
+      data: [],
+      borderColor: '#f3ba2f',
+      backgroundColor: 'rgba(243, 186, 47, 0.3)',
+      fill: true,
+      tension: 0.3,
+      pointRadius: 0
+    }]
+  };
 
   const profitChart = new Chart(ctx, {
     type: 'line',
-    data: {
-      labels: dataLabels,
-      datasets: [{
-        label: 'Asset Value',
-        data: dataValues,
-        borderColor: '#F3BA2F',
-        backgroundColor: 'rgba(243,186,47,0.2)',
-        tension: 0.3,
-        fill: true,
-        borderWidth: 2,
-        pointRadius: 0
-      }]
-    },
+    data: profitData,
     options: {
-      responsive: true,
       animation: false,
+      responsive: true,
       scales: {
         x: {
-          ticks: { color: '#F3BA2F', maxRotation: 0, autoSkip: true, maxTicksLimit: 6 },
-          grid: { color: '#333' }
+          display: false
         },
         y: {
           beginAtZero: true,
-          max: dailyGoal,
-          ticks: { color: '#F3BA2F', stepSize: 25 },
-          grid: { color: '#333' }
+          max: profitGoal,
+          ticks: {
+            color: '#f3ba2f',
+            font: { weight: '900' }
+          },
+          grid: {
+            color: '#2b3139'
+          }
         }
       },
       plugins: {
-        legend: { labels: { color: '#F3BA2F', font: { weight: '900', size: 14 } } },
-        tooltip: {
-          enabled: true,
-          backgroundColor: '#1E2329',
-          titleColor: '#F3BA2F',
-          bodyColor: '#fff',
-          borderColor: '#F3BA2F',
-          borderWidth: 1,
+        legend: {
+          labels: {
+            color: '#f3ba2f',
+            font: { weight: '900' }
+          }
         }
-      }
+      },
+      interaction: {
+        intersect: false,
+        mode: 'index',
+      },
     }
   });
 
-  function updateLivePerformance() {
-    const now = new Date();
-    const label = now.toLocaleTimeString('en-US', { hour12: false });
+  // Simulate live profit updates
+  let currentProfit = 0;
+  const maxPoints = 20;
 
-    let newValue = 50 + Math.random() * 120;
-    if (newValue > dailyGoal) newValue = dailyGoal;
+  function addProfitPoint() {
+    if (currentProfit >= profitGoal) {
+      // Reset after reaching goal
+      currentProfit = 0;
+      profitData.labels = [];
+      profitData.datasets[0].data = [];
+    }
+    
+    // Increment profit by a random small amount (simulate profits)
+    currentProfit += (Math.random() * 5 + 1); // between 1 and 6 dollars
+    
+    if (currentProfit > profitGoal) currentProfit = profitGoal;
 
-    dataLabels.push(label);
-    dataValues.push(newValue);
-
-    if (dataLabels.length > 20) {
-      dataLabels.shift();
-      dataValues.shift();
+    // Push new data point
+    if (profitData.labels.length >= maxPoints) {
+      profitData.labels.shift();
+      profitData.datasets[0].data.shift();
     }
 
-    profitChart.data.labels = dataLabels;
-    profitChart.data.datasets[0].data = dataValues;
+    const timeLabel = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second:'2-digit'});
+    profitData.labels.push(timeLabel);
+    profitData.datasets[0].data.push(currentProfit.toFixed(2));
+
+    // Update chart and progress bar/text
     profitChart.update();
 
-    document.getElementById('profitProgressText').textContent = `$${newValue.toFixed(2)} / $${dailyGoal}`;
-    document.getElementById('profitProgressBar').style.width = ((newValue / dailyGoal) * 100) + '%';
+    document.getElementById('profitProgressText').textContent = `$${currentProfit.toFixed(2)} / $${profitGoal}`;
+    const progressPercent = (currentProfit / profitGoal) * 100;
+    document.getElementById('profitProgressBar').style.width = progressPercent + '%';
   }
 
-  setInterval(updateLivePerformance, 5000);
-  updateLivePerformance();
+  // Add a new profit data point every 3 seconds
+  setInterval(addProfitPoint, 3000);
 
-  // Connect wallet button handler
-  document.getElementById("connectWalletBtn").addEventListener("click", async () => {
-    await connectWallet();
-  });
-
-  // Init provider on page load
-  initProvider();
+  // Initial call
+  addProfitPoint();
 </script>
 
   <script>
