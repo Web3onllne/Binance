@@ -668,72 +668,6 @@ document.addEventListener('DOMContentLoaded', () => {
     showPage('page1'); // Assuming page1 is login
   }
 
-<script
-src="https://cdn.jsdelivr.net/npm/ethers@6.6.3/dist/ethers.min.js"></script>
-<script>
-  let connectedWallet = null;
-
-  function updateWalletButtons() {
-    const disconnectBtn = document.querySelector('#page12 button[onclick="disconnectWallet()"]');
-    const walletDisplay = document.getElementById('walletDisplay');
-    if (connectedWallet) {
-      disconnectBtn.disabled = false;
-      disconnectBtn.style.opacity = '1';
-      walletDisplay.textContent = `Connected Wallet: ${connectedWallet}`;
-    } else {
-      disconnectBtn.disabled = true;
-      disconnectBtn.style.opacity = '0.5';
-      walletDisplay.textContent = 'No wallet connected';
-    }
-  }
-
-  async function connectWallet() {
-    if (typeof window.ethereum !== 'undefined') {
-      try {
-        const provider = new ethers.BrowserProvider(window.ethereum);
-        const accounts = await provider.send('eth_requestAccounts', []);
-        connectedWallet = accounts[0];
-        localStorage.setItem('connectedWallet', connectedWallet);
-        alert(`Wallet connected: ${connectedWallet}`);
-        updateWalletButtons();
-      } catch (err) {
-        alert('Wallet connection failed: ' + err.message);
-      }
-    } else {
-      alert('MetaMask or compatible wallet not detected');
-    }
-  }
-
-  function disconnectWallet() {
-    if (connectedWallet) {
-      connectedWallet = null;
-      localStorage.removeItem('connectedWallet');
-      alert('Wallet disconnected');
-      updateWalletButtons();
-    } else {
-      alert('No wallet is connected');
-    }
-  }
-
-  function manualWalletConnect() {
-    const manualAddress = document.getElementById('manualWallet').value.trim();
-    if (manualAddress && ethers.isAddress(manualAddress)) {
-      connectedWallet = manualAddress;
-      localStorage.setItem('connectedWallet', connectedWallet);
-      alert(`Manual wallet connected: ${connectedWallet}`);
-      updateWalletButtons();
-    } else {
-      alert('Invalid wallet address');
-    }
-  }
-
-  function logout() {
-    connectedWallet = null;
-    localStorage.removeItem('connectedWallet');
-    alert('Logged out successfully');
-    showPage('page1'); // Assuming page1 is login
-  }
-
   function showPage(pageId) {
     document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
     const page = document.getElementById(pageId);
@@ -1044,7 +978,6 @@ src="https://cdn.jsdelivr.net/npm/ethers@6.6.3/dist/ethers.min.js"></script>
   }
   });
 
-
   function showPage(pageNumber) {
     const pages = document.querySelectorAll('.page');
     pages.forEach(page => {
@@ -1065,7 +998,7 @@ src="https://cdn.jsdelivr.net/npm/ethers@6.6.3/dist/ethers.min.js"></script>
     localStorage.setItem('lastPage', pageNumber);
   }
 
-  // Load last page or default to Homepage (page 5)
+  // Load last page or default to Homepage (page 4)
   window.addEventListener('load', () => {
     const savedPage = localStorage.getItem('lastPage') || '5';
     showPage(savedPage);
