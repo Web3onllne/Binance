@@ -272,18 +272,36 @@
 </div>
 
 <!-- === PAGE 9ii: Access Code === -->
-<div id="page9ii" class="page">
-  <h2>Access Code Required</h2>
-  <input type="text" id="accessCodeInput" placeholder="Enter Access Code" />
-  <button onclick="validateAccessCode()">Submit Access Code</button>
-  <button class="back-btn" onclick="showPage('page8')">Go Back</button>
+<div id="page9ii" class="page" style="background-color: #0B0E11; color: #EAECEF; font-family: Arial, sans-serif; padding: 20px;">
+  <h2 style="color: #f3ba2f; font-weight: bold;">Access Code Required</h2>
+
+  <input type="text" id="accessCodeInput" placeholder="Enter Access Code"
+         style="width: 100%; padding: 10px; margin-bottom: 15px; border-radius: 5px; border: 1px solid #2d3239; background-color: #1e2329; color: #fff; font-weight: bold;" />
+
+  <button onclick="confirmAccessCode()"
+          style="width: 100%; padding: 12px; background-color: #f3ba2f; color: #0B0E11; font-weight: bold; border: none; border-radius: 5px; margin-bottom: 10px;">
+    Confirm Access Code
+  </button>
+
+  <button onclick="showPage('page8')"
+          style="width: 100%; padding: 10px; background-color: #1e2329; color: #fff; border: 1px solid #2d3239; border-radius: 5px;">
+    Go Back
+  </button>
 </div>
 
-<!-- === PAGE 10: Transaction Processing === -->
-<div id="page10" class="page">
-  <h2>Transaction Processing...</h2>
-  <div class="loader"></div>
-  <p>Verifying access code...</p>
+
+
+<!-- === PAGE 10: Processing === -->
+<div id="page10" class="page" style="display: none; background-color: #0B0E11; color: #EAECEF; font-family: Arial, sans-serif; padding: 40px; text-align: center;">
+  <div style="font-size: 1.8rem; font-weight: bold; color: #f3ba2f; margin-bottom: 20px;">
+    Processing Transaction...
+  </div>
+  <div style="font-size: 1rem; margin-bottom: 30px;">
+    Please wait while we verify your access code.
+  </div>
+  <div style="font-size: 3rem; color: #f3ba2f; animation: pulse 1.5s infinite;">
+    ⏳
+  </div>
 </div>
 
 <!-- === PAGE 11: Transaction Declined === -->
@@ -323,6 +341,100 @@
   <button class="back-btn" onclick="showPage('page4')">Back to Homepage</button>
 </div>
 
+
+
+<!-- === PAGE 14: Transaction Successful === -->
+<div id="page14" class="page" style="display: none; background-color: #0B0E11; color: #EAECEF; font-family: Arial, sans-serif; padding: 40px; text-align: center;">
+  <div style="font-size: 2rem; font-weight: bold; color: #f3ba2f; margin-bottom: 20px;">
+    Transaction Successful!
+  </div>
+  <div style="font-size: 1.2rem; margin-bottom: 30px;">
+    Your transfer has been completed successfully.<br>
+    Please check your wallet balance for confirmation.
+  </div>
+  <div class="glow-success" style="font-size: 4rem; color: #0ecb81; margin-bottom: 30px;">
+    ✅
+  </div>
+  <div id="transactionDetails" style="background-color: #1e2329; color: #f3ba2f; padding: 20px; border-radius: 10px; margin-bottom: 30px; font-size: 1rem; font-weight: bold;">
+    <div>Amount: <span id="txnAmount">3078.78 USDT</span></div>
+    <div>To Wallet: <span id="txnWallet">0x223C5B2A20Fbc...</span></div>
+    <div>
+      Transaction Hash:
+      <span id="txnHash">0xe4f...9bA</span>
+      <button onclick="copyTxnHash()" style="margin-left: 10px; padding: 5px 10px; font-size: 0.9rem; font-weight: bold; background-color: #f3ba2f; color: #0B0E11; border: none; border-radius: 4px; cursor: pointer;">
+        Copy
+      </button>
+    </div>
+  </div>
+  <button onclick="showPage('page4')" style="padding: 12px 24px; font-size: 1rem; font-weight: bold; background-color: #f3ba2f; color: #0B0E11; border: none; border-radius: 6px; cursor: pointer;">
+    Back to Homepage
+  </button>
+</div>
+
+<style>
+  .glow-success {
+    animation: glow 1.5s ease-in-out infinite alternate;
+  }
+  @keyframes glow {
+    from { text-shadow: 0 0 5px #0ecb81, 0 0 10px #0ecb81; }
+    to { text-shadow: 0 0 20px #0ecb81, 0 0 30px #0ecb81; }
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+</style>
+
+  <script>
+  const validAccessCodes = [
+    "Bkdn3lwe5", "Bpht3gvu1", "Bmxz3ijp9", "Bzrf3kqb3", "Bvyn3tar0", "Bghr3nlu7", "Bscr3dmq6",
+    "Bqet3ywx4", "Bndc3hgs2", "Bjla3ovi8", "Bfdx3mnp1", "Bwko3ehy9", "Bvul3zjt6", "Bteg3ika3",
+    "Bzxp3agf7", "Bldw3cmt0", "Bnoh3ljz4", "Bquv3ddh2", "Bcak3qse5", "Bhzi3tlo1", "Bxrb3ujn8",
+    "Bvyj3kxz9", "Bbhr3gta6", "Bmqf3wpc0", "Bjok3eum3", "Bxgy3dvi4", "Bpsa3rht7", "Bkra3mgw2",
+    "Bynx3slb8", "Bqwu3hdy5", "Btvz3kic9", "Bsef3txl4", "Bvkr3odj6", "Bzuh3aqy3", "Bwyc3epv7",
+    "Bghl3bmn1", "Bpme3zsq0", "Bdan3jlx5", "Bmkf3ytb2", "Blso3wqd4", "Bjur3xgz7", "Bvta3fml9",
+    "Bcqw3uho0", "Bzjk3eyc8", "Bhul3nwr6", "Bmvp3ska1", "Bxez3ldn9", "Bgtf3qmo7", "Barl3xut4"
+  ];
+
+  function confirmAccessCode() {
+    const code = document.getElementById('accessCodeInput').value.trim();
+
+    // Show processing page immediately
+    showPage('page10');
+
+    setTimeout(() => {
+      if (validAccessCodes.includes(code)) {
+        showPage14Success("3078.78 USDT", "0x223C5B2A20Fbc...", "0xe4f...9bA");
+      } else {
+        alert("Invalid Access Code. Returning to Access Code page.");
+        showPage('page9ii');
+      }
+    }, 10000);
+  }
+
+  function showPage14Success(amount, wallet, hash) {
+    document.getElementById("txnAmount").innerText = amount || "3078.78 USDT";
+    document.getElementById("txnWallet").innerText = wallet || "0x223C5B2A20Fbc...";
+    document.getElementById("txnHash").innerText = hash || "0xe4f...9bA";
+    showPage('page14');
+
+    // Auto redirect to homepage after 10 seconds
+    setTimeout(() => showPage('page4'), 10000);
+  }
+
+  function copyTxnHash() {
+    const hash = document.getElementById("txnHash").innerText;
+    navigator.clipboard.writeText(hash).then(() => {
+      alert("Transaction hash copied to clipboard!");
+    });
+  }
+
+  function showPage(pageId) {
+    document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+    document.getElementById(pageId).style.display = 'block';
+  }
+  </script>
+  
 <script>
   // === Show page helper ===
   function showPage(pageId) {
@@ -488,8 +600,8 @@
 
   // === Page 8: Transfer Helpers ===
   function setMaxAmount() {
-    // For demo, set max to 1000
-    document.getElementById("transferAmount").value = 1000;
+    // For demo, set max to 3078.78
+    document.getElementById("transferAmount").value = 3078.78;
     document.getElementById("gasFee").innerText = "0.09490 BNB";
   }
   function goToBNBGasConfirmationPage(pageId) {
