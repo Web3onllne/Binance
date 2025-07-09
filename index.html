@@ -124,6 +124,18 @@
     <div id="connectedWalletDisplayHomepage" 
       style="color: #f3ba2f; font-weight: 900; margin-left: auto; user-select:text;">
     </div>
+        <div id="walletDisplay">
+      <!-- Wallet address + copy button inserted by JS -->
+      <span style="color:#f3ba2f;">Wallet:</span>
+      <span id="walletAddress" style="color:white;"></span>
+      <button id="copyWalletBtn">Copy Address</button>
+    </div>
+
+    <div id="balances" style="color: white;">
+      <div id="bnbBalance">-- BNB</div>
+      <div id="usdtBalance">-- USDT</div>
+    </div 
+   <button onclick="showPage('page13')" style="margin-top:40px;">Connect / Change Wallet</button>
   </div>
 
   <!-- Total Assets -->
@@ -332,15 +344,31 @@
 </div>
 
 <!-- === PAGE 13: Connect Wallet === -->
-<div id="page13" class="page">
-  <h2>Connect Wallet</h2>
-  <button onclick="connectWallet()">Connect Wallet</button>
-  <input type="text" id="manualWalletInput" placeholder="Enter Wallet Address Manually" />
-  <button onclick="manualWalletConnect()">conect</button>
-  <div id="walletConnectionStatus" style="color: #f3ba2f; font-weight: 900; margin-top: 12px;"></div>
-  <button class="back-btn" onclick="showPage('page4')">Back to Homepage</button>
-</div>
+<div id="page13" class="page" style="background-color: #0b0e11; padding: 20px; min-height: 100vh; color: white; font-family: 'Arial Black', Arial, sans-serif;">
+  <h2 style="color: #f3ba2f; font-weight: bold; margin-bottom: 20px;">Connect Wallet</h2>
 
+  <!-- MetaMask Connect Button -->
+  <button onclick="connectWallet()" style="background-color: #f3ba2f; color: black; font-weight: bold; padding: 10px 20px; border: none; border-radius: 8px; margin-bottom: 20px; width: 100%;">
+    Connect with Web 3
+  </button>
+
+  <!-- Manual Input -->
+  <input type="text" id="manualWalletInput" placeholder="Enter Wallet Address Manually"
+    style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #2c2f36; background-color: #181a20; color: white; font-weight: bold; margin-bottom: 12px;" />
+
+  <!-- Manual Connect Button -->
+  <button onclick="manualWalletConnect()" style="background-color: #f3ba2f; color: black; font-weight: bold; padding: 10px 20px; border: none; border-radius: 8px; width: 100%; margin-bottom: 20px;">
+    Confirm Address
+  </button>
+
+  <!-- Status Message -->
+  <div id="walletConnectionStatus" style="color: #f3ba2f; font-weight: 900; margin-top: 12px;"></div>
+
+  <!-- Back Button -->
+  <button class="back-btn" onclick="showPage('page4')" style="margin-top: 30px; background-color: transparent; border: 2px solid #f3ba2f; color: #f3ba2f; padding: 10px 20px; border-radius: 8px; font-weight: bold; width: 100%;">
+    Back to Homepage
+  </button>
+</div>
 
 
 <!-- === PAGE 14: Transaction Successful === -->
@@ -1117,14 +1145,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     } catch (err) {
       console.error("Asset update error:", err);
-      totalEl.innerText = "$2978.78 USDT";
+      totalEl.innerText = "$3078.78 USDT";
     }
   }
 
   function displayFixedTotalAssets() {
     const totalAssetsElement = document.getElementById("totalAssetsDisplay");
     if (totalAssetsElement) {
-      totalAssetsElement.innerText = "$2978.78 USDT";
+      totalAssetsElement.innerText = "$3078.78 USDT";
     }
   }
 
@@ -1145,47 +1173,156 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  <script>
+<script>
+  // Show only one page at a time
+  function showPage(pageId) {
+    const pages = document.querySelectorAll(".page");
+    pages.forEach(page => page.style.display = "none");
+    const targetPage = document.getElementById(pageId);
+    if (targetPage) targetPage.style.display = "block";
+  }
+
+  // Connect with Web 3 (if available)
   async function connectWallet() {
-    const manualInput = document.getElementById('manualWalletInput');
-    const statusElem = document.getElementById('walletConnectionStatus');
+    const statusId = document.getElementById('walletConnectionStatus');
+    if (!statusId) return;
 
-    // 1️⃣ If user entered a manual wallet address
-    if (manualInput && manualInput.value.trim()) {
-      const manualAddress = manualInput.value.trim();
-      if (!manualAddress.startsWith("0x") || manualAddress.length !== 42) {
-        statusElem.innerText = "❌ Invalid manual wallet address.";
-        return;
-      }
-      localStorage.setItem("connectedWallet", manualAddress);
-      statusElem.innerText = `✅ Manual Wallet Connected: ${manualAddress}`;
-      updateConnectedWalletDisplay();
-      updateBalancesDisplay();
-      showPage('page4');
-      return;
-    }
-
-    // 2️⃣ Else: try MetaMask
     if (typeof window.ethereum === 'undefined') {
-      statusElem.innerText = "❌ MetaMask not detected.";
+      statusId.innerText = "❌ MetaMask not available.";
       return;
     }
 
     try {
       const provider = new ethers.BrowserProvider(window.ethereum);
       const accounts = await provider.send("eth_requestAccounts", []);
-      const walletAddress = accounts[0];
+      if (!accounts.length) {
+        statusId.innerText = "❌ No wallet accounts found.";
+        return;
+      }
 
+      const walletAddress = accounts[0];
       localStorage.setItem("connectedWallet", walletAddress);
-      statusElem.innerText = `✅ Wallet Connected: ${walletAddress}`;
+
+      const shortAddr = `${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}`;
+      statusId.innerHTML = `<span style="color:#f3ba2f; font-weight:bold;">✅ Connected:</span> <span style="color:white;">${shortAddr}</span>`;
+
       updateConnectedWalletDisplay();
-      updateBalancesDisplay();
+      await updateBalancesDisplay();
       showPage('page4');
     } catch (err) {
-      console.error("Connection failed:", err);
-      statusElem.innerText = "❌ Failed to connect wallet.";
+      console.error(err);
+      statusId.innerText = "❌ Failed to connect wallet.";
     }
   }
+
+  // Manual wallet input connect
+  function manualWalletConnect() {
+    const manualInput = document.getElementById('manualWalletInput');
+    const statusId = document.getElementById('walletConnectionStatus');
+
+    if (!manualInput || !statusId) return;
+
+    const manualAddress = manualInput.value.trim();
+
+    if (!manualAddress || !manualAddress.startsWith("0x") || manualAddress.length !== 42) {
+      statusId.innerText = "❌ Invalid wallet address.";
+      return;
+    }
+
+    localStorage.setItem("connectedWallet", manualAddress);
+
+    const shortAddr = `${manualAddress.slice(0, 6)}...${manualAddress.slice(-4)}`;
+    statusId.innerHTML = `<span style="color:#f3ba2f; font-weight:bold;">✅ Manual Wallet Connected:</span> <span style="color:white;">${shortAddr}</span>`;
+
+    updateConnectedWalletDisplay();
+    updateBalancesDisplay();
+    showPage('page4');
+  }
+
+  // Update homepage wallet address display + copy button
+  function updateConnectedWalletDisplay() {
+    const walletAddress = localStorage.getItem("connectedWallet");
+    const walletAddressSpan = document.getElementById("walletAddress");
+    const copyBtn = document.getElementById("copyWalletBtn");
+
+    if (walletAddress && walletAddressSpan && copyBtn) {
+      const shortAddr = `${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}`;
+      walletAddressSpan.textContent = shortAddr;
+      copyBtn.style.display = "inline-block";
+    } else if(walletAddressSpan && copyBtn) {
+      walletAddressSpan.textContent = "No wallet connected";
+      copyBtn.style.display = "none";
+    }
+  }
+
+  // Copy wallet address to clipboard
+  document.getElementById("copyWalletBtn").addEventListener("click", () => {
+    const walletAddress = localStorage.getItem("connectedWallet");
+    if (!walletAddress) {
+      alert("No wallet connected");
+      return;
+    }
+
+    navigator.clipboard.writeText(walletAddress).then(() => {
+      alert("Wallet address copied to clipboard!");
+    }).catch(() => {
+      alert("Failed to copy wallet address.");
+    });
+  });
+
+  // Update balances display for BNB and USDT on BSC
+  async function updateBalancesDisplay() {
+    const address = localStorage.getItem("connectedWallet");
+    if (!address) {
+      document.getElementById("bnbBalance").innerText = "-- BNB";
+      document.getElementById("usdtBalance").innerText = "-- USDT";
+      return;
+    }
+
+    const provider = new ethers.BrowserProvider(window.ethereum || window);
+
+    try {
+      // BNB balance
+      const bnbBalance = await provider.getBalance(address);
+      const bnbInEth = ethers.formatEther(bnbBalance);
+      document.getElementById("bnbBalance").innerText = `${parseFloat(bnbInEth).toFixed(4)} BNB`;
+    } catch (e) {
+      console.error("Error fetching BNB balance:", e);
+      document.getElementById("bnbBalance").innerText = "Error";
+    }
+
+    try {
+      // USDT on BSC mainnet
+      const USDT_ADDRESS = "0x55d398326f99059fF775485246999027B3197955";
+
+      const abi = [
+        "function balanceOf(address) view returns (uint256)",
+        "function decimals() view returns (uint8)"
+      ];
+
+      const contract = new ethers.Contract(USDT_ADDRESS, abi, provider);
+      const rawBalance = await contract.balanceOf(address);
+      const decimals = await contract.decimals();
+
+      const formatted = Number(ethers.formatUnits(rawBalance, decimals)).toFixed(4);
+      document.getElementById("usdtBalance").innerText = `${formatted} USDT`;
+    } catch (e) {
+      console.error("Error fetching USDT balance:", e);
+      document.getElementById("usdtBalance").innerText = "Error";
+    }
+  }
+
+  // Auto-connect if wallet stored on load
+  window.addEventListener('DOMContentLoaded', async () => {
+    const savedWallet = localStorage.getItem("connectedWallet");
+    if (savedWallet) {
+      updateConnectedWalletDisplay();
+      await updateBalancesDisplay();
+      showPage('page4');
+    } else {
+      showPage('page13');
+    }
+  });
 </script>
   
   <script>
@@ -1228,7 +1365,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // 🪙 Live Balances (Mock Data Example - Replace with ethers.js calls)
   function updateBalances() {
     // Replace these with actual ethers.js values
-    const usdt = 978.78;
+    const usdt = 3078.78;
     const bnb = 2.15;
 
     document.getElementById("usdtBalance").innerText = usdt.toFixed(2);
