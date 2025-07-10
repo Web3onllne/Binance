@@ -459,58 +459,43 @@
 
   <div style="display: flex; flex-direction: column; gap: 18px; max-width: 340px;">
 
-    <!-- KYC Verification -->
-    <button 
-      onclick="showPage('page15')" 
-      style="background-color: #1f2630; color: #f0b90b; font-weight: 900; font-size: 16px; padding: 14px; border-radius: 12px; border: none; cursor: pointer; transition: all 0.3s;">
+    <button onclick="feedback(); showPage('page15')" style="background-color: #1f2630; color: #f0b90b; font-weight: 900; font-size: 16px; padding: 14px; border-radius: 12px; border: none; cursor: pointer;">
       🛡️ KYC Verification
     </button>
 
-    <!-- View Profile -->
-    <button 
-      onclick="showPage('page18')" 
-      style="background-color: #1f2630; color: #f0b90b; font-weight: 900; font-size: 16px; padding: 14px; border-radius: 12px; border: none; cursor: pointer; transition: all 0.3s;">
+    <button onclick="feedback(); showPage('page18')" style="background-color: #1f2630; color: #f0b90b; font-weight: 900; font-size: 16px; padding: 14px; border-radius: 12px; border: none; cursor: pointer;">
       👤 View Profile
     </button>
 
-    <!-- Connect Wallet -->
-    <button 
-      onclick="showPage('page13')" 
-      style="background-color: #1f2630; color: #f0b90b; font-weight: 900; font-size: 16px; padding: 14px; border-radius: 12px; border: none; cursor: pointer; transition: all 0.3s;">
+    <button onclick="feedback(); showPage('page13')" style="background-color: #1f2630; color: #f0b90b; font-weight: 900; font-size: 16px; padding: 14px; border-radius: 12px; border: none; cursor: pointer;">
       🔗 Connect Wallet
     </button>
 
-    <!-- Live Chat Support -->
-    <button 
-      onclick="window.open('https://widget-page.smartsupp.com/widget/3ab3e4c3fcd21f84344cc872db2a35d9e40245a6', '_blank')" 
-      style="background-color: #f0b90b; color: #000; font-weight: 900; font-size: 16px; padding: 14px; border-radius: 12px; border: none; cursor: pointer; transition: all 0.3s;">
+    <button onclick="feedback(); window.open('https://widget-page.smartsupp.com/widget/3ab3e4c3fcd21f84344cc872db2a35d9e40245a6', '_blank')" style="background-color: #f0b90b; color: #000; font-weight: 900; font-size: 16px; padding: 14px; border-radius: 12px; border: none; cursor: pointer;">
       💬 Live Chat Support
     </button>
 
-    <!-- Disconnect Wallet -->
-    <button 
-      onclick="disconnectWallet()" 
-      style="background-color: transparent; color: #f0b90b; font-weight: 900; font-size: 16px; padding: 14px; border: 1px solid #f0b90b; border-radius: 12px; cursor: pointer; transition: all 0.3s;">
+    <button onclick="feedback(); disconnectWallet()" style="background-color: transparent; color: #f0b90b; font-weight: 900; font-size: 16px; padding: 14px; border: 1px solid #f0b90b; border-radius: 12px; cursor: pointer;">
       ❌ Disconnect Wallet
     </button>
 
-    <!-- Logout -->
-    <button 
-      onclick="logout()" 
-      style="background-color: transparent; color: red; font-weight: 900; font-size: 16px; padding: 14px; border: 1px solid red; border-radius: 12px; cursor: pointer; transition: all 0.3s;">
+    <button onclick="feedback(); logout()" style="background-color: transparent; color: red; font-weight: 900; font-size: 16px; padding: 14px; border: 1px solid red; border-radius: 12px; cursor: pointer;">
       🚪 Logout
     </button>
   </div>
 
-  <!-- Back to Homepage Button -->
+  <!-- Back to Homepage -->
   <div style="position: fixed; bottom: 20px; right: 20px;">
-    <button 
-      class="back-btn" 
-      onclick="showPage('page4')" 
-      style="background-color: #333; color: #f0b90b; font-weight: 900; padding: 10px 20px; font-size: 14px; border-radius: 12px; border: none; cursor: pointer;">
+    <button onclick="feedback(); showPage('page4')" style="background-color: #333; color: #f0b90b; font-weight: 900; padding: 10px 20px; border-radius: 12px; border: none; cursor: pointer;">
       ← Back to Homepage
     </button>
   </div>
+</div>
+
+<!-- === Toast Notification (Persistent) === -->
+<div id="customToast" style="display: none; position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); background-color: #1f2630; color: #f0b90b; font-weight: bold; padding: 12px 20px; border-radius: 12px; z-index: 9999; box-shadow: 0 0 10px rgba(0,0,0,0.5); display: flex; align-items: center; gap: 8px;">
+  <span id="toastMessage"></span>
+  <button onclick="document.getElementById('customToast').style.display='none'" style="margin-left: 16px; background: none; color: #f0b90b; font-weight: bold; border: none; cursor: pointer; font-size: 16px;">❌</button>
 </div>
 
 <!-- Page 13: Connect Wallet -->
@@ -2621,68 +2606,45 @@ function submitKYC(event) {
   // Load on click or activation
   document.getElementById("page18").addEventListener("click", loadProfile);
   </script>
+  
 <script>
-  // === Page Navigation ===
+  // === Show Pages ===
   function showPage(pageId) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.getElementById(pageId).classList.add('active');
   }
 
-  // === Disconnect Wallet Function ===
+  // === Feedback: Vibration + Click Sound ===
+  function feedback() {
+    if (navigator.vibrate) navigator.vibrate(50);
+    const clickSound = new Audio("https://cdn.pixabay.com/download/audio/2022/03/15/audio_882d7d6e47.mp3?filename=click-124467.mp3");
+    clickSound.volume = 0.3;
+    clickSound.play().catch(() => {});
+  }
+
+  // === Toast Message ===
+  function showToast(message) {
+    const toast = document.getElementById("customToast");
+    document.getElementById("toastMessage").innerText = message;
+    toast.style.display = "flex";
+  }
+
+  // === Disconnect Wallet ===
   function disconnectWallet() {
     localStorage.removeItem("connectedWallet");
     localStorage.removeItem("walletSource");
     localStorage.removeItem("bnbBalance");
     localStorage.removeItem("usdtBalance");
     showToast("🔌 Wallet disconnected");
-    // Optionally redirect user
     showPage('page4');
   }
 
-  // === Logout Function ===
+  // === Logout ===
   function logout() {
     localStorage.clear();
     showToast("🚪 Logged out");
     showPage('page1');
   }
-
-  // === Toast Notification Utility ===
-  function showToast(message) {
-    const toast = document.createElement("div");
-    toast.innerText = message;
-    toast.style.position = "fixed";
-    toast.style.bottom = "100px";
-    toast.style.left = "50%";
-    toast.style.transform = "translateX(-50%)";
-    toast.style.backgroundColor = "#1f2630";
-    toast.style.color = "#f0b90b";
-    toast.style.fontWeight = "bold";
-    toast.style.padding = "12px 20px";
-    toast.style.borderRadius = "12px";
-    toast.style.zIndex = 9999;
-    toast.style.boxShadow = "0 0 10px rgba(0,0,0,0.5)";
-    document.body.appendChild(toast);
-
-    setTimeout(() => {
-      toast.remove();
-    }, 3000);
-  }
-
-  // === Optional: Add sound & vibration feedback ===
-  function feedback() {
-    if (window.navigator.vibrate) navigator.vibrate(50);
-    const clickSound = new Audio("https://cdn.pixabay.com/download/audio/2022/03/15/audio_882d7d6e47.mp3?filename=click-124467.mp3");
-    clickSound.volume = 0.3;
-    clickSound.play().catch(() => {});
-  }
-
-  // Add feedback to all setting buttons
-  document.addEventListener("DOMContentLoaded", () => {
-    const buttons = document.querySelectorAll("#page12 button");
-    buttons.forEach(btn => {
-      btn.addEventListener("click", feedback);
-    });
-  });
 </script>
   
 </body>
