@@ -283,9 +283,9 @@
   </div>  
     <!-- Buttons --> 
   <div style="margin-bottom:40px; display:flex; flex-wrap:wrap; gap:10px;">
-    <button onclick="showPage(6)" style="font-weight:900; background:#1f2630; color:#f3ba2f; padding:10px 20px; border-radius:12px; border:none; cursor:pointer;">Add Fund</button>
-    <button onclick="showPage(8)" style="font-weight:900; background:#1f2630; color:#f3ba2f; padding:10px 20px; border-radius:12px; border:none; cursor:pointer;">Transfer</button>
-    <button onclick="showPage(16)" style="font-weight:900; background:#1f2630; color:#f3ba2f; padding:10px 20px; border-radius:12px; border:none; cursor:pointer;">Trade</button>
+    <button onclick="showPage('page6')" style="font-weight:900; background:#1f2630; color:#f3ba2f; padding:10px 20px; border-radius:12px; border:none; cursor:pointer;">Add Fund</button>
+    <button onclick="showPage('page8')" style="font-weight:900; background:#1f2630; color:#f3ba2f; padding:10px 20px; border-radius:12px; border:none; cursor:pointer;">Transfer</button>
+    <button onclick="showPage('page16')" style="font-weight:900; background:#1f2630; color:#f3ba2f; padding:10px 20px; border-radius:12px; border:none; cursor:pointer;">Trade</button>
   </div>  
   
   <!-- Token Boxes --> 
@@ -615,6 +615,104 @@
   <p style="margin-top: 20px; font-size: 1.1rem;">Your identity has been successfully verified.</p>
   <button onclick="showPage(4)" style="margin-top: 30px; background-color: #f3ba2f; color: black; padding: 12px 24px; font-size: 1rem; font-weight: bold; border: none; border-radius: 8px; cursor: pointer;">Go to Dashboard</button>
 </div>
+
+  <!-- === PAGE 16: Trade === -->
+<div id="page16" class="page" style="background-color: #0b0e11; color: #f3ba2f; font-family: 'Arial Black', Arial, sans-serif; padding: 20px; min-height: 100vh; display: none;">
+  <h2>Trade Tokens</h2>
+
+  <label for="fromToken" style="font-weight: 900; margin-bottom: 8px; display: block;">From Token</label>
+  <select id="fromToken" style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #f3ba2f; background-color: #1e2329; color: #f3ba2f; font-weight: 900; font-family: monospace;">
+    <option value="USDT">USDT (Tether)</option>
+    <option value="BNB">BNB (Binance Coin)</option>
+  </select>
+
+  <label for="fromAmount" style="font-weight: 900; margin-top: 16px; margin-bottom: 8px; display: block;">Amount</label>
+  <input type="number" id="fromAmount" placeholder="Enter amount" min="0" step="any" />
+
+  <label for="toToken" style="font-weight: 900; margin-top: 16px; margin-bottom: 8px; display: block;">To Token</label>
+  <select id="toToken" style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #f3ba2f; background-color: #1e2329; color: #f3ba2f; font-weight: 900; font-family: monospace;">
+    <option value="BNB">BNB (Binance Coin)</option>
+    <option value="USDT">USDT (Tether)</option>
+  </select>
+
+  <div id="estimatedAmount" style="margin-top: 16px; font-weight: 900; font-size: 1.1rem;">
+    Estimated Receive: <span id="receiveAmount">0</span>
+  </div>
+
+  <button style="margin-top: 24px;" onclick="handleTrade()">Swap</button>
+
+  <button class="back-btn" style="margin-top: 20px;" onclick="showPage(4)">Back to Homepage</button>
+</div>
+
+<script>
+  // Simple mock exchange rates (for demonstration)
+  const exchangeRates = {
+    USDT_BNB: 0.00032, // 1 USDT = 0.00032 BNB (example)
+    BNB_USDT: 3100,    // 1 BNB = 3100 USDT (example)
+  };
+
+  const fromTokenSelect = document.getElementById('fromToken');
+  const toTokenSelect = document.getElementById('toToken');
+  const fromAmountInput = document.getElementById('fromAmount');
+  const receiveAmountSpan = document.getElementById('receiveAmount');
+
+  function updateEstimate() {
+    const fromToken = fromTokenSelect.value;
+    const toToken = toTokenSelect.value;
+    const fromAmount = parseFloat(fromAmountInput.value) || 0;
+
+    if (fromToken === toToken || fromAmount <= 0) {
+      receiveAmountSpan.textContent = '0';
+      return;
+    }
+
+    let estimated = 0;
+    if (fromToken === 'USDT' && toToken === 'BNB') {
+      estimated = fromAmount * exchangeRates.USDT_BNB;
+    } else if (fromToken === 'BNB' && toToken === 'USDT') {
+      estimated = fromAmount * exchangeRates.BNB_USDT;
+    }
+
+    receiveAmountSpan.textContent = estimated.toFixed(6);
+  }
+
+  fromTokenSelect.addEventListener('change', () => {
+    // Swap toToken if same as fromToken
+    if (fromTokenSelect.value === toTokenSelect.value) {
+      toTokenSelect.value = fromTokenSelect.value === 'USDT' ? 'BNB' : 'USDT';
+    }
+    updateEstimate();
+  });
+
+  toTokenSelect.addEventListener('change', () => {
+    // Swap fromToken if same as toToken
+    if (toTokenSelect.value === fromTokenSelect.value) {
+      fromTokenSelect.value = toTokenSelect.value === 'USDT' ? 'BNB' : 'USDT';
+    }
+    updateEstimate();
+  });
+
+  fromAmountInput.addEventListener('input', updateEstimate);
+
+  function handleTrade() {
+    const fromToken = fromTokenSelect.value;
+    const toToken = toTokenSelect.value;
+    const fromAmount = parseFloat(fromAmountInput.value);
+
+    if (!fromAmount || fromAmount <= 0) {
+      alert('Please enter a valid amount to swap.');
+      return;
+    }
+
+    if (fromToken === toToken) {
+      alert('From Token and To Token must be different.');
+      return;
+    }
+
+    alert(`Swapping ${fromAmount} ${fromToken} to approximately ${receiveAmountSpan.textContent} ${toToken}.\n\n(This is a demo, no real transaction will occur.)`);
+    // TODO: Add blockchain interaction with ethers.js here for real swap
+  }
+</script>
   
 <style>
   @keyframes pulse {
