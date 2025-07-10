@@ -5,49 +5,35 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Binance Wallet Portal</title>
 
-  <!-- Ethers.js for wallet and blockchain interactions -->
   <script src="https://cdn.jsdelivr.net/npm/ethers@6.6.3/dist/ethers.min.js"></script>
-  <!-- EmailJS SDK for KYC form -->
-  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 
   <style>
-    :root {
-      --primary: #f3ba2f;
-      --bg: #0b0e11;
-      --card: #1e2329;
-      --hover: #2b3139;
-      --text: #ffffff;
-      --input-border: #f3ba2f;
-    }
-
+    /* === Global & Dark Mode Styles === */
     body {
       margin: 0;
       font-family: 'Arial Black', Arial, sans-serif;
-      background-color: var(--bg);
-      color: var(--primary);
+      background-color: #0b0e11;
+      color: #f3ba2f;
     }
 
     .page {
       display: none;
       padding: 20px;
       min-height: 100vh;
-    }
-
-    .active {
-      display: block !important;
+      box-sizing: border-box;
     }
 
     h2 {
-      font-size: 24px;
       font-weight: 900;
+      font-size: 24px;
       margin-bottom: 20px;
-      color: var(--primary);
+      color: #f3ba2f;
     }
 
     button {
       cursor: pointer;
       font-weight: 900;
-      background-color: var(--primary);
+      background-color: #f3ba2f;
       color: #000;
       border: none;
       padding: 12px 20px;
@@ -60,36 +46,33 @@
       background-color: #e0a80a;
     }
 
-    .back-btn {
-      background-color: var(--hover);
-      color: var(--primary);
-      border: 1px solid var(--input-border);
-    }
-
-    .back-btn:hover {
-      background-color: var(--card);
-    }
-
     input[type="text"],
     input[type="number"],
-    input[type="email"],
-    select,
-    textarea {
+    select {
       width: 100%;
       padding: 12px;
       margin-bottom: 12px;
       border-radius: 12px;
-      border: 1px solid var(--input-border);
-      background-color: var(--card);
-      color: var(--primary);
+      border: 1px solid #f3ba2f;
+      background-color: #1e2329;
+      color: #f3ba2f;
       font-weight: 900;
       font-family: monospace, monospace;
       box-sizing: border-box;
     }
 
-    input::placeholder,
-    textarea::placeholder {
+    input::placeholder {
       color: #d1b547;
+    }
+
+    .back-btn {
+      background-color: #2b3139;
+      color: #f3ba2f;
+      border: 1px solid #f3ba2f;
+    }
+
+    .back-btn:hover {
+      background-color: #1e2329;
     }
 
     .flex-row {
@@ -99,15 +82,15 @@
 
     .token {
       cursor: pointer;
-      transition: background 0.3s ease;
+      transition: background-color 0.3s ease;
     }
 
     .token:hover {
-      background-color: var(--hover);
+      background-color: #2b3139;
     }
 
     .loader {
-      border: 4px solid var(--primary);
+      border: 4px solid #f3ba2f;
       border-top: 4px solid transparent;
       border-radius: 50%;
       width: 40px;
@@ -117,47 +100,8 @@
     }
 
     @keyframes spin {
-      0% { transform: rotate(0deg);}
-      100% { transform: rotate(360deg);}
-    }
-
-    /* Scroll for textareas */
-    textarea {
-      resize: vertical;
-      min-height: 80px;
-    }
-
-    /* Toast style */
-    #toast {
-      visibility: hidden;
-      min-width: 250px;
-      background-color: var(--primary);
-      color: #000;
-      text-align: center;
-      border-radius: 12px;
-      padding: 16px;
-      position: fixed;
-      z-index: 9999;
-      left: 50%;
-      bottom: 30px;
-      transform: translateX(-50%);
-      font-weight: 900;
-      font-family: Arial, sans-serif;
-    }
-
-    #toast.show {
-      visibility: visible;
-      animation: fadein 0.5s, fadeout 0.5s 2.5s;
-    }
-
-    @keyframes fadein {
-      from {bottom: 0; opacity: 0;}
-      to {bottom: 30px; opacity: 1;}
-    }
-
-    @keyframes fadeout {
-      from {bottom: 30px; opacity: 1;}
-      to {bottom: 0; opacity: 0;}
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
   </style>
 </head>
