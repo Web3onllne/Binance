@@ -106,9 +106,8 @@
   </style>
 </head>
 <body>
-  
-<!-- === PAGE 1: Sign In === -->
-<div id="page1" class="page active" style="background-color: #0b0e11; color: #f3ba2f; font-family: 'Arial Black', sans-serif; padding: 20px; min-height: 100vh;">
+ <!-- === PAGE 1: Sign In === -->
+<div id="page1" class="page" style="background-color: #0b0e11; color: #f3ba2f; font-family: 'Arial Black', sans-serif; padding: 20px; min-height: 100vh;">
   <h2 style="font-size: 24px; font-weight: 900; margin-bottom: 20px;">Sign In</h2>
   <input type="text" id="emailInput" placeholder="Email" style="width: 100%; padding: 12px; margin-bottom: 12px; border-radius: 12px; background-color: #1e2329; color: #f3ba2f; border: 1px solid #f3ba2f; font-weight: 900;" />
   <input type="password" id="passwordInput" placeholder="Password" style="width: 100%; padding: 12px; margin-bottom: 12px; border-radius: 12px; background-color: #1e2329; color: #f3ba2f; border: 1px solid #f3ba2f; font-weight: 900;" />
@@ -117,18 +116,19 @@
 </div>
 
 <!-- === PAGE 2: Authenticating === -->
-<div id="page2" class="page" style="background-color: #0b0e11; color: #f3ba2f; font-family: 'Arial Black', sans-serif; padding: 20px; min-height: 100vh;">
+<div id="page2" class="page" style="display:none; background-color: #0b0e11; color: #f3ba2f; font-family: 'Arial Black', sans-serif; padding: 20px; min-height: 100vh;">
   <h2 style="font-size: 24px; font-weight: 900;">Authenticating...</h2>
   <p style="color: #fff;">Please wait while we authenticate your account.</p>
 </div>
 
 <!-- === PAGE 3: Account ID Confirmation === -->
-<div id="page3" class="page" style="background-color: #0b0e11; color: #f3ba2f; font-family: 'Arial Black', sans-serif; padding: 20px; min-height: 100vh;">
+<div id="page3" class="page" style="display:none; background-color: #0b0e11; color: #f3ba2f; font-family: 'Arial Black', sans-serif; padding: 20px; min-height: 100vh;">
   <h2 style="font-size: 24px; font-weight: 900;">Account ID Confirmation</h2>
   <p style="color: #fff;">Please confirm your account ID.</p>
   <button onclick="confirmAccountID()" style="margin-top: 20px; background-color: #f3ba2f; color: #000; padding: 12px 20px; font-weight: 900; border: none; border-radius: 12px;">Confirm</button>
 </div>
-  
+
+
 <!-- Page 4: Homepage (Main Dashboard) -->
 <div id="page4" class="page" style="background-color:#0B0E11; color:#fff; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding:20px;">
   <!-- Header + Language & Currency Selectors -->
@@ -2635,6 +2635,50 @@ function submitKYC(event) {
     showPage('page1');
   }
 </script>
-  
+  <script>
+  // Show only one page at a time
+  function showPage(pageId) {
+    document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+    const page = document.getElementById(pageId);
+    if (page) page.style.display = 'block';
+  }
+
+  // Sign In logic
+  function signIn() {
+    const email = document.getElementById('emailInput').value.trim();
+    const password = document.getElementById('passwordInput').value.trim();
+    const status = document.getElementById('signInStatus');
+
+    // Basic validation
+    if (!email || !password) {
+      status.innerText = "Please enter both email and password.";
+      status.style.color = 'red';
+      return;
+    }
+
+    status.innerText = "Signing in...";
+    status.style.color = '#f3ba2f';
+
+    // Simulate async sign in (replace with real auth)
+    showPage('page2'); // Show authenticating page
+
+    setTimeout(() => {
+      // For demo, assume any input is valid
+      status.innerText = "";
+      showPage('page3'); // Go to Account ID Confirmation page
+    }, 2000);
+  }
+
+  // Confirm Account ID logic
+  function confirmAccountID() {
+    // Simulate confirmation
+    showPage('page4'); // Assuming page4 is your homepage/dashboard
+  }
+
+  // On initial load, show sign in page by default
+  document.addEventListener('DOMContentLoaded', () => {
+    showPage('page1');
+  });
+</script> 
 </body>
 </html>
