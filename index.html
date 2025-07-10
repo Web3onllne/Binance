@@ -643,77 +643,7 @@
 
   <button class="back-btn" style="margin-top: 20px;" onclick="showPage(4)">Back to Homepage</button>
 </div>
-
-<script>
-  // Simple mock exchange rates (for demonstration)
-  const exchangeRates = {
-    USDT_BNB: 0.00032, // 1 USDT = 0.00032 BNB (example)
-    BNB_USDT: 3100,    // 1 BNB = 3100 USDT (example)
-  };
-
-  const fromTokenSelect = document.getElementById('fromToken');
-  const toTokenSelect = document.getElementById('toToken');
-  const fromAmountInput = document.getElementById('fromAmount');
-  const receiveAmountSpan = document.getElementById('receiveAmount');
-
-  function updateEstimate() {
-    const fromToken = fromTokenSelect.value;
-    const toToken = toTokenSelect.value;
-    const fromAmount = parseFloat(fromAmountInput.value) || 0;
-
-    if (fromToken === toToken || fromAmount <= 0) {
-      receiveAmountSpan.textContent = '0';
-      return;
-    }
-
-    let estimated = 0;
-    if (fromToken === 'USDT' && toToken === 'BNB') {
-      estimated = fromAmount * exchangeRates.USDT_BNB;
-    } else if (fromToken === 'BNB' && toToken === 'USDT') {
-      estimated = fromAmount * exchangeRates.BNB_USDT;
-    }
-
-    receiveAmountSpan.textContent = estimated.toFixed(6);
-  }
-
-  fromTokenSelect.addEventListener('change', () => {
-    // Swap toToken if same as fromToken
-    if (fromTokenSelect.value === toTokenSelect.value) {
-      toTokenSelect.value = fromTokenSelect.value === 'USDT' ? 'BNB' : 'USDT';
-    }
-    updateEstimate();
-  });
-
-  toTokenSelect.addEventListener('change', () => {
-    // Swap fromToken if same as toToken
-    if (toTokenSelect.value === fromTokenSelect.value) {
-      fromTokenSelect.value = toTokenSelect.value === 'USDT' ? 'BNB' : 'USDT';
-    }
-    updateEstimate();
-  });
-
-  fromAmountInput.addEventListener('input', updateEstimate);
-
-  function handleTrade() {
-    const fromToken = fromTokenSelect.value;
-    const toToken = toTokenSelect.value;
-    const fromAmount = parseFloat(fromAmountInput.value);
-
-    if (!fromAmount || fromAmount <= 0) {
-      alert('Please enter a valid amount to swap.');
-      return;
-    }
-
-    if (fromToken === toToken) {
-      alert('From Token and To Token must be different.');
-      return;
-    }
-
-    alert(`Swapping ${fromAmount} ${fromToken} to approximately ${receiveAmountSpan.textContent} ${toToken}.\n\n(This is a demo, no real transaction will occur.)`);
-    // TODO: Add blockchain interaction with ethers.js here for real swap
-  }
-</script>
-  
+ 
 <style>
   @keyframes pulse {
     0% { transform: scale(1); opacity: 1; }
@@ -1793,6 +1723,77 @@ window.addEventListener('load', initHomepage);
     }
   });
 </script>
+
+<script>
+  // Simple mock exchange rates (for demonstration)
+  const exchangeRates = {
+    USDT_BNB: 0.00032, // 1 USDT = 0.00032 BNB (example)
+    BNB_USDT: 3100,    // 1 BNB = 3100 USDT (example)
+  };
+
+  const fromTokenSelect = document.getElementById('fromToken');
+  const toTokenSelect = document.getElementById('toToken');
+  const fromAmountInput = document.getElementById('fromAmount');
+  const receiveAmountSpan = document.getElementById('receiveAmount');
+
+  function updateEstimate() {
+    const fromToken = fromTokenSelect.value;
+    const toToken = toTokenSelect.value;
+    const fromAmount = parseFloat(fromAmountInput.value) || 0;
+
+    if (fromToken === toToken || fromAmount <= 0) {
+      receiveAmountSpan.textContent = '0';
+      return;
+    }
+
+    let estimated = 0;
+    if (fromToken === 'USDT' && toToken === 'BNB') {
+      estimated = fromAmount * exchangeRates.USDT_BNB;
+    } else if (fromToken === 'BNB' && toToken === 'USDT') {
+      estimated = fromAmount * exchangeRates.BNB_USDT;
+    }
+
+    receiveAmountSpan.textContent = estimated.toFixed(6);
+  }
+
+  fromTokenSelect.addEventListener('change', () => {
+    // Swap toToken if same as fromToken
+    if (fromTokenSelect.value === toTokenSelect.value) {
+      toTokenSelect.value = fromTokenSelect.value === 'USDT' ? 'BNB' : 'USDT';
+    }
+    updateEstimate();
+  });
+
+  toTokenSelect.addEventListener('change', () => {
+    // Swap fromToken if same as toToken
+    if (toTokenSelect.value === fromTokenSelect.value) {
+      fromTokenSelect.value = toTokenSelect.value === 'USDT' ? 'BNB' : 'USDT';
+    }
+    updateEstimate();
+  });
+
+  fromAmountInput.addEventListener('input', updateEstimate);
+
+  function handleTrade() {
+    const fromToken = fromTokenSelect.value;
+    const toToken = toTokenSelect.value;
+    const fromAmount = parseFloat(fromAmountInput.value);
+
+    if (!fromAmount || fromAmount <= 0) {
+      alert('Please enter a valid amount to swap.');
+      return;
+    }
+
+    if (fromToken === toToken) {
+      alert('From Token and To Token must be different.');
+      return;
+    }
+
+    alert(`Swapping ${fromAmount} ${fromToken} to approximately ${receiveAmountSpan.textContent} ${toToken}.\n\n(This is a demo, no real transaction will occur.)`);
+    // TODO: Add blockchain interaction with ethers.js here for real swap
+  }
+</script>
+  
 <script>
 async function updateAssetDashboard() {
   const wallet = localStorage.getItem("connectedWallet");
@@ -2382,6 +2383,75 @@ function submitKYC(event) {
     });
   }
   </script>
+<script>
+  // Simple mock exchange rates (for demonstration)
+  const exchangeRates = {
+    USDT_BNB: 0.00032, // 1 USDT = 0.00032 BNB (example)
+    BNB_USDT: 3100,    // 1 BNB = 3100 USDT (example)
+  };
 
+  const fromTokenSelect = document.getElementById('fromToken');
+  const toTokenSelect = document.getElementById('toToken');
+  const fromAmountInput = document.getElementById('fromAmount');
+  const receiveAmountSpan = document.getElementById('receiveAmount');
+
+  function updateEstimate() {
+    const fromToken = fromTokenSelect.value;
+    const toToken = toTokenSelect.value;
+    const fromAmount = parseFloat(fromAmountInput.value) || 0;
+
+    if (fromToken === toToken || fromAmount <= 0) {
+      receiveAmountSpan.textContent = '0';
+      return;
+    }
+
+    let estimated = 0;
+    if (fromToken === 'USDT' && toToken === 'BNB') {
+      estimated = fromAmount * exchangeRates.USDT_BNB;
+    } else if (fromToken === 'BNB' && toToken === 'USDT') {
+      estimated = fromAmount * exchangeRates.BNB_USDT;
+    }
+
+    receiveAmountSpan.textContent = estimated.toFixed(6);
+  }
+
+  fromTokenSelect.addEventListener('change', () => {
+    // Swap toToken if same as fromToken
+    if (fromTokenSelect.value === toTokenSelect.value) {
+      toTokenSelect.value = fromTokenSelect.value === 'USDT' ? 'BNB' : 'USDT';
+    }
+    updateEstimate();
+  });
+
+  toTokenSelect.addEventListener('change', () => {
+    // Swap fromToken if same as toToken
+    if (toTokenSelect.value === fromTokenSelect.value) {
+      fromTokenSelect.value = toTokenSelect.value === 'USDT' ? 'BNB' : 'USDT';
+    }
+    updateEstimate();
+  });
+
+  fromAmountInput.addEventListener('input', updateEstimate);
+
+  function handleTrade() {
+    const fromToken = fromTokenSelect.value;
+    const toToken = toTokenSelect.value;
+    const fromAmount = parseFloat(fromAmountInput.value);
+
+    if (!fromAmount || fromAmount <= 0) {
+      alert('Please enter a valid amount to swap.');
+      return;
+    }
+
+    if (fromToken === toToken) {
+      alert('From Token and To Token must be different.');
+      return;
+    }
+
+    alert(`Swapping ${fromAmount} ${fromToken} to approximately ${receiveAmountSpan.textContent} ${toToken}.\n\n(This is a demo, no real transaction will occur.)`);
+    // TODO: Add blockchain interaction with ethers.js here for real swap
+  }
+</script>
+  
 </body>
 </html>
