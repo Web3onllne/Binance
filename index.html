@@ -5,23 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Binance Wallet Portal</title>
 
-  <!-- Ethers.js -->
   <script src="https://cdn.jsdelivr.net/npm/ethers@6.6.3/dist/ethers.min.js"></script>
 
   <style>
-    :root {
-      --primary: #f3ba2f;
-      --bg: #0b0e11;
-      --card: #1e2329;
-      --hover: #2b3139;
-      --text: #ffffff;
-    }
-
+    /* === Global & Dark Mode Styles === */
     body {
       margin: 0;
       font-family: 'Arial Black', Arial, sans-serif;
-      background-color: var(--bg);
-      color: var(--primary);
+      background-color: #0b0e11;
+      color: #f3ba2f;
     }
 
     .page {
@@ -31,27 +23,23 @@
       box-sizing: border-box;
     }
 
-    .active {
-      display: block !important;
-    }
-
     h2 {
       font-weight: 900;
       font-size: 24px;
       margin-bottom: 20px;
-      color: var(--primary);
+      color: #f3ba2f;
     }
 
     button {
       cursor: pointer;
       font-weight: 900;
-      background-color: var(--primary);
+      background-color: #f3ba2f;
       color: #000;
       border: none;
       padding: 12px 20px;
       border-radius: 12px;
+      transition: background-color 0.3s ease;
       margin-bottom: 12px;
-      transition: background-color 0.2s ease-in-out;
     }
 
     button:hover {
@@ -60,18 +48,16 @@
 
     input[type="text"],
     input[type="number"],
-    input[type="password"],
-    input[type="email"],
     select {
       width: 100%;
       padding: 12px;
       margin-bottom: 12px;
       border-radius: 12px;
-      border: 1px solid var(--primary);
-      background-color: var(--card);
-      color: var(--primary);
+      border: 1px solid #f3ba2f;
+      background-color: #1e2329;
+      color: #f3ba2f;
       font-weight: 900;
-      font-family: monospace;
+      font-family: monospace, monospace;
       box-sizing: border-box;
     }
 
@@ -80,13 +66,13 @@
     }
 
     .back-btn {
-      background-color: var(--hover);
-      color: var(--primary);
-      border: 1px solid var(--primary);
+      background-color: #2b3139;
+      color: #f3ba2f;
+      border: 1px solid #f3ba2f;
     }
 
     .back-btn:hover {
-      background-color: var(--card);
+      background-color: #1e2329;
     }
 
     .flex-row {
@@ -96,14 +82,15 @@
 
     .token {
       cursor: pointer;
+      transition: background-color 0.3s ease;
     }
 
     .token:hover {
-      background-color: var(--hover);
+      background-color: #2b3139;
     }
 
     .loader {
-      border: 4px solid var(--primary);
+      border: 4px solid #f3ba2f;
       border-top: 4px solid transparent;
       border-radius: 50%;
       width: 40px;
@@ -2267,6 +2254,10 @@ async function loadAssetsDashboard() {
     alert("Account ID Confirmed! Proceeding...");
     // Add your next navigation logic here
   }
+  function confirmAccountID() {
+  // Directly navigate to Page 4 (Homepage)
+  showPage("page4");
+  }
 </script>
 
 <script>
@@ -2430,6 +2421,7 @@ function submitKYC(event) {
     });
   }
   </script>
+  
 <script>
   // Simple mock exchange rates (for demonstration)
   const exchangeRates = {
