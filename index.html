@@ -453,51 +453,52 @@
 </script>
   
 <!-- === PAGE 12: Settings === -->
-<div id="page12" class="page" style="background-color: #0b0e11; color: #f0b90b; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 20px;">
+<div id="page12" class="page" style="background-color: #0b0e11; color: #f0b90b; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 24px; min-height: 100vh;">
 
-  <h2 style="font-weight: 900; margin-bottom: 24px;">Settings</h2>
+  <h2 style="font-weight: 900; font-size: 24px; margin-bottom: 24px;">⚙️ Settings</h2>
 
-  <div style="display: flex; flex-direction: column; gap: 16px; max-width: 320px;">
+  <div style="display: flex; flex-direction: column; gap: 18px; max-width: 340px;">
+
     <!-- KYC Verification -->
     <button 
       onclick="showPage('page15')" 
-      style="background-color: #1f2630; color: #f0b90b; font-weight: 900; padding: 12px; border-radius: 12px; border: none; cursor: pointer;">
-      KYC Verification
+      style="background-color: #1f2630; color: #f0b90b; font-weight: 900; font-size: 16px; padding: 14px; border-radius: 12px; border: none; cursor: pointer; transition: all 0.3s;">
+      🛡️ KYC Verification
     </button>
 
     <!-- View Profile -->
     <button 
       onclick="showPage('page18')" 
-      style="background-color: #1f2630; color: #f0b90b; font-weight: 900; padding: 12px; border-radius: 12px; border: none; cursor: pointer;">
-      View Profile
+      style="background-color: #1f2630; color: #f0b90b; font-weight: 900; font-size: 16px; padding: 14px; border-radius: 12px; border: none; cursor: pointer; transition: all 0.3s;">
+      👤 View Profile
     </button>
 
     <!-- Connect Wallet -->
     <button 
       onclick="showPage('page13')" 
-      style="background-color: #1f2630; color: #f0b90b; font-weight: 900; padding: 12px; border-radius: 12px; border: none; cursor: pointer;">
-      Connect Wallet
+      style="background-color: #1f2630; color: #f0b90b; font-weight: 900; font-size: 16px; padding: 14px; border-radius: 12px; border: none; cursor: pointer; transition: all 0.3s;">
+      🔗 Connect Wallet
     </button>
 
-    <!-- Live Chat -->
+    <!-- Live Chat Support -->
     <button 
       onclick="window.open('https://widget-page.smartsupp.com/widget/3ab3e4c3fcd21f84344cc872db2a35d9e40245a6', '_blank')" 
-      style="background-color: #f0b90b; color: #000; font-weight: 900; padding: 12px; border-radius: 12px; border: none; cursor: pointer;">
-      Live Chat
+      style="background-color: #f0b90b; color: #000; font-weight: 900; font-size: 16px; padding: 14px; border-radius: 12px; border: none; cursor: pointer; transition: all 0.3s;">
+      💬 Live Chat Support
     </button>
 
     <!-- Disconnect Wallet -->
     <button 
       onclick="disconnectWallet()" 
-      style="background-color: #222; color: #f0b90b; border: 1px solid #f0b90b; font-weight: 900; padding: 12px; border-radius: 12px; cursor: pointer;">
-      Disconnect Wallet
+      style="background-color: transparent; color: #f0b90b; font-weight: 900; font-size: 16px; padding: 14px; border: 1px solid #f0b90b; border-radius: 12px; cursor: pointer; transition: all 0.3s;">
+      ❌ Disconnect Wallet
     </button>
 
     <!-- Logout -->
     <button 
       onclick="logout()" 
-      style="background-color: #222; color: red; border: 1px solid red; font-weight: 900; padding: 12px; border-radius: 12px; cursor: pointer;">
-      Logout
+      style="background-color: transparent; color: red; font-weight: 900; font-size: 16px; padding: 14px; border: 1px solid red; border-radius: 12px; cursor: pointer; transition: all 0.3s;">
+      🚪 Logout
     </button>
   </div>
 
@@ -506,8 +507,8 @@
     <button 
       class="back-btn" 
       onclick="showPage('page4')" 
-      style="background-color: #444; color: #f0b90b; font-weight: 900; padding: 10px 20px; border-radius: 12px; border: none; cursor: pointer;">
-      Back to Homepage
+      style="background-color: #333; color: #f0b90b; font-weight: 900; padding: 10px 20px; font-size: 14px; border-radius: 12px; border: none; cursor: pointer;">
+      ← Back to Homepage
     </button>
   </div>
 </div>
@@ -643,6 +644,79 @@
 
   <button class="back-btn" style="margin-top: 20px;" onclick="showPage(4)">Back to Homepage</button>
 </div>
+
+<!-- === PAGE 18: View / Edit Profile === -->
+<div id="page18" class="page" style="background-color: #0b0e11; color: #f0b90b; font-family: 'Segoe UI', sans-serif; padding: 24px; min-height: 100vh;">
+
+  <h2 style="font-weight: 900; font-size: 24px; margin-bottom: 24px;">👤 Profile Information</h2>
+
+  <div id="profileCard" style="background-color: #1f2630; padding: 20px; border-radius: 16px; max-width: 400px; box-shadow: 0 0 10px rgba(240, 185, 11, 0.2); display: flex; flex-direction: column; gap: 16px;">
+    
+    <!-- Name -->
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+      <span style="font-weight: bold;">Name:</span>
+      <span id="profileName">John Doe</span>
+      <input type="text" id="editName" style="display:none; padding: 6px;" />
+    </div>
+
+    <!-- Email -->
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+      <span style="font-weight: bold;">Email:</span>
+      <span id="profileEmail">john@example.com</span>
+      <input type="email" id="editEmail" style="display:none; padding: 6px;" />
+    </div>
+
+    <!-- Country -->
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+      <span style="font-weight: bold;">Country:</span>
+      <span id="profileCountry">United States</span>
+      <input type="text" id="editCountry" style="display:none; padding: 6px;" />
+    </div>
+
+    <!-- Phone -->
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+      <span style="font-weight: bold;">Phone:</span>
+      <span id="profilePhone">+123456789</span>
+      <input type="text" id="editPhone" style="display:none; padding: 6px;" />
+    </div>
+
+    <!-- Wallet -->
+    <div style="display: flex; justify-content: space-between;">
+      <span style="font-weight: bold;">Wallet:</span>
+      <span id="profileWallet">0xABC...1234</span>
+    </div>
+
+    <!-- KYC Status -->
+    <div style="display: flex; justify-content: space-between;">
+      <span style="font-weight: bold;">KYC Status:</span>
+      <span id="profileKYCStatus" style="color: limegreen; font-weight: bold;">Verified</span>
+    </div>
+  </div>
+
+  <!-- Edit & Save Buttons -->
+  <div style="margin-top: 20px; display: flex; gap: 12px;">
+    <button id="editBtn" onclick="enableEdit()" style="background-color: #f0b90b; color: #0b0e11; font-weight: 900; padding: 10px 20px; border-radius: 12px; border: none; cursor: pointer;">
+      ✏️ Edit
+    </button>
+
+    <button id="saveBtn" onclick="saveProfile()" style="display: none; background-color: #00c896; color: #fff; font-weight: 900; padding: 10px 20px; border-radius: 12px; border: none; cursor: pointer;">
+      💾 Save
+    </button>
+  </div>
+
+  <!-- Confirmation -->
+  <div id="saveMessage" style="margin-top: 16px; color: #00c896; font-weight: bold; display: none;">
+    ✅ Profile updated successfully!
+  </div>
+
+  <!-- Back Button -->
+  <div style="margin-top: 30px;">
+    <button onclick="showPage('page12')" style="background-color: #444; color: #f0b90b; font-weight: 900; padding: 12px 24px; border-radius: 12px; border: none; cursor: pointer;">
+      ← Back to Settings
+    </button>
+  </div>
+</div>
+
   
 <style>
   @keyframes pulse {
@@ -2493,6 +2567,122 @@ function submitKYC(event) {
     alert(`Swapping ${fromAmount} ${fromToken} to approximately ${receiveAmountSpan.textContent} ${toToken}.\n\n(This is a demo, no real transaction will occur.)`);
     // TODO: Add blockchain interaction with ethers.js here for real swap
   }
+</script>
+  <script>
+  function enableEdit() {
+    document.getElementById("editBtn").style.display = "none";
+    document.getElementById("saveBtn").style.display = "inline-block";
+
+    ["Name", "Email", "Country", "Phone"].forEach(field => {
+      const value = document.getElementById(`profile${field}`).innerText;
+      document.getElementById(`profile${field}`).style.display = "none";
+      const input = document.getElementById(`edit${field}`);
+      input.style.display = "inline-block";
+      input.value = value;
+    });
+  }
+
+  function saveProfile() {
+    const newName = document.getElementById("editName").value;
+    const newEmail = document.getElementById("editEmail").value;
+    const newCountry = document.getElementById("editCountry").value;
+    const newPhone = document.getElementById("editPhone").value;
+
+    localStorage.setItem("kycName", newName);
+    localStorage.setItem("kycEmail", newEmail);
+    localStorage.setItem("kycCountry", newCountry);
+    localStorage.setItem("kycPhone", newPhone);
+
+    ["Name", "Email", "Country", "Phone"].forEach(field => {
+      document.getElementById(`profile${field}`).innerText = document.getElementById(`edit${field}`).value;
+      document.getElementById(`profile${field}`).style.display = "inline-block";
+      document.getElementById(`edit${field}`).style.display = "none";
+    });
+
+    document.getElementById("saveBtn").style.display = "none";
+    document.getElementById("editBtn").style.display = "inline-block";
+    document.getElementById("saveMessage").style.display = "block";
+
+    setTimeout(() => {
+      document.getElementById("saveMessage").style.display = "none";
+    }, 3000);
+  }
+
+  function loadProfile() {
+    document.getElementById("profileName").innerText = localStorage.getItem("kycName") || "Not Set";
+    document.getElementById("profileEmail").innerText = localStorage.getItem("kycEmail") || "Not Set";
+    document.getElementById("profileCountry").innerText = localStorage.getItem("kycCountry") || "Not Set";
+    document.getElementById("profilePhone").innerText = localStorage.getItem("kycPhone") || "Not Set";
+    const wallet = localStorage.getItem("connectedWallet");
+    document.getElementById("profileWallet").innerText = wallet ? wallet.slice(0, 6) + "..." + wallet.slice(-4) : "Not Connected";
+    document.getElementById("profileKYCStatus").innerText = localStorage.getItem("kycStatus") || "Pending";
+  }
+
+  // Load on click or activation
+  document.getElementById("page18").addEventListener("click", loadProfile);
+  </script>
+<script>
+  // === Page Navigation ===
+  function showPage(pageId) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(pageId).classList.add('active');
+  }
+
+  // === Disconnect Wallet Function ===
+  function disconnectWallet() {
+    localStorage.removeItem("connectedWallet");
+    localStorage.removeItem("walletSource");
+    localStorage.removeItem("bnbBalance");
+    localStorage.removeItem("usdtBalance");
+    showToast("🔌 Wallet disconnected");
+    // Optionally redirect user
+    showPage('page4');
+  }
+
+  // === Logout Function ===
+  function logout() {
+    localStorage.clear();
+    showToast("🚪 Logged out");
+    showPage('page1');
+  }
+
+  // === Toast Notification Utility ===
+  function showToast(message) {
+    const toast = document.createElement("div");
+    toast.innerText = message;
+    toast.style.position = "fixed";
+    toast.style.bottom = "100px";
+    toast.style.left = "50%";
+    toast.style.transform = "translateX(-50%)";
+    toast.style.backgroundColor = "#1f2630";
+    toast.style.color = "#f0b90b";
+    toast.style.fontWeight = "bold";
+    toast.style.padding = "12px 20px";
+    toast.style.borderRadius = "12px";
+    toast.style.zIndex = 9999;
+    toast.style.boxShadow = "0 0 10px rgba(0,0,0,0.5)";
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+      toast.remove();
+    }, 3000);
+  }
+
+  // === Optional: Add sound & vibration feedback ===
+  function feedback() {
+    if (window.navigator.vibrate) navigator.vibrate(50);
+    const clickSound = new Audio("https://cdn.pixabay.com/download/audio/2022/03/15/audio_882d7d6e47.mp3?filename=click-124467.mp3");
+    clickSound.volume = 0.3;
+    clickSound.play().catch(() => {});
+  }
+
+  // Add feedback to all setting buttons
+  document.addEventListener("DOMContentLoaded", () => {
+    const buttons = document.querySelectorAll("#page12 button");
+    buttons.forEach(btn => {
+      btn.addEventListener("click", feedback);
+    });
+  });
 </script>
   
 </body>
