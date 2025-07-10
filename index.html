@@ -2553,7 +2553,9 @@ function submitKYC(event) {
     // TODO: Add blockchain interaction with ethers.js here for real swap
   }
 </script>
-  <script>
+  
+<script>
+  // === Enable Edit Mode ===
   function enableEdit() {
     document.getElementById("editBtn").style.display = "none";
     document.getElementById("saveBtn").style.display = "inline-block";
@@ -2567,45 +2569,54 @@ function submitKYC(event) {
     });
   }
 
+  // === Save Profile (No page change or fade) ===
   function saveProfile() {
     const newName = document.getElementById("editName").value;
     const newEmail = document.getElementById("editEmail").value;
     const newCountry = document.getElementById("editCountry").value;
     const newPhone = document.getElementById("editPhone").value;
 
+    // Save to localStorage
     localStorage.setItem("kycName", newName);
     localStorage.setItem("kycEmail", newEmail);
     localStorage.setItem("kycCountry", newCountry);
     localStorage.setItem("kycPhone", newPhone);
 
+    // Update text and hide inputs
     ["Name", "Email", "Country", "Phone"].forEach(field => {
       document.getElementById(`profile${field}`).innerText = document.getElementById(`edit${field}`).value;
       document.getElementById(`profile${field}`).style.display = "inline-block";
       document.getElementById(`edit${field}`).style.display = "none";
     });
 
+    // Button toggle
     document.getElementById("saveBtn").style.display = "none";
     document.getElementById("editBtn").style.display = "inline-block";
-    document.getElementById("saveMessage").style.display = "block";
 
-    setTimeout(() => {
-      document.getElementById("saveMessage").style.display = "none";
-    }, 3000);
+    // Show success message (stay visible)
+    const msg = document.getElementById("saveMessage");
+    msg.innerText = "✅ Profile updated successfully!";
+    msg.style.display = "block";
   }
 
+  // === Load Profile Data (Only when user enters page) ===
   function loadProfile() {
     document.getElementById("profileName").innerText = localStorage.getItem("kycName") || "Not Set";
     document.getElementById("profileEmail").innerText = localStorage.getItem("kycEmail") || "Not Set";
     document.getElementById("profileCountry").innerText = localStorage.getItem("kycCountry") || "Not Set";
     document.getElementById("profilePhone").innerText = localStorage.getItem("kycPhone") || "Not Set";
+
     const wallet = localStorage.getItem("connectedWallet");
-    document.getElementById("profileWallet").innerText = wallet ? wallet.slice(0, 6) + "..." + wallet.slice(-4) : "Not Connected";
+    document.getElementById("profileWallet").innerText = wallet
+      ? wallet.slice(0, 6) + "..." + wallet.slice(-4)
+      : "Not Connected";
+
     document.getElementById("profileKYCStatus").innerText = localStorage.getItem("kycStatus") || "Pending";
   }
 
-  // Load on click or activation
+  // === Trigger loadProfile ONLY when page 18 is activated ===
   document.getElementById("page18").addEventListener("click", loadProfile);
-  </script>
+</script>
   
 <script>
   // === Show Pages ===
