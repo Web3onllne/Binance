@@ -579,8 +579,9 @@
   </button>
 </div>
 
-  <!-- Page 15: KYC Verification -->
-<!-- === PAGE 15: KYC VERIFICATION === --><div id="page15" class="page" style="display: none; background-color: #0B0E11; color: #fff; font-family: 'Segoe UI', sans-serif; padding: 20px;">
+
+<!-- === PAGE 15: KYC VERIFICATION === -->
+  <div id="page15" class="page" style="display: none; background-color: #0B0E11; color: #fff; font-family: 'Segoe UI', sans-serif; padding: 20px;">
   <div style="font-size: 1.5rem; font-weight: bold; color: #f3ba2f; margin-bottom: 20px;">KYC Verification</div>
   <form id="kycForm" onsubmit="submitKYC(event)" style="display: flex; flex-direction: column; gap: 16px;">
     <input type="text" id="kycName" placeholder="Full Name" required style="padding: 10px; border-radius: 8px; border: none;" />
@@ -602,12 +603,14 @@
 
   </form>
 </div>
-  <!-- === PAGE 15i: KYC PENDING REVIEW === --><div id="page15i" class="page" style="display: none; background-color: #0B0E11; color: #fff; padding: 40px; text-align: center; font-family: 'Segoe UI', sans-serif;">
+  <!-- === PAGE 15i: KYC PENDING REVIEW === -->
+  <div id="page15i" class="page" style="display: none; background-color: #0B0E11; color: #fff; padding: 40px; text-align: center; font-family: 'Segoe UI', sans-serif;">
   <h2 style="color: #f3ba2f; font-weight: bold;">KYC Submission Received</h2>
   <p style="margin-top: 20px;">Your documents are currently under review. This may take a few moments.</p>
   <div style="font-size: 3rem; margin-top: 30px; color: orange;">⏳</div>
 </div>
-  <!-- === PAGE 15ii: KYC APPROVED === --><div id="page15ii" class="page" style="display: none; background-color: #0B0E11; color: #fff; padding: 40px; text-align: center; font-family: 'Segoe UI', sans-serif;">
+  <!-- === PAGE 15ii: KYC APPROVED === -->
+  <div id="page15ii" class="page" style="display: none; background-color: #0B0E11; color: #fff; padding: 40px; text-align: center; font-family: 'Segoe UI', sans-serif;">
   <h2 style="color: #0ecb81; font-weight: bold;">✅ KYC Verified</h2>
   <p style="margin-top: 20px; font-size: 1.1rem;">Your identity has been successfully verified.</p>
   <button onclick="showPage(4)" style="margin-top: 30px; background-color: #f3ba2f; color: black; padding: 12px 24px; font-size: 1rem; font-weight: bold; border: none; border-radius: 8px; cursor: pointer;">Go to Dashboard</button>
