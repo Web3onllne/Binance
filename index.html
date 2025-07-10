@@ -846,17 +846,36 @@ function manualWalletConnect() {
 
   const manualAddress = manualInput.value.trim();
   if (!manualAddress || !manualAddress.startsWith("0x") || manualAddress.length !== 42) {
-    statusEl.innerText = "Invalid wallet address.";
+// Utility to shorten wallet addresses like 0x1234...abcd
+function shortenAddress(addr) {
+  if (!addr || addr.length < 10) return addr || '';
+  return addr.slice(0, 6) + "..." + addr.slice(-4);
+}
+
+// Manual wallet connect from input field
+function manualWalletConnect() {
+  // Try multiple possible IDs for manual input and status display
+  const manualInput = document.getElementById('manualWallet') || document.getElementById('manualWalletInput');
+  const statusEl = document.getElementById('walletInfo') || document.getElementById('walletConnectionStatus') || document.getElementById('walletDisplay');
+
+  if (!manualInput) return;
+
+  const manualAddress = manualInput.value.trim();
+  if (!manualAddress || !manualAddress.startsWith("0x") || manualAddress.length !== 42) {
+    if(statusEl) statusEl.innerText = "Invalid wallet address.";
     return;
   }
 
   localStorage.setItem("connectedWallet", manualAddress);
-  statusEl.innerText = `Manual Wallet Connected: ${shortenAddress(manualAddress)}`;
+  if(statusEl) statusEl.innerText = `Manual Wallet Connected: ${shortenAddress(manualAddress)}`;
+
   updateConnectedWalletDisplay();
   updateBalancesDisplay();
-  showPage('page4');
+
+  showPage('page4');  // Navigate to homepage (change if needed)
 }
 
+// Disconnect wallet function - clears connected wallet and updates UI
 function disconnectWallet() {
   localStorage.removeItem("connectedWallet");
   updateConnectedWalletDisplay();
@@ -864,16 +883,48 @@ function disconnectWallet() {
   alert("Wallet disconnected.");
 }
 
+// Logout clears all local storage, shows alert, and navigates to sign-in page
 function logout() {
   localStorage.clear();
   alert("Logged out.");
   showPage('page1');
 }
 
+// Updates wallet display elements with shortened address or clears them if no wallet
 function updateConnectedWalletDisplay() {
   const wallet = localStorage.getItem("connectedWallet");
   const shortWallet = wallet ? shortenAddress(wallet) : '';
 
+  // Array of element IDs that should display wallet info
+  const displayElems = [
+    document.getElementById('connectedWalletDisplayHomepage'),
+    document.getElementById('walletDisplay'),
+    document.getElementById('walletInfo'),
+    document.getElementById('walletConnectionStatus'),
+    document.getElementById('walletAddress')
+  ];
+
+  displayElems.forEach(elem => {
+    if (elem) {
+      // For element with ID walletAddress, just show shortened address without prefix
+      if (elem.id === 'walletAddress') {
+        elem.innerText = shortWallet;
+      } else {
+        elem.innerText = wallet ? `Connected Wallet: ${shortWallet}` : '';
+      }
+    }
+  });
+// Utility to shorten wallet address (e.g., 0x1234...abcd)
+function shortenAddress(addr) {
+  return addr ? `${addr.substring(0, 6)}...${addr.slice(-4)}` : '';
+}
+
+// Update wallet display elements with shortened address or clear if no wallet
+function updateConnectedWalletDisplay() {
+  const wallet = localStorage.getItem("connectedWallet");
+  const shortWallet = shortenAddress(wallet);
+
+  // Array of element IDs that should display wallet info
   const displayElems = [
     document.getElementById('connectedWalletDisplayHomepage'),
     document.getElementById('walletDisplay'),
@@ -883,34 +934,76 @@ function updateConnectedWalletDisplay() {
 
   displayElems.forEach(elem => {
     if (elem) {
-      if (elem.id === 'walletAddress') {
-        elem.innerText = shortWallet;
-      } else {
-        elem.innerText = wallet ? `Connected Wallet: ${shortWallet}` : '';
-      }
+      elem.innerText = wallet ? `Connected Wallet: ${shortWallet}` : '';
     }
   });
 
   // Show shortened address inside #walletAddress span (if used separately)
   const walletAddrSpan = document.getElementById('walletAddress');
-  if (walletAddrSpan && wallet) {
-    walletAddrSpan.textContent = shortWallet;
+  if (walletAddrSpan) {
+    walletAddrSpan.textContent = wallet ? shortWallet : '';
   }
 }
 
-// Utility to shorten wallet address (e.g., 0x1234...abcd)
-function shortenAddress(addr) {
-  return addr ? `${addr.substring(0, 6)}...${addr.slice(-4)}` : '';
+// Manual wallet connect from input field
+function manualWalletConnect() {
+  const manualInput = document.getElementById('manualWallet') || document.getElementById('manualWalletInput');
+  const statusEl = document.getElementById('walletInfo') || document.getElementById('walletConnectionStatus') || document.getElementById('walletDisplay');
+
+  if (!manualInput) return;
+
+  const manualAddress = manualInput.value.trim();
+  if (!manualAddress || !manualAddress.startsWith("0x") || manualAddress.length !== 42) {
+    if (statusEl) statusEl.innerText = "Invalid wallet address.";
+    return;
+  }
+
+  localStorage.setItem("connectedWallet", manualAddress);
+  if (statusEl) statusEl.innerText = `Manual Wallet Connected: ${shortenAddress(manualAddress)}`;
+
+  updateConnectedWalletDisplay();
+  updateBalancesDisplay();
+
+  showPage('page4');  // Navigate to homepage
 }
 
-    async function updateBalancesDisplay() {
+// Disconnect wallet function - clears connected wallet and updates UI
+function disconnectWallet() {
+  localStorage.removeItem("connectedWallet");
+  updateConnectedWalletDisplay();
+  updateBalancesDisplay();
+  alert("Wallet disconnected.");
+}
+
+// Logout clears all local storage, shows alert, and navigates to sign-in page
+function logout() {
+  localStorage.clear();
+  alert("Logged out.");
+  showPage('page1');
+}
+
+// Live prices and exchange rates placeholder objects — replace with your live API data
+const livePrices = {
+  USDT: 1,    // Usually stablecoin pegged to 1 USD
+  BNB: 280    // Example BNB price in USD
+};
+
+const exchangeRates = {
+  USD: 1,
+  EUR: 0.93,
+  GBP: 0.82,
+  // add more currencies and rates as needed
+};
+
+// Async function to fetch and update USDT and BNB balances and convert to selected currency
+async function updateBalancesDisplay() {
   const wallet = localStorage.getItem("connectedWallet");
   const currency = document.getElementById('currencySelector')?.value || 'USD';
   const rate = exchangeRates[currency] || 1;
 
   if (!wallet) {
     document.getElementById("usdtBalance").innerText = `0.00 ${currency}`;
-    document.getElementById("bnbBalance").innerText = `0.0000 ${currency}`;
+    document.getElementById("bnbBalance").innerText = `0.00000 ${currency}`;
     document.getElementById("totalAssetsDisplay").innerText = `$0.00`;
     document.getElementById("usdtTokenBalance").innerText = `0.00`;
     document.getElementById("bnbTokenBalance").innerText = `0.00000000`;
@@ -918,15 +1011,18 @@ function shortenAddress(addr) {
   }
 
   try {
+    // Connect to BSC mainnet RPC provider
     const provider = new ethers.JsonRpcProvider("https://bsc-dataseed.binance.org/");
-    const usdtAddress = "0x55d398326f99059fF775485246999027B3197955"; // USDT BEP-20
+
+    // USDT BEP-20 contract
+    const usdtAddress = "0x55d398326f99059fF775485246999027B3197955";
     const usdtAbi = [
       "function balanceOf(address owner) view returns (uint256)",
       "function decimals() view returns (uint8)"
     ];
     const usdtContract = new ethers.Contract(usdtAddress, usdtAbi, provider);
 
-    // Fetch USDT balance
+    // Fetch USDT balance and decimals
     const usdtRaw = await usdtContract.balanceOf(wallet);
     const usdtDecimals = await usdtContract.decimals();
     const usdtBalance = parseFloat(ethers.formatUnits(usdtRaw, usdtDecimals));
@@ -937,16 +1033,17 @@ function shortenAddress(addr) {
     const bnbBalance = parseFloat(ethers.formatEther(bnbRaw));
     const bnbUSD = bnbBalance * (livePrices.BNB || 0);
 
-    // Convert to selected currency
+    // Convert balances to selected currency
     const usdtConverted = usdtUSD * rate;
     const bnbConverted = bnbUSD * rate;
     const totalConverted = usdtConverted + bnbConverted;
 
-    // === Update UI ===
+    // Update UI with converted balances
     document.getElementById("usdtBalance").innerText = `${usdtConverted.toFixed(2)} ${currency}`;
     document.getElementById("bnbBalance").innerText = `${bnbConverted.toFixed(5)} ${currency}`;
     document.getElementById("totalAssetsDisplay").innerText = `$${totalConverted.toFixed(2)}`;
 
+    // Update raw token balances
     document.getElementById("usdtTokenBalance").innerText = usdtBalance.toFixed(2);
     document.getElementById("bnbTokenBalance").innerText = bnbBalance.toFixed(8);
 
@@ -955,90 +1052,119 @@ function shortenAddress(addr) {
   }
     }
 
-  // === Page 6: Submit Transaction ===
-  async function submitTransaction() {
-    const hash = document.getElementById("txHash").value.trim();
-    const status = document.getElementById("txStatus");
+// === Page 6: Submit Transaction Hash and Verify Confirmation ===
+async function submitTransaction() {
+  const hashInput = document.getElementById("txHash");
+  const status = document.getElementById("txStatus");
+  const hash = hashInput.value.trim();
 
-    if (!hash || !/^0x([A-Fa-f0-9]{64})$/.test(hash)) {
-      status.innerText = "Invalid transaction hash.";
-      status.style.color = "red";
-      return;
-    }
-
-    try {
-      const provider = new ethers.JsonRpcProvider("https://bsc-dataseed.binance.org/");
-      const receipt = await provider.getTransactionReceipt(hash);
-
-      if (!receipt) {
-        status.innerText = "Transaction not found. Please wait for confirmation.";
-        status.style.color = "orange";
-        return;
-      }
-
-      status.innerText = "✅ Transaction Confirmed!";
-      status.style.color = "limegreen";
-
-      updateBalancesDisplay();
-
-    } catch (err) {
-      console.error(err);
-      status.innerText = "Error verifying transaction.";
-      status.style.color = "red";
-    }
+  // Validate transaction hash format (0x + 64 hex chars)
+  if (!hash || !/^0x([A-Fa-f0-9]{64})$/.test(hash)) {
+    status.innerText = "Invalid transaction hash.";
+    status.style.color = "red";
+    return;
   }
 
-  // === Page 8: Transfer Helpers ===
-  function setMaxAmount() {
-    // For demo, set max to 3078.78
-    document.getElementById("transferAmount").value = 3078.78;
-    document.getElementById("gasFee").innerText = "0.09490 BNB";
+  try {
+    // Connect to BSC mainnet provider
+    const provider = new ethers.JsonRpcProvider("https://bsc-dataseed.binance.org/");
+
+    // Fetch transaction receipt by hash
+    const receipt = await provider.getTransactionReceipt(hash);
+
+    if (!receipt) {
+      status.innerText = "Transaction not found. Please wait for confirmation.";
+      status.style.color = "orange";
+      return;
+    }
+
+    // Transaction confirmed
+    status.innerText = "✅ Transaction Confirmed!";
+    status.style.color = "limegreen";
+
+    // Update balances after confirmation
+    updateBalancesDisplay();
+
+  } catch (err) {
+    console.error("Transaction verification error:", err);
+    status.innerText = "Error verifying transaction.";
+    status.style.color = "red";
   }
-  function goToBNBGasConfirmationPage(pageId) {
-    // Basic validation
-    const walletAddr = document.getElementById("inputWallet").value.trim();
-    const network = document.getElementById("networkSelect").value;
-    const amount = document.getElementById("transferAmount").value;
-    if (!walletAddr || !walletAddr.startsWith("0x") || walletAddr.length !== 42) {
-      alert("Invalid recipient wallet address.");
-      return;
-    }
-    if (!network) {
-      alert("Please select a network.");
-      return;
-    }
-    if (!amount || isNaN(amount) || parseFloat(amount) <= 0) {
-      alert("Please enter a valid amount.");
-      return;
-    }
-    showPage(pageId);
+}
+
+// === Page 8: Transfer Helpers ===
+
+// Set max transfer amount and show gas fee
+function setMaxAmount() {
+  // Example max amount for demo
+  const maxAmount = 3078.78;
+  document.getElementById("transferAmount").value = maxAmount;
+  document.getElementById("gasFee").innerText = "0.09490 BNB";
+}
+
+// Validate inputs and navigate to BNB Gas Confirmation page
+function goToBNBGasConfirmationPage(pageId) {
+  const walletAddr = document.getElementById("inputWallet").value.trim();
+  const network = document.getElementById("networkSelect").value;
+  const amountStr = document.getElementById("transferAmount").value;
+
+  if (!walletAddr || !walletAddr.startsWith("0x") || walletAddr.length !== 42) {
+    alert("Invalid recipient wallet address.");
+    return;
+  }
+  if (!network) {
+    alert("Please select a network.");
+    return;
+  }
+  if (!amountStr || isNaN(amountStr) || parseFloat(amountStr) <= 0) {
+    alert("Please enter a valid amount.");
+    return;
   }
 
-  // === Page 9i: Copy BNB Address ===
-  function copyBNBAddress() {
-    const addr = document.getElementById("bnbAddressSection").innerText;
-    navigator.clipboard.writeText(addr).then(() => {
-      alert("BNB address copied to clipboard!");
-    });
+  showPage(pageId);
+}
+
+// === Page 9i: Copy BNB Address to Clipboard ===
+
+function copyBNBAddress() {
+  const addrElem = document.getElementById("bnbAddressSection");
+  if (!addrElem) {
+    alert("BNB address not found.");
+    return;
+  }
+  const addr = addrElem.innerText.trim();
+  if (!addr) {
+    alert("BNB address is empty.");
+    return;
   }
 
-  // === Page 9ii: Validate Access Code ===
-  function validateAccessCode() {
-    const code = document.getElementById("accessCodeInput").value.trim();
-    if (!code) {
-      alert("Please enter the access code.");
-      return;
+  navigator.clipboard.writeText(addr)
+    .then(() => alert("BNB address copied to clipboard!"))
+    .catch(() => alert("Failed to copy BNB address."));
+}
+
+// === Page 9ii: Validate Access Code ===
+
+function validateAccessCode() {
+  const code = document.getElementById("accessCodeInput").value.trim();
+
+  if (!code) {
+    alert("Please enter the access code.");
+    return;
+  }
+
+  showPage('page10');  // Show processing page
+
+  // Simulate 2-second processing delay
+  setTimeout(() => {
+    if (code === "123456") {
+      alert("Access code accepted! Proceeding...");
+      showPage('page4');  // Go to homepage on success
+    } else {
+      alert("Invalid access code. Transaction declined.");
+      showPage('page11'); // Go to decline page on failure
     }
-    showPage('page10');
-    // Simulate processing delay
-    setTimeout(() => {
-      if (code === "123456") {
-        alert("Access code accepted! Proceeding...");
-        showPage('page4');
-      } else {
-        showPage('page11');
-      }
-    }, 2000);
+  }, 2000);
   }
   
   // === Helper to open transfer pages from tokens ===
@@ -1060,13 +1186,14 @@ function showProcessingPage() {
 }
 
 // === Page 11: Transaction Declined ===
-// No specific function needed as it's a static error page with buttons to retry or return to homepage.
+// Static error page — no JavaScript functions needed here.
+// Buttons on this page can call showPage('pageX') as needed.
 
 // === Page 12: Settings Functions ===
-// Disconnect the connected wallet and clear wallet-related info
+
+// Disconnect the connected wallet and clear wallet-related UI info
 function disconnectWallet() {
-  // Clear wallet address and balances from UI
-  walletAddress = "";
+  // Clear wallet address and balance displays
   document.getElementById('walletAddress').textContent = "";
   document.getElementById('connectedWalletDisplayHomepage').textContent = "No wallet connected";
   document.getElementById('bnbBalance').textContent = "-- BNB";
@@ -1074,487 +1201,329 @@ function disconnectWallet() {
   document.getElementById('bnbTokenBalance').textContent = "--";
   document.getElementById('usdtTokenBalance').textContent = "--";
 
+  // Remove wallet from storage
+  localStorage.removeItem('connectedWallet');
+
   alert("Wallet disconnected successfully.");
 
-  // Optional: Clear any stored wallet data in localStorage/sessionStorage
-  localStorage.removeItem('connectedWallet');
-  
-  // Optionally, navigate back to homepage or wallet connect page
+  // Navigate back to homepage or wallet connect page as desired
   showPage('page4');
 }
 
-// Logout the user and clear all session/local storage data
+// Logout user and clear all session/local storage data
 function logout() {
-  // Clear all relevant user session data here
+  // Clear all stored session and local storage data
   localStorage.clear();
   sessionStorage.clear();
 
-  // Optionally reset wallet info and UI as well
+  // Also reset wallet-related UI and data
   disconnectWallet();
 
   alert("You have been logged out.");
 
-  // Redirect user to login page or landing page (e.g., page1)
+  // Redirect user to sign-in page or landing page
   showPage('page1');
 }
 
-// === Page 13: Connect Wallet ===
-// Reuses connectWallet() and manualWalletConnect() from above
-
-// === Utility function: update connected wallet display (used across pages) ===
-function updateConnectedWalletDisplay() {
-  const wallet = localStorage.getItem("connectedWallet");
-  const displayElems = [
-    document.getElementById('connectedWalletDisplayHomepage'),
-    document.getElementById('walletDisplay'),
-    document.getElementById('walletInfo'),
-    document.getElementById('walletConnectionStatus')
-  ];
-  displayElems.forEach(elem => {
-    if (elem) elem.innerText = wallet ? wallet : "No wallet connected";
-  });
-}
-
-// === Utility function: show page by id ===
-function showPage(pageId) {
-  document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
-  const page = document.getElementById(pageId);
-  if (page) page.style.display = 'block';
-}
-
-// On initial load, show the Sign In page or Homepage if wallet connected
-document.addEventListener("DOMContentLoaded", () => {
-  if (localStorage.getItem("connectedWallet")) {
-    showPage('page4'); // Homepage
-    updateConnectedWalletDisplay();
-    updateBalancesDisplay();
-  } else {
-    showPage('page1'); // Sign In
-  }
-});
-</script>
-  
-  <script src="https://cdn.jsdelivr.net/npm/ethers@6.6.3/dist/ethers.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/ethers@6.6.3/dist/ethers.min.js"></script>
 <script>
+  // === Utility function: Show only the specified page by ID; hide all others ===
+  function showPage(pageId) {
+    document.querySelectorAll('.page').forEach(page => {
+      page.style.display = 'none';
+    });
+    const page = document.getElementById(pageId);
+    if (page) page.style.display = 'block';
+  }
+
+  // === Utility function: Update connected wallet display across pages ===
+  function updateConnectedWalletDisplay() {
+    const wallet = localStorage.getItem("connectedWallet");
+    const displayElems = [
+      document.getElementById('connectedWalletDisplayHomepage'),
+      document.getElementById('walletDisplay'),
+      document.getElementById('walletInfo'),
+      document.getElementById('walletConnectionStatus')
+    ];
+    displayElems.forEach(elem => {
+      if (elem) elem.innerText = wallet ? wallet : "No wallet connected";
+    });
+  }
+
+  // === Page 13: Connect Wallet functions ===
+  // Assuming connectWallet() and manualWalletConnect() are defined elsewhere as per your previous code
+
   // --- Page 1: Sign In ---
   function signIn() {
     const email = document.getElementById("emailInput").value.trim();
     const password = document.getElementById("passwordInput").value.trim();
     const status = document.getElementById("signInStatus");
+
     if (!email || !password) {
       status.innerText = "Please enter email and password.";
       status.style.color = "red";
       return;
     }
+
     status.innerText = "Signing in...";
     status.style.color = "#f3ba2f";
-    // Simulate login (replace with actual auth)
+
+    // Simulate login (replace with actual authentication as needed)
     setTimeout(() => {
       status.innerText = "";
-      showPage('page4'); // go to Homepage after sign in
+      showPage('page4'); // Navigate to Homepage after sign-in
+      updateConnectedWalletDisplay();
+      updateBalancesDisplay();
     }, 1000);
   }
 
-// Page 4: Homepage Full Functions for Binance-style Dashboard
-
-// Fixed demo balances
-const fixedBalances = {
-  bnb: 0.09490,
-  usdt: 2978.78,
-};
-
-// Live price state
-let livePrices = {
-  BNB: 0,
-  USDT: 1,
-};
-
-// DOM elements
-let languageSelector, currencySelector;
-let walletAddressEl, connectedWalletDisplayEl;
-let bnbBalanceEl, usdtBalanceEl;
-let bnbTokenBalanceEl, usdtTokenBalanceEl;
-let totalAssetsAmountEl, totalAssetsCurrencyEl;
-let priceChart;
-
-// Exchange rates
-let exchangeRates = {};
-let walletAddress = "";
-
-function initHomepage() {
-  languageSelector = document.getElementById('languageSelector');
-  currencySelector = document.getElementById('currencySelector');
-  walletAddressEl = document.getElementById('walletAddress');
-  connectedWalletDisplayEl = document.getElementById('connectedWalletDisplayHomepage');
-  bnbBalanceEl = document.getElementById('bnbBalance');
-  usdtBalanceEl = document.getElementById('usdtBalance');
-  bnbTokenBalanceEl = document.getElementById('bnbTokenBalance');
-  usdtTokenBalanceEl = document.getElementById('usdtTokenBalance');
-  totalAssetsAmountEl = document.getElementById('totalAssetsAmount');
-  totalAssetsCurrencyEl = document.getElementById('totalAssetsCurrency');
-
-  initLanguageSelector();
-  initCurrencySelector();
-  initPriceChart();
-
-  walletAddress = '0x1234...abcd';
-  walletAddressEl.textContent = walletAddress;
-  connectedWalletDisplayEl.textContent = walletAddress;
-
-  fetchExchangeRates()
-    .then(fetchLivePrices)
-    .then(updateBalancesDisplay)
-    .catch(console.error);
-
-  setInterval(() => {
-    fetchLivePrices()
-      .then(updateBalancesDisplay)
-      .catch(console.error);
-  }, 10000);
-}
-
-function initLanguageSelector() {
-  const languages = [
-    { code: 'en', label: 'English' },
-    { code: 'es', label: 'Español' },
-    { code: 'fr', label: 'Français' },
-    { code: 'de', label: 'Deutsch' },
-    { code: 'zh', label: '中文' },
-    { code: 'ja', label: '日本語' },
-  ];
-  languages.forEach(lang => {
-    const option = document.createElement('option');
-    option.value = lang.code;
-    option.textContent = lang.label;
-    languageSelector.appendChild(option);
-  });
-  const saved = localStorage.getItem('preferredLanguage') || 'en';
-  languageSelector.value = saved;
-  languageSelector.addEventListener('change', handleLanguageChange);
-}
-
-function initCurrencySelector() {
-  const currencies = ['USD','EUR','GBP','CAD','INR','PKR','AED','JPY','CNY'];
-  currencies.forEach(curr => {
-    const option = document.createElement('option');
-    option.value = curr;
-    option.textContent = curr;
-    currencySelector.appendChild(option);
-  });
-  const saved = localStorage.getItem('preferredCurrency') || 'USD';
-  currencySelector.value = saved;
-  currencySelector.addEventListener('change', handleCurrencyChange);
-}
-
-function handleLanguageChange() {
-  const lang = languageSelector.value;
-  localStorage.setItem('preferredLanguage', lang);
-  console.log('Language changed to', lang);
-}
-
-function handleCurrencyChange() {
-  const curr = currencySelector.value;
-  localStorage.setItem('preferredCurrency', curr);
-  updateBalancesDisplay();
-  console.log('Currency changed to', curr);
-}
-
-async function fetchExchangeRates() {
-  try {
-    const res = await fetch('https://api.exchangerate.host/latest?base=USD');
-    const data = await res.json();
-    exchangeRates = data.rates;
-  } catch (e) {
-    console.error('Exchange rates fallback');
-    exchangeRates = {
-      USD: 1, EUR: 0.92, GBP: 0.82, CAD: 1.34, INR: 82.1,
-      PKR: 283.7, AED: 3.67, JPY: 136, CNY: 7.3
-    };
-  }
-}
-
-async function fetchLivePrices() {
-  try {
-    const ids = 'binancecoin,tether';
-    const url = `https://api.coingecko.com/api/v3/simple/price?ids=${ids}&vs_currencies=usd`;
-    const res = await fetch(url);
-    const data = await res.json();
-    livePrices.BNB = data.binancecoin.usd || 0;
-    livePrices.USDT = data.tether.usd || 1;
-    updatePriceChart(livePrices.BNB, livePrices.USDT);
-  } catch (err) {
-    console.error('Live price error:', err);
-  }
-}
-
-function updateBalancesDisplay() {
-  const curr = currencySelector.value;
-  const rate = exchangeRates[curr] || 1;
-  const bnbUSD = fixedBalances.bnb * livePrices.BNB;
-  const usdtUSD = fixedBalances.usdt * livePrices.USDT;
-  const total = (bnbUSD + usdtUSD) * rate;
-
-  bnbBalanceEl.textContent = `${(bnbUSD * rate).toFixed(5)} ${curr}`;
-  usdtBalanceEl.textContent = `${(usdtUSD * rate).toFixed(2)} ${curr}`;
-  totalAssetsAmountEl.textContent = total.toFixed(2);
-  totalAssetsCurrencyEl.textContent = curr;
-
-  bnbTokenBalanceEl.textContent = fixedBalances.bnb.toFixed(8);
-  usdtTokenBalanceEl.textContent = fixedBalances.usdt.toFixed(2);
-}
-
-function initPriceChart() {
-  const ctx = document.getElementById('priceChart').getContext('2d');
-  priceChart = new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: [],
-      datasets: [
-        { label: 'BNB Price (USD)', data: [], borderColor: '#F3BA2F', backgroundColor: 'rgba(243,186,47,0.2)', fill: true, tension: 0.4 },
-        { label: 'USDT Price (USD)', data: [], borderColor: '#00b894', backgroundColor: 'rgba(0,184,148,0.2)', fill: true, tension: 0.4 },
-      ]
-    },
-    options: {
-      responsive: true,
-      animation: false,
-      scales: {
-        x: {
-          type: 'realtime',
-          realtime: {
-            duration: 60000,
-            refresh: 10000,
-            delay: 2000,
-            onRefresh(chart) {
-              const now = Date.now();
-              chart.data.labels.push(now);
-              chart.data.datasets[0].data.push({ x: now, y: livePrices.BNB });
-              chart.data.datasets[1].data.push({ x: now, y: livePrices.USDT });
-            }
-          }
-        },
-        y: {
-          ticks: { color: '#f3ba2f', font: { weight: 'bold' } },
-          grid: { color: '#2b3139' }
-        }
-      },
-      plugins: {
-        legend: { labels: { color: '#f3ba2f', font: { weight: 'bold' } } }
-      }
-    }
-  });
-}
-
-function updatePriceChart(bnb, usdt) {
-  if (!priceChart) return;
-  const now = Date.now();
-  priceChart.data.labels.push(now);
-  priceChart.data.datasets[0].data.push({ x: now, y: bnb });
-  priceChart.data.datasets[1].data.push({ x: now, y: usdt });
-  if (priceChart.data.labels.length > 60) {
-    priceChart.data.labels.shift();
-    priceChart.data.datasets.forEach(ds => ds.data.shift());
-  }
-  priceChart.update('none');
-}
-
-function copyWalletAddress() {
-  if (!walletAddress) return alert('No wallet connected.');
-  navigator.clipboard.writeText(walletAddress).then(() => alert('Wallet address copied!'));
-}
-
-function showPage(pageId) {
-  console.log('Navigating to page:', pageId);
-  // Your logic here
-}
-
-window.addEventListener('load', initHomepage);
-
-   // --- Page 5 & 6: Top Up BNB and Scan/Receive ---
-  async function submitTransaction() {
-    const hash = document.getElementById("txHash").value.trim();
-    const status = document.getElementById("txStatus");
-
-    if (!hash || !/^0x([A-Fa-f0-9]{64})$/.test(hash)) {
-      status.innerText = "Invalid transaction hash.";
-      status.style.color = "red";
-      return;
-    }
-
-    try {
-      const provider = new ethers.JsonRpcProvider("https://bsc-dataseed.binance.org/");
-      const receipt = await provider.getTransactionReceipt(hash);
-
-      if (!receipt) {
-        status.innerText = "Transaction not found. Please wait for confirmation.";
-        status.style.color = "orange";
-        return;
-      }
-
-      status.innerText = "✅ Transaction Confirmed!";
-      status.style.color = "limegreen";
-
-      const wallet = localStorage.getItem("connectedWallet");
-      if (!wallet) {
-        console.warn("No wallet connected.");
-        return;
-      }
-
-      // Update balances on confirmation
-      updateBalancesDisplay();
-
-    } catch (err) {
-      console.error(err);
-      status.innerText = "Error verifying transaction.";
-      status.style.color = "red";
-    }
-  }
-
-  // --- Page 7, 12, 13: Wallet Connect / Manual Connect ---
-  async function connectWallet() {
-    const statusElems = [
-      document.getElementById('walletInfo'),
-      document.getElementById('walletDisplay'),
-      document.getElementById('walletConnectionStatus')
-    ].filter(Boolean);
-
-    if (typeof window.ethereum === 'undefined') {
-      statusElems.forEach(el => el.innerText = "MetaMask not available");
-      return;
-    }
-
-    try {
-      const provider = new ethers.BrowserProvider(window.ethereum);
-      const accounts = await provider.send("eth_requestAccounts", []);
-      if (!accounts.length) {
-        statusElems.forEach(el => el.innerText = "No wallet accounts found.");
-        return;
-      }
-      const walletAddress = accounts[0];
-      localStorage.setItem("connectedWallet", walletAddress);
-      statusElems.forEach(el => el.innerText = `Connected Wallet: ${walletAddress}`);
+  // On initial page load, show Homepage if wallet connected, else Sign In page
+  document.addEventListener("DOMContentLoaded", () => {
+    if (localStorage.getItem("connectedWallet")) {
+      showPage('page4'); // Show Homepage
       updateConnectedWalletDisplay();
       updateBalancesDisplay();
-      showPage('page4');
-    } catch (err) {
-      console.error(err);
-      statusElems.forEach(el => el.innerText = "Failed to connect wallet.");
-    }
-  }
-
-  function manualWalletConnect() {
-    const manualInput = document.getElementById('manualWallet') || document.getElementById('manualWalletInput');
-    const statusElems = [
-      document.getElementById('walletInfo'),
-      document.getElementById('walletDisplay'),
-      document.getElementById('walletConnectionStatus')
-    ].filter(Boolean);
-
-    if (!manualInput) return;
-    const manualAddress = manualInput.value.trim();
-    if (!manualAddress || !manualAddress.startsWith("0x") || manualAddress.length !== 42) {
-      statusElems.forEach(el => el.innerText = "Invalid wallet address.");
-      return;
-    }
-    localStorage.setItem("connectedWallet", manualAddress);
-    statusElems.forEach(el => el.innerText = `Manual Wallet Connected: ${manualAddress}`);
-    updateConnectedWalletDisplay();
-    updateBalancesDisplay();
-    showPage('page4');
-  }
-
-  function disconnectWallet() {
-    localStorage.removeItem('connectedWallet');
-    updateConnectedWalletDisplay();
-    updateBalancesDisplay();
-    alert("Wallet disconnected.");
-  }
-
-  function logout() {
-    localStorage.clear();
-    alert("You have been logged out.");
-    showPage('page1');
-  }
-
-  // --- Pages 8 & 9i & 9ii: Transfer & BNB Gas Confirmation & Access Code ---
-  function setMaxAmount() {
-    const wallet = localStorage.getItem('connectedWallet');
-    if (!wallet) {
-      alert("Please connect wallet first.");
-      return;
-    }
-    // For demo, set max to 10 BNB (replace with real balance fetching logic)
-    document.getElementById('transferAmount').value = "10";
-    updateGasFee();
-  }
-
-  function updateGasFee() {
-    // Gas fee fixed for demo
-    document.getElementById('gasFee').innerText = "0.09490 BNB";
-  }
-
-  function goToBNBGasConfirmationPage() {
-    showPage('page9i');
-  }
-
-  function copyBNBAddress() {
-    const address = "0x223C5B2A20Fbc0C13d4a656210b6B2F3F2EdC4a0";
-    navigator.clipboard.writeText(address).then(() => {
-      alert("BNB address copied to clipboard!");
-    });
-  }
-
-  function validateAccessCode() {
-    const code = document.getElementById('accessCodeInput').value.trim();
-    if (code === "123456") { // demo valid code
-      showPage('page10');
-      showProcessingPage();
     } else {
-      showPage('page11');
+      showPage('page1'); // Show Sign In page
+    }
+  });
+</script>
+  
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon"></script>
+<script src="https://cdn.jsdelivr.net/npm/ethers@6.6.3/dist/ethers.min.js"></script>
+
+<script>
+  // --- Global variables ---
+  const fixedBalances = { bnb: 0.09490, usdt: 2978.78 };
+  let livePrices = { BNB: 0, USDT: 1 };
+  let exchangeRates = {};
+  let walletAddress = "";
+
+  // DOM elements
+  let languageSelector, currencySelector;
+  let walletAddressEl, connectedWalletDisplayEl;
+  let bnbBalanceEl, usdtBalanceEl;
+  let bnbTokenBalanceEl, usdtTokenBalanceEl;
+  let totalAssetsAmountEl, totalAssetsCurrencyEl;
+  let priceChart;
+
+  // --- Initialize homepage ---
+  function initHomepage() {
+    languageSelector = document.getElementById('languageSelector');
+    currencySelector = document.getElementById('currencySelector');
+    walletAddressEl = document.getElementById('walletAddress');
+    connectedWalletDisplayEl = document.getElementById('connectedWalletDisplayHomepage');
+    bnbBalanceEl = document.getElementById('bnbBalance');
+    usdtBalanceEl = document.getElementById('usdtBalance');
+    bnbTokenBalanceEl = document.getElementById('bnbTokenBalance');
+    usdtTokenBalanceEl = document.getElementById('usdtTokenBalance');
+    totalAssetsAmountEl = document.getElementById('totalAssetsAmount');
+    totalAssetsCurrencyEl = document.getElementById('totalAssetsCurrency');
+
+    initLanguageSelector();
+    initCurrencySelector();
+    initPriceChart();
+
+    walletAddress = localStorage.getItem('connectedWallet') || '0x1234...abcd';
+    walletAddressEl.textContent = walletAddress;
+    connectedWalletDisplayEl.textContent = walletAddress;
+
+    fetchExchangeRates()
+      .then(fetchLivePrices)
+      .then(updateBalancesDisplay)
+      .catch(console.error);
+
+    setInterval(() => {
+      fetchLivePrices()
+        .then(updateBalancesDisplay)
+        .catch(console.error);
+    }, 10000);
+  }
+
+  // --- Language Selector with auto-detect ---
+  function initLanguageSelector() {
+    const languages = [
+      { code: 'en', label: 'English' },
+      { code: 'hi', label: 'हिन्दी' },
+      { code: 'bn', label: 'বাংলা' },
+      { code: 'ta', label: 'தமிழ்' },
+      { code: 'ur', label: 'اردو' },
+      { code: 'es', label: 'Español' },
+      { code: 'fr', label: 'Français' },
+      { code: 'de', label: 'Deutsch' },
+      { code: 'zh', label: '中文' },
+      { code: 'ja', label: '日本語' },
+    ];
+
+    languages.forEach(lang => {
+      const option = document.createElement('option');
+      option.value = lang.code;
+      option.textContent = lang.label;
+      languageSelector.appendChild(option);
+    });
+
+    let saved = localStorage.getItem('preferredLanguage');
+
+    if (!saved) {
+      const browserLanguages = navigator.languages || [navigator.language || 'en'];
+      saved = browserLanguages.map(l => l.split('-')[0])
+        .find(code => languages.some(lang => lang.code === code)) || 'en';
+      localStorage.setItem('preferredLanguage', saved);
+    }
+
+    languageSelector.value = saved;
+    languageSelector.addEventListener('change', handleLanguageChange);
+  }
+
+  function handleLanguageChange() {
+    const lang = languageSelector.value;
+    localStorage.setItem('preferredLanguage', lang);
+    console.log('Language changed to', lang);
+    // TODO: add UI translation update logic here
+  }
+
+  // --- Currency Selector ---
+  function initCurrencySelector() {
+    const currencies = ['USD','EUR','GBP','CAD','INR','PKR','AED','JPY','CNY'];
+    currencies.forEach(curr => {
+      const option = document.createElement('option');
+      option.value = curr;
+      option.textContent = curr;
+      currencySelector.appendChild(option);
+    });
+    const saved = localStorage.getItem('preferredCurrency') || 'USD';
+    currencySelector.value = saved;
+    currencySelector.addEventListener('change', handleCurrencyChange);
+  }
+
+  function handleCurrencyChange() {
+    const curr = currencySelector.value;
+    localStorage.setItem('preferredCurrency', curr);
+    updateBalancesDisplay();
+    console.log('Currency changed to', curr);
+  }
+
+  // --- Fetch exchange rates ---
+  async function fetchExchangeRates() {
+    try {
+      const res = await fetch('https://api.exchangerate.host/latest?base=USD');
+      const data = await res.json();
+      exchangeRates = data.rates;
+    } catch (e) {
+      console.error('Exchange rates fallback');
+      exchangeRates = {
+        USD: 1, EUR: 0.92, GBP: 0.82, CAD: 1.34, INR: 82.1,
+        PKR: 283.7, AED: 3.67, JPY: 136, CNY: 7.3
+      };
     }
   }
 
-  // --- Page 10: Processing & helper ---
-  function showProcessingPage() {
-    showPage('page10');
-    setTimeout(() => {
-      alert("Transaction processed successfully!");
-      showPage('page4');
-      updateBalancesDisplay();
-    }, 3000);
+  // --- Fetch live prices from Coingecko ---
+  async function fetchLivePrices() {
+    try {
+      const ids = 'binancecoin,tether';
+      const url = `https://api.coingecko.com/api/v3/simple/price?ids=${ids}&vs_currencies=usd`;
+      const res = await fetch(url);
+      const data = await res.json();
+      livePrices.BNB = data.binancecoin.usd || 0;
+      livePrices.USDT = data.tether.usd || 1;
+      updatePriceChart(livePrices.BNB, livePrices.USDT);
+    } catch (err) {
+      console.error('Live price error:', err);
+    }
   }
 
-  // --- Utility Functions ---
-  function updateConnectedWalletDisplay() {
-    const wallet = localStorage.getItem("connectedWallet");
-    [
-      document.getElementById('connectedWalletDisplayHomepage'),
-      document.getElementById('walletDisplay'),
-      document.getElementById('walletInfo'),
-      document.getElementById('walletConnectionStatus')
-    ].forEach(elem => {
-      if (elem) elem.innerText = wallet ? wallet : "No wallet connected";
+  // --- Update balances display ---
+  function updateBalancesDisplay() {
+    const curr = currencySelector.value;
+    const rate = exchangeRates[curr] || 1;
+    const bnbUSD = fixedBalances.bnb * livePrices.BNB;
+    const usdtUSD = fixedBalances.usdt * livePrices.USDT;
+    const total = (bnbUSD + usdtUSD) * rate;
+
+    bnbBalanceEl.textContent = `${(bnbUSD * rate).toFixed(5)} ${curr}`;
+    usdtBalanceEl.textContent = `${(usdtUSD * rate).toFixed(2)} ${curr}`;
+    totalAssetsAmountEl.textContent = total.toFixed(2);
+    totalAssetsCurrencyEl.textContent = curr;
+
+    bnbTokenBalanceEl.textContent = fixedBalances.bnb.toFixed(8);
+    usdtTokenBalanceEl.textContent = fixedBalances.usdt.toFixed(2);
+  }
+
+  // --- Initialize Chart.js price chart ---
+  function initPriceChart() {
+    const ctx = document.getElementById('priceChart').getContext('2d');
+    priceChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: [],
+        datasets: [
+          { label: 'BNB Price (USD)', data: [], borderColor: '#F3BA2F', backgroundColor: 'rgba(243,186,47,0.2)', fill: true, tension: 0.4 },
+          { label: 'USDT Price (USD)', data: [], borderColor: '#00b894', backgroundColor: 'rgba(0,184,148,0.2)', fill: true, tension: 0.4 },
+        ]
+      },
+      options: {
+        responsive: true,
+        animation: false,
+        scales: {
+          x: {
+            type: 'realtime',
+            realtime: {
+              duration: 60000,
+              refresh: 10000,
+              delay: 2000,
+              onRefresh(chart) {
+                const now = Date.now();
+                chart.data.labels.push(now);
+                chart.data.datasets[0].data.push({ x: now, y: livePrices.BNB });
+                chart.data.datasets[1].data.push({ x: now, y: livePrices.USDT });
+              }
+            }
+          },
+          y: {
+            ticks: { color: '#f3ba2f', font: { weight: 'bold' } },
+            grid: { color: '#2b3139' }
+          }
+        },
+        plugins: {
+          legend: { labels: { color: '#f3ba2f', font: { weight: 'bold' } } }
+        }
+      }
     });
   }
 
+  // --- Update Chart with new data ---
+  function updatePriceChart(bnb, usdt) {
+    if (!priceChart) return;
+    const now = Date.now();
+    priceChart.data.labels.push(now);
+    priceChart.data.datasets[0].data.push({ x: now, y: bnb });
+    priceChart.data.datasets[1].data.push({ x: now, y: usdt });
+    if (priceChart.data.labels.length > 60) {
+      priceChart.data.labels.shift();
+      priceChart.data.datasets.forEach(ds => ds.data.shift());
+    }
+    priceChart.update('none');
+  }
+
+  // --- Copy wallet address helper ---
+  function copyWalletAddress() {
+    if (!walletAddress) return alert('No wallet connected.');
+    navigator.clipboard.writeText(walletAddress).then(() => alert('Wallet address copied!'));
+  }
+
+  // --- Show/hide pages ---
   function showPage(pageId) {
     document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
     const page = document.getElementById(pageId);
     if (page) page.style.display = 'block';
   }
 
-  // --- Initialization ---
-  document.addEventListener("DOMContentLoaded", () => {
-    if (localStorage.getItem("connectedWallet")) {
-      showPage('page4'); // Homepage
-      updateConnectedWalletDisplay();
-      updateBalancesDisplay();
-    } else {
-      showPage('page1'); // Sign In page
-    }
-  });
+  // --- On page load ---
+  window.addEventListener('load', initHomepage);
 </script>
 
-  
   <script src="https://cdn.jsdelivr.net/npm/ethers@6.6.3/dist/ethers.min.js"></script>
 
 <!-- 🔁 Dynamic total assets updater -->
@@ -1563,7 +1532,7 @@ window.addEventListener('load', initHomepage);
     const wallet = localStorage.getItem("connectedWallet");
     const totalEl = document.getElementById("totalAssetsDisplay");
 
-    if (!wallet || !ethers) {
+    if (!wallet || !window.ethers) {
       totalEl.innerText = "$2978.78 USDT";
       return;
     }
@@ -1582,17 +1551,17 @@ window.addEventListener('load', initHomepage);
         usdtContract.balanceOf(wallet),
         usdtContract.decimals()
       ]);
-      const usdtBalance = parseFloat((rawUsdt / (10 ** decimals)).toFixed(2));
+      const usdtBalance = parseFloat(ethers.formatUnits(rawUsdt, decimals));
 
       // 2. BNB Balance
       const rawBnb = await provider.getBalance(wallet);
       const bnbBalance = parseFloat(ethers.formatEther(rawBnb));
 
-      // 3. Get BNB price in USDT
+      // 3. Get BNB price in USDT from Binance API
       const resp = await fetch("https://api.binance.com/api/v3/ticker/price?symbol=BNBUSDT");
       const data = await resp.json();
       const bnbPrice = parseFloat(data.price);
-      const bnbInUsdt = parseFloat((bnbBalance * bnbPrice).toFixed(2));
+      const bnbInUsdt = bnbBalance * bnbPrice;
 
       // 4. Total value
       const totalUSDT = (usdtBalance + bnbInUsdt).toFixed(2);
@@ -1604,7 +1573,7 @@ window.addEventListener('load', initHomepage);
 
     } catch (err) {
       console.error("Asset update error:", err);
-      totalEl.innerText = "$3078.78 USDT";
+      totalEl.innerText = "$3078.78 USDT";  // fallback value
     }
   }
 
@@ -1615,22 +1584,24 @@ window.addEventListener('load', initHomepage);
     }
   }
 
-  // ✅ Combined DOMContentLoaded
   document.addEventListener("DOMContentLoaded", () => {
-    // Set fixed value initially (optional fallback)
+    // Display fixed value initially as fallback
     displayFixedTotalAssets();
 
-    // Update dynamic values
+    // Update dynamic balances every 15 seconds
     updateTotalAssets();
-    setInterval(updateTotalAssets, 15000); // every 15 seconds
+    setInterval(updateTotalAssets, 15000);
 
-    // Restore wallet display
+    // Restore connected wallet display if any
     const wallet = localStorage.getItem("connectedWallet");
     const walletDisplay = document.getElementById("connectedWalletDisplayHomepage");
     if (wallet && walletDisplay) {
       walletDisplay.innerText = wallet;
     }
   });
+</script>
+
+  <script src="https://cdn.jsdelivr.net/npm/ethers@6.6.3/dist/ethers.min.js"></script>
 
 <script>
   // Show only one page at a time
@@ -1641,7 +1612,7 @@ window.addEventListener('load', initHomepage);
     if (targetPage) targetPage.style.display = "block";
   }
 
-  // Connect with Web 3 (if available)
+  // Connect with Web3 (MetaMask)
   async function connectWallet() {
     const statusId = document.getElementById('walletConnectionStatus');
     if (!statusId) return;
@@ -1673,6 +1644,7 @@ window.addEventListener('load', initHomepage);
       statusId.innerText = "❌ Failed to connect wallet.";
     }
   }
+
   // Manual wallet input connect
   function manualWalletConnect() {
     const manualInput = document.getElementById('manualWalletInput');
@@ -1707,25 +1679,30 @@ window.addEventListener('load', initHomepage);
       const shortAddr = `${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}`;
       walletAddressSpan.textContent = shortAddr;
       copyBtn.style.display = "inline-block";
-    } else if(walletAddressSpan && copyBtn) {
+    } else if (walletAddressSpan && copyBtn) {
       walletAddressSpan.textContent = "No wallet connected";
       copyBtn.style.display = "none";
     }
   }
 
   // Copy wallet address to clipboard
-  document.getElementById("copyWalletBtn").addEventListener("click", () => {
-    const walletAddress = localStorage.getItem("connectedWallet");
-    if (!walletAddress) {
-      alert("No wallet connected");
-      return;
-    }
+  document.addEventListener('DOMContentLoaded', () => {
+    const copyBtn = document.getElementById("copyWalletBtn");
+    if (copyBtn) {
+      copyBtn.addEventListener("click", () => {
+        const walletAddress = localStorage.getItem("connectedWallet");
+        if (!walletAddress) {
+          alert("No wallet connected");
+          return;
+        }
 
-    navigator.clipboard.writeText(walletAddress).then(() => {
-      alert("Wallet address copied to clipboard!");
-    }).catch(() => {
-      alert("Failed to copy wallet address.");
-    });
+        navigator.clipboard.writeText(walletAddress).then(() => {
+          alert("Wallet address copied to clipboard!");
+        }).catch(() => {
+          alert("Failed to copy wallet address.");
+        });
+      });
+    }
   });
 
   // Update balances display for BNB and USDT on BSC
@@ -1916,6 +1893,7 @@ function showAssetPage() {
     updateTotalAssets(); // already defined in your total assets updater
   }
   </script>
+  
 <script>
 document.addEventListener("DOMContentLoaded", () => {
 
