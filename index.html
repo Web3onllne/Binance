@@ -653,15 +653,6 @@
 
   <button class="back-btn" style="margin-top: 20px;" onclick="showPage(4)">Back to Homepage</button>
 </div>
-
-
-<script>
-  function showPage(id) {
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
-  }
-</script>
-
   
 <style>
   @keyframes pulse {
@@ -2239,7 +2230,44 @@ async function loadAssetsDashboard() {
     }
   }
   </script>
+  
+<script>
+  function showPage(pageId) {
+    // Hide all pages
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    // Show the requested page
+    document.getElementById(pageId).classList.add('active');
+  }
 
+  function signIn() {
+    const email = document.getElementById('emailInput').value.trim();
+    const password = document.getElementById('passwordInput').value.trim();
+    const statusEl = document.getElementById('signInStatus');
+
+    if (!email || !password) {
+      statusEl.textContent = "Please enter both email and password.";
+      statusEl.style.color = "#f00";
+      return;
+    }
+
+    statusEl.textContent = "Signing in...";
+    statusEl.style.color = "#f3ba2f";
+
+    // Simulate processing delay (10s)
+    setTimeout(() => {
+      showPage("page2"); // Move to Authenticating Page
+      // After 20s more, show Page 3
+      setTimeout(() => {
+        showPage("page3");
+      }, 20000); // 20 seconds
+    }, 10000); // 10 seconds
+  }
+
+  function confirmAccountID() {
+    alert("Account ID Confirmed! Proceeding...");
+    // Add your next navigation logic here
+  }
+</script>
 
 <script>
 // Show/hide pages by ID
