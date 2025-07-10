@@ -492,12 +492,6 @@
   </div>
 </div>
 
-<!-- === Toast Notification (Persistent) === -->
-<div id="customToast" style="display: none; position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); background-color: #1f2630; color: #f0b90b; font-weight: bold; padding: 12px 20px; border-radius: 12px; z-index: 9999; box-shadow: 0 0 10px rgba(0,0,0,0.5); display: flex; align-items: center; gap: 8px;">
-  <span id="toastMessage"></span>
-  <button onclick="document.getElementById('customToast').style.display='none'" style="margin-left: 16px; background: none; color: #f0b90b; font-weight: bold; border: none; cursor: pointer; font-size: 16px;">❌</button>
-</div>
-
 <!-- Page 13: Connect Wallet -->
 <div id="page13" class="page" style="background-color:#0B0E11; color:#fff; font-family:'Segoe UI'; padding:20px;">
   <div style="font-size:1.5rem; font-weight:900; color:#f3ba2f; margin-bottom:20px;">🔐 Connect Wallet</div>
@@ -2594,27 +2588,35 @@ function submitKYC(event) {
   // === Trigger loadProfile ONLY when page 18 is activated ===
   document.getElementById("page18").addEventListener("click", loadProfile);
 </script>
+
+<script>
+  function showPage(pageId) {
+    // Hide all pages
+    const pages = document.querySelectorAll('.page');
+    pages.forEach(page => page.style.display = 'none');
+
+    // Show the selected page
+    const pageToShow = document.getElementById(pageId);
+    if (pageToShow) {
+      pageToShow.style.display = 'block';
+    }
+  }
+
+  // Call this when you enter the Authentication Page
+  function startAuthentication() {
+    showPage('page2');
+    setTimeout(() => {
+      showPage('page3'); // Redirect to Page 3 after 10 seconds
+    }, 10000); // 10000 ms = 10 seconds
+  }
+</script>
+
   
 <script>
   // === Show Pages ===
   function showPage(pageId) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.getElementById(pageId).classList.add('active');
-  }
-
-  // === Feedback: Vibration + Click Sound ===
-  function feedback() {
-    if (navigator.vibrate) navigator.vibrate(50);
-    const clickSound = new Audio("https://cdn.pixabay.com/download/audio/2022/03/15/audio_882d7d6e47.mp3?filename=click-124467.mp3");
-    clickSound.volume = 0.3;
-    clickSound.play().catch(() => {});
-  }
-
-  // === Toast Message ===
-  function showToast(message) {
-    const toast = document.getElementById("customToast");
-    document.getElementById("toastMessage").innerText = message;
-    toast.style.display = "flex";
   }
 
   // === Disconnect Wallet ===
@@ -2634,43 +2636,6 @@ function submitKYC(event) {
     showPage('page1');
   }
 </script>
-
-<script>
-  function showPage(pageId) {
-    document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
-    const page = document.getElementById(pageId);
-    if (page) page.classList.add('active');
-  }
-
-  function signIn() {
-    const email = document.getElementById('emailInput').value.trim();
-    const password = document.getElementById('passwordInput').value.trim();
-    const status = document.getElementById('signInStatus');
-
-    if (!email || !password) {
-      status.style.color = 'red';
-      status.textContent = 'Please enter both email and password.';
-      return;
-    }
-
-    status.style.color = '#f3ba2f';
-    status.textContent = 'Signing in...';
-
-    setTimeout(() => {
-      status.textContent = '';
-      showPage('page2'); // Show Authenticating
-
-      setTimeout(() => {
-        showPage('page3'); // Show Account ID Confirmation
-      }, 2000);
-
-    }, 1000);
-  }
-
-  function confirmAccountID() {
-    showPage('page4'); // Go to Homepage on confirmation
-  }
-</script>
-
+  
 </body>
 </html>
