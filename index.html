@@ -125,7 +125,7 @@
 <div id="page3" class="page" style="display:none; background-color: #0b0e11; color: #f3ba2f; font-family: 'Arial Black', sans-serif; padding: 20px; min-height: 100vh;">
   <h2 style="font-size: 24px; font-weight: 900;">Account ID Confirmation</h2>
   <p style="color: #fff;">Please confirm your account ID.</p>
-  <button onclick="confirmAccountID()" style="margin-top: 20px; background-color: #f3ba2f; color: #000; padding: 12px 20px; font-weight: 900; border: none; border-radius: 12px;">Confirm</button>
+  <button onclick="showPage('page4')" style="margin-top: 20px; background-color: #f3ba2f; color: #000; padding: 12px 20px; font-weight: 900; border: none; border-radius: 12px;">Confirm</button>
 </div>
 
 
@@ -2546,7 +2546,6 @@ function submitKYC(event) {
       input.value = value;
     });
   }
-
   // === Save Profile (No page change or fade) ===
   function saveProfile() {
     const newName = document.getElementById("editName").value;
@@ -2635,50 +2634,43 @@ function submitKYC(event) {
     showPage('page1');
   }
 </script>
-  <script>
-  // Show only one page at a time
+
+<script>
   function showPage(pageId) {
-    document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+    document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
     const page = document.getElementById(pageId);
-    if (page) page.style.display = 'block';
+    if (page) page.classList.add('active');
   }
 
-  // Sign In logic
   function signIn() {
     const email = document.getElementById('emailInput').value.trim();
     const password = document.getElementById('passwordInput').value.trim();
     const status = document.getElementById('signInStatus');
 
-    // Basic validation
     if (!email || !password) {
-      status.innerText = "Please enter both email and password.";
       status.style.color = 'red';
+      status.textContent = 'Please enter both email and password.';
       return;
     }
 
-    status.innerText = "Signing in...";
     status.style.color = '#f3ba2f';
-
-    // Simulate async sign in (replace with real auth)
-    showPage('page2'); // Show authenticating page
+    status.textContent = 'Signing in...';
 
     setTimeout(() => {
-      // For demo, assume any input is valid
-      status.innerText = "";
-      showPage('page3'); // Go to Account ID Confirmation page
-    }, 2000);
+      status.textContent = '';
+      showPage('page2'); // Show Authenticating
+
+      setTimeout(() => {
+        showPage('page3'); // Show Account ID Confirmation
+      }, 2000);
+
+    }, 1000);
   }
 
-  // Confirm Account ID logic
   function confirmAccountID() {
-    // Simulate confirmation
-    showPage('page4'); // Assuming page4 is your homepage/dashboard
+    showPage('page4'); // Go to Homepage on confirmation
   }
+</script>
 
-  // On initial load, show sign in page by default
-  document.addEventListener('DOMContentLoaded', () => {
-    showPage('page1');
-  });
-</script> 
 </body>
 </html>
