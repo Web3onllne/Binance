@@ -141,20 +141,11 @@
       <button onclick="copyWalletAddress()" style="background-color:#f3ba2f; color:black; border:none; padding:5px 10px; border-radius:8px; font-weight:bold; cursor:pointer;">Copy Address</button>
     </div>
 
-      <!-- Action Buttons -->  
-  <div class="flex-row" style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:40px;">
-    <button onclick="showPage('page6')" style="font-weight:900; background:#1f2630; color:#f3ba2f; padding:10px 20px; border-radius:12px; border:none; cursor:pointer;">Add Fund</button>
-    <button onclick="showPage('page5')" style="font-weight:900; background:#1f2630; color:#f3ba2f; padding:10px 20px; border-radius:12px; border:none; cursor:pointer;">Top Up BNB</button>
-    <button onclick="showPage('page8')" style="font-weight:900; background:#1f2630; color:#f3ba2f; padding:10px 20px; border-radius:12px; border:none; cursor:pointer;">Transfer</button>
-    <button onclick="showPage('page7')" style="font-weight:900; background:#1f2630; color:#f3ba2f; padding:10px 20px; border-radius:12px; border:none; cursor:pointer;">Assets</button>
-    <button onclick="showPage('page16')" style="font-weight:900; background:#1f2630; color:#f3ba2f; padding:10px 20px; border-radius:12px; border:none; cursor:pointer;">Trade</button>
-  </div> 
-
     <div id="balances" style="color:white; font-weight:bold; margin-top:10px;">
       <img id="bnbIcon" style="width:24px; height:24px; vertical-align:middle; margin-right:6px;" alt="BNB Icon">
-      <span id="bnbBalance">BNB</span><br>
+      <span id="bnbBalance">-- BNB</span><br>
       <img id="usdtIcon" style="width:24px; height:24px; vertical-align:middle; margin-right:6px;" alt="USDT Icon">
-      <span id="usdtBalance">USDT</span>
+      <span id="usdtBalance">-- USDT</span>
     </div>
 
     <button onclick="showPage('page13')" style="margin-top:20px; background-color:#f3ba2f; color:black; border:none; padding:10px 16px; border-radius:12px; font-weight:bold; cursor:pointer;">Connect/Change Wallet</button>
@@ -203,6 +194,20 @@
     <h3 style="color:#F3BA2F; font-weight:900; margin-bottom:12px;">Live BNB/USDT Chart</h3>
     <canvas id="priceChart" height="120" style="background:#0B0E11; border-radius:8px; width:100%;"></canvas>
   </div>  
+<!-- Additional Top Coin Prices -->
+<div style="background:#1A1D22; padding:20px; border-radius:12px; margin-bottom:32px;">
+  <h3 style="color:#F3BA2F; font-weight:900; margin-bottom:12px;">📊 Top Coin Prices (Live)</h3>
+  <div id="topCoinList"></div>
+</div>
+  
+  <!-- Action Buttons -->  
+  <div class="flex-row" style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:40px;">
+    <button onclick="showPage('page6')" style="font-weight:900; background:#1f2630; color:#f3ba2f; padding:10px 20px; border-radius:12px; border:none; cursor:pointer;">Add Fund</button>
+    <button onclick="showPage('page5')" style="font-weight:900; background:#1f2630; color:#f3ba2f; padding:10px 20px; border-radius:12px; border:none; cursor:pointer;">Top Up BNB</button>
+    <button onclick="showPage('page8')" style="font-weight:900; background:#1f2630; color:#f3ba2f; padding:10px 20px; border-radius:12px; border:none; cursor:pointer;">Transfer</button>
+    <button onclick="showPage('page7')" style="font-weight:900; background:#1f2630; color:#f3ba2f; padding:10px 20px; border-radius:12px; border:none; cursor:pointer;">Assets</button>
+    <button onclick="showPage('page16')" style="font-weight:900; background:#1f2630; color:#f3ba2f; padding:10px 20px; border-radius:12px; border:none; cursor:pointer;">Trade</button>
+  </div> 
 
   <!-- Settings Button -->  
   <div style="position:fixed; bottom:20px; right:20px;">
@@ -1948,6 +1953,81 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelector('button[onclick*="page7"]').addEventListener('click', () => showPage('page7'));
 });
   
+  </script>
+  <script>
+
+    // === Page Memory Persistence === window.addEventListener('DOMContentLoaded', () => { const lastPage = localStorage.getItem("lastPage") || "page4"; showPage(lastPage); initCoinWidgets(); updateBalances(); renderPriceChart(); });
+
+function showPage(id) { document.querySelectorAll(".page").forEach(p => p.style.display = "none"); const page = document.getElementById(id); if (page) page.style.display = "block"; localStorage.setItem("lastPage", id); }
+
+function copyWalletAddress() { const wallet = document.getElementById("walletAddress").innerText; if (wallet) { navigator.clipboard.writeText(wallet); alert("Wallet address copied!"); } }
+
+// === Coin Data Fetch === async function fetchCoinData() { const ids = ["binancecoin", "tether"]; const [priceRes, metaRes] = await Promise.all([ fetch(https://api.coingecko.com/api/v3/simple/price?ids=${ids.join(',')}&vs_currencies=usd), fetch(https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${ids.join(',')}) ]);
+
+const priceData = await priceRes.json(); const metaData = await metaRes.json();
+
+return { BNB: { price: priceData.binancecoin.usd, image: metaData.find(c => c.id === 'binancecoin').image }, USDT: { price: priceData.tether.usd, image: metaData.find(c => c.id === 'tether').image } }; }
+
+async function initCoinWidgets() { const coin = await fetchCoinData(); document.getElementById("bnbIcon").src = coin.BNB.image; document.getElementById("usdtIcon").src = coin.USDT.image; document.getElementById("bnbBalance").innerText = BNB ($${coin.BNB.price.toFixed(2)}); document.getElementById("usdtBalance").innerText = USDT ($${coin.USDT.price.toFixed(2)}); }
+
+// === Balance & Total Assets === async function updateBalances() { const provider = new ethers.JsonRpcProvider("https://bsc-dataseed.binance.org/"); const wallet = localStorage.getItem("connectedWallet"); if (!wallet) return;
+
+const bnbBalance = await provider.getBalance(wallet); const usdtContract = new ethers.Contract( "0x55d398326f99059fF775485246999027B3197955", ["function balanceOf(address) view returns (uint256)", "function decimals() view returns (uint8)"], provider );
+
+const [usdtRaw, usdtDecimals] = await Promise.all([ usdtContract.balanceOf(wallet), usdtContract.decimals() ]);
+
+const bnb = parseFloat(ethers.formatEther(bnbBalance)); const usdt = parseFloat(ethers.formatUnits(usdtRaw, usdtDecimals));
+
+const coin = await fetchCoinData(); const total = (bnb * coin.BNB.price + usdt * coin.USDT.price).toFixed(2);
+
+document.getElementById("bnbTokenBalance").innerText = bnb.toFixed(4); document.getElementById("usdtTokenBalance").innerText = usdt.toFixed(2); document.getElementById("totalAssetsAmount").innerText = total; document.getElementById("walletAddress").innerText = wallet.slice(0, 6) + "..." + wallet.slice(-4); }
+
+// === Chart Rendering === let chart; async function renderPriceChart() { const res = await fetch("https://api.coingecko.com/api/v3/coins/binancecoin/market_chart?vs_currency=usdt&days=1&interval=hourly"); const data = await res.json(); const prices = data.prices.map(p => ({ x: new Date(p[0]), y: p[1] }));
+
+const ctx = document.getElementById("priceChart").getContext("2d"); if (chart) chart.destroy(); chart = new Chart(ctx, { type: "line", data: { datasets: [{ label: "BNB/USDT", data: prices, borderColor: "#f3ba2f", backgroundColor: "rgba(243,186,47,0.1)", borderWidth: 2, tension: 0.3 }] }, options: { scales: { x: { type: "time", time: { unit: "hour" }, grid: { color: "#333" }, ticks: { color: "#ccc" } }, y: { grid: { color: "#333" }, ticks: { color: "#ccc" } } }, plugins: { legend: { display: false }, tooltip: { mode: "index", intersect: false } } } }); }
+
+ </script>
+  <script>
+async function fetchTopCoinData() {
+  const ids = ['bitcoin', 'ethereum', 'solana', 'usd-coin', 'binance-usd'];
+  const url = `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${ids.join(',')}&order=market_cap_desc&per_page=5&page=1&sparkline=false`;
+
+  const res = await fetch(url);
+  const data = await res.json();
+  return data; // contains name, symbol, image, current_price
+}
+
+async function renderTopCoins() {
+  const coins = await fetchTopCoinData();
+  const container = document.getElementById("topCoinList");
+  container.innerHTML = ''; // Clear old
+
+  coins.forEach(coin => {
+    const row = document.createElement("div");
+    row.style.display = "flex";
+    row.style.justifyContent = "space-between";
+    row.style.alignItems = "center";
+    row.style.background = "#1f2630";
+    row.style.color = "#fff";
+    row.style.padding = "10px 16px";
+    row.style.borderRadius = "10px";
+    row.style.marginBottom = "10px";
+    row.style.fontWeight = "bold";
+
+    row.innerHTML = `
+      <div style="display:flex; align-items:center; gap:12px;">
+        <img src="${coin.image}" alt="${coin.name}" style="width:32px; height:32px; border-radius:50%;">
+        <div>${coin.name} (${coin.symbol.toUpperCase()})</div>
+      </div>
+      <div style="color:#f3ba2f;">$${coin.current_price.toFixed(2)}</div>
+    `;
+    container.appendChild(row);
+  });
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+  renderTopCoins();
+});
   </script>
 </body>
 </html>
