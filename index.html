@@ -1819,6 +1819,136 @@ function initProfilePage() {
 // Call initProfilePage when page18 is shown
 // e.g., modify your showPage() to call initProfilePage() when showing page18
 </script>
+  
+ <script>
+   // Show one page, hide others, and persist current page to localStorage
+function showPage(pageId) {
+  document.querySelectorAll('.page').forEach(page => {
+    page.style.display = (page.id === pageId) ? 'block' : 'none';
+  });
+  localStorage.setItem('currentPage', pageId);
+}
+
+// On page load, restore last opened page or default to homepage 'page4'
+document.addEventListener('DOMContentLoaded', () => {
+  const savedPage = localStorage.getItem('currentPage') || 'page4';
+  showPage(savedPage);
+  loadWalletInfo();
+  populateLanguageSelector();
+  populateCurrencySelector();
+});
+
+// Example: Load wallet info from localStorage (simulate connected wallet)
+function loadWalletInfo() {
+  const walletAddress = localStorage.getItem('walletAddress');
+  const displayEl = document.getElementById('walletAddress');
+  const connectedWalletDisplay = document.getElementById('connectedWalletDisplayHomepage');
+  if (walletAddress) {
+    displayEl.textContent = shortenAddress(walletAddress);
+    connectedWalletDisplay.textContent = 'Connected Wallet: ' + shortenAddress(walletAddress);
+  } else {
+    displayEl.textContent = '';
+    connectedWalletDisplay.textContent = '';
+  }
+}
+
+// Utility: Shorten long wallet addresses for display (e.g., 0xabc...123)
+function shortenAddress(address) {
+  if (!address) return '';
+  return address.slice(0, 6) + '...' + address.slice(-4);
+}
+
+// Copy wallet address to clipboard
+function copyWalletAddress() {
+  const walletAddress = localStorage.getItem('walletAddress');
+  if (!walletAddress) {
+    alert('No wallet address to copy');
+    return;
+  }
+  navigator.clipboard.writeText(walletAddress)
+    .then(() => alert('Wallet address copied to clipboard!'))
+    .catch(() => alert('Failed to copy address.'));
+}
+
+// Example functions to populate language and currency selectors
+function populateLanguageSelector() {
+  const selector = document.getElementById('languageSelector');
+  if (!selector) return;
+  // Add example languages
+  const languages = [
+    { code: 'en', name: 'English' },
+    { code: 'fr', name: 'French' },
+    { code: 'es', name: 'Spanish' },
+  ];
+  selector.innerHTML = languages.map(lang => 
+    `<option value="${lang.code}">${lang.name}</option>`
+  ).join('');
+  selector.value = localStorage.getItem('selectedLanguage') || 'en';
+}
+
+function populateCurrencySelector() {
+  const selector = document.getElementById('currencySelector');
+  if (!selector) return;
+  // Add example currencies
+  const currencies = [
+    { code: 'USD', symbol: '$' },
+    { code: 'CAD', symbol: 'C$' },
+    { code: 'EUR', symbol: '€' },
+  ];
+  selector.innerHTML = currencies.map(cur => 
+    `<option value="${cur.code}">${cur.code}</option>`
+  ).join('');
+  selector.value = localStorage.getItem('selectedCurrency') || 'USD';
+}
+
+// Handle language change event
+function handleLanguageChange() {
+  const selector = document.getElementById('languageSelector');
+  if (!selector) return;
+  localStorage.setItem('selectedLanguage', selector.value);
+  alert('Language changed to ' + selector.options[selector.selectedIndex].text);
+  // You can add your translation logic here
+}
+
+// Handle currency change event
+function handleCurrencyChange() {
+  const selector = document.getElementById('currencySelector');
+  if (!selector) return;
+  localStorage.setItem('selectedCurrency', selector.value);
+  alert('Currency changed to ' + selector.value);
+  // You can update total assets display with conversion here
+}
+
+// Helper to open transfer page with token param
+function openTransferPage(token) {
+  // Save token param to localStorage or pass as needed
+  localStorage.setItem('transferToken', token);
+  showPage('page8'); // Assuming page8 is transfer page
+}
+
+// Connect wallet simulation (for testing)
+function connectWalletSim() {
+  const exampleAddress = '0xAbCDEF1234567890abcdef1234567890aBcDef12';
+  localStorage.setItem('walletAddress', exampleAddress);
+  loadWalletInfo();
+  alert('Wallet connected: ' + shortenAddress(exampleAddress));
+}
+
+// Add event listeners to buttons (optional if using inline onclick)
+document.addEventListener('DOMContentLoaded', () => {
+  // Example: Add Fund button
+  document.querySelector('button[onclick*="page6"]').addEventListener('click', () => showPage('page6'));
+  // Transfer button
+  document.querySelector('button[onclick*="page8"]').addEventListener('click', () => showPage('page8'));
+  // Trade button
+  document.querySelector('button[onclick*="page16"]').addEventListener('click', () => showPage('page16'));
+  // Top Up BNB button
+  document.querySelector('button[onclick*="page5"]').addEventListener('click', () => showPage('page5'));
+  // Assets button
+  document.querySelector('button[onclick*="page7"]').addEventListener('click', () => showPage('page7'));
+});
+  
+  </script>
 </body>
 </html>
     
