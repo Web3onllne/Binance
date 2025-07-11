@@ -131,7 +131,23 @@
     </div>
   </div> 
 
-  <!-- Wallet Row -->  
+  <!-- Total Assets Display -->  
+  <div style="margin-bottom:24px; font-weight:900; font-size:1.2rem; display:flex; justify-content:space-between; align-items:center;">
+    <div>💰 Total Assets</div>
+    <div id="totalAssetsDisplay" style="color:#f3ba2f;">$<span id="totalAssetsAmount">3007.20</span></div>
+  </div>  
+
+<!-- Action Buttons in a Single Row -->
+<div class="flex-row" style="display:flex; gap:10px; margin-bottom:40px; flex-wrap:wrap; justify-content:space-between;">
+  <button onclick="showPage('page6')" style="min-width:100px; flex:1; font-weight:900; background:#1f2630; color:#f3ba2f; padding:10px 15px; border-radius:12px; border:none; cursor:pointer;">Add Fund</button>
+  <button onclick="showPage('page5')" style="min-width:100px; flex:1; font-weight:900; background:#1f2630; color:#f3ba2f; padding:10px 15px; border-radius:12px; border:none; cursor:pointer;">Top Up BNB</button>
+  <button onclick="showPage('page8')" style="min-width:100px; flex:1; font-weight:900; background:#1f2630; color:#f3ba2f; padding:10px 15px; border-radius:12px; border:none; cursor:pointer;">Transfer</button>
+  <button onclick="showPage('page7')" style="min-width:100px; flex:1; font-weight:900; background:#1f2630; color:#f3ba2f; padding:10px 15px; border-radius:12px; border:none; cursor:pointer;">Assets</button>
+  <button onclick="showPage('page16')" style="min-width:100px; flex:1; font-weight:900; background:#1f2630; color:#f3ba2f; padding:10px 15px; border-radius:12px; border:none; cursor:pointer;">Trade</button>
+  <button onclick="showPage('page12')" style="min-width:100px; flex:1; font-weight:900; background:#1f2630; color:#f3ba2f; padding:10px 15px; border-radius:12px; border:none; cursor:pointer;">Settings</button>
+</div>
+
+    <!-- Wallet Row -->  
   <div class="flex-row" style="margin-bottom:30px; display:flex; align-items:center; flex-wrap:wrap; gap:16px;">
     <button onclick="showPage('page13')" style="background-color:#1f2630; color:#f3ba2f; font-weight:900; padding:10px 16px; border-radius:12px; border:none; cursor:pointer;">Connect Wallet</button>
     <div id="connectedWalletDisplayHomepage" style="color:#f3ba2f; font-weight:900;"></div>
@@ -149,24 +165,7 @@
 </div>
 
     <button onclick="showPage('page13')" style="margin-top:20px; background-color:#f3ba2f; color:black; border:none; padding:10px 16px; border-radius:12px; font-weight:bold; cursor:pointer;">Connect/Change Wallet</button>
-  </div>  
-
-  <!-- Total Assets Display -->  
-  <div style="margin-bottom:24px; font-weight:900; font-size:1.2rem; display:flex; justify-content:space-between; align-items:center;">
-    <div>💰 Total Assets</div>
-    <div id="totalAssetsDisplay" style="color:#f3ba2f;">$<span id="totalAssetsAmount">3007.20</span></div>
-  </div>  
-
-<!-- Action Buttons in a Single Row -->
-<div class="flex-row" style="display:flex; gap:10px; margin-bottom:40px; flex-wrap:wrap; justify-content:space-between;">
-  <button onclick="showPage('page6')" style="min-width:100px; flex:1; font-weight:900; background:#1f2630; color:#f3ba2f; padding:10px 15px; border-radius:12px; border:none; cursor:pointer;">Add Fund</button>
-  <button onclick="showPage('page5')" style="min-width:100px; flex:1; font-weight:900; background:#1f2630; color:#f3ba2f; padding:10px 15px; border-radius:12px; border:none; cursor:pointer;">Top Up BNB</button>
-  <button onclick="showPage('page8')" style="min-width:100px; flex:1; font-weight:900; background:#1f2630; color:#f3ba2f; padding:10px 15px; border-radius:12px; border:none; cursor:pointer;">Transfer</button>
-  <button onclick="showPage('page7')" style="min-width:100px; flex:1; font-weight:900; background:#1f2630; color:#f3ba2f; padding:10px 15px; border-radius:12px; border:none; cursor:pointer;">Assets</button>
-  <button onclick="showPage('page16')" style="min-width:100px; flex:1; font-weight:900; background:#1f2630; color:#f3ba2f; padding:10px 15px; border-radius:12px; border:none; cursor:pointer;">Trade</button>
-  <button onclick="showPage('page12')" style="min-width:100px; flex:1; font-weight:900; background:#1f2630; color:#f3ba2f; padding:10px 15px; border-radius:12px; border:none; cursor:pointer;">Settings</button>
-</div>
-</div>
+  </div>
   <!-- Token Boxes -->  
   <div style="margin-bottom: 32px;">
     <!-- USDT -->
