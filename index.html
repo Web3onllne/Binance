@@ -2514,6 +2514,134 @@ function showPage(pageId) {
     updateTranslations(defaultLang);
   }
    </script>
+  
+  <script>
+// === CoinGecko API Integration ===
+
+const topCoinList = ["bitcoin", "ethereum", "solana", "usd-coin", "binance-usd"]; // Top coins to fetch
+const mainCoins = ["tether", "binancecoin"];
+
+// API: Live Coin Prices + Logos
+async function fetchMainCoinData() {
+  try {
+    const res = await fetch("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=" + mainCoins.join(","));
+    const data = await res.json();
+
+    data.forEach(coin => {
+      if (coin.id === "binancecoin") {
+        document.getElementById("bnbBalance").innerText = coin.current_price.toFixed(2) + " USD";
+        document.getElementById("bnbTokenBalance").innerText = coin.current_price.toFixed(2);
+        document.getElementById("bnbIcon").src = coin.image;
+      }
+      if (coin.id === "tether") {
+        document.getElementById("usdtBalance").innerText = coin.current_price.toFixed(2) + " USD";
+        document.getElementById("usdtTokenBalance").innerText = coin.current_price.toFixed(2);
+        document.getElementById("usdtIcon").src = coin.image;
+      }
+    });
+
+    calculateTotalAssets(data);
+  } catch (err) {
+    console.error("Error fetching coin data:", err);
+  }
+}
+
+// Calculate total assets from balances
+function calculateTotalAssets(data) {
+  // Simulated values, replace with real wallet balances
+  const usdtAmount = 2978.78;
+  const bnbAmount = 0.09490;
+
+  const usdtPrice = data.find(c => c.id === "tether")?.current_price || 1;
+  const bnbPrice = data.find(c => c.id === "binancecoin")?.current_price || 240;
+
+  const total = (usdtAmount * usdtPrice) + (bnbAmount * bnbPrice);
+  document.getElementById("totalAssetsAmount").innerText = total.toFixed(2);
+}
+
+// Live BNB/USDT Chart
+async function renderBNBChart() {
+  try {
+    const res = await fetch("https://api.coingecko.com/api/v3/coins/binancecoin/market_chart?vs_currency=usd&days=1&interval=hourly");
+    const chartData = await res.json();
+
+    const labels = chartData.prices.map(p => new Date(p[0]).toLocaleTimeString());
+    const prices = chartData.prices.map(p => p[1]);
+
+    const ctx = document.getElementById("priceChart").getContext("2d");
+    if (window.bnbChart) window.bnbChart.destroy();
+
+    window.bnbChart = new Chart(ctx, {
+      type: "line",
+      data: {
+        labels,
+        datasets: [{
+          label: "BNB/USDT Price",
+          data: prices,
+          fill: true,
+          borderColor: "#f3ba2f",
+          backgroundColor: "rgba(243,186,47,0.1)",
+          tension: 0.4
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { display: false }
+        },
+        scales: {
+          x: { display: true },
+          y: { display: true }
+        }
+      }
+    });
+  } catch (err) {
+    console.error("Error rendering BNB chart:", err);
+  }
+}
+
+// Top Coin Prices Section
+async function renderTopCoins() {
+  try {
+    const res = await fetch("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=" + topCoinList.join(","));
+    const data = await res.json();
+
+    const container = document.getElementById("topCoinList");
+    container.innerHTML = "";
+
+    data.forEach(coin => {
+      const change = coin.price_change_percentage_24h.toFixed(2);
+      const color = change >= 0 ? "lime" : "red";
+
+      container.innerHTML += `
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:8px 0; border-bottom:1px solid #1f2630;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <img src="${coin.image}" alt="${coin.name}" style="width:24px; height:24px; border-radius:50%;">
+            <strong style="color:white;">${coin.symbol.toUpperCase()}</strong>
+          </div>
+          <div style="text-align:right;">
+            <span style="color:#f3ba2f;">$${coin.current_price.toFixed(2)}</span><br>
+            <span style="color:${color}; font-size:0.8rem;">${change}%</span>
+          </div>
+        </div>
+      `;
+    });
+  } catch (err) {
+    console.error("Top coins fetch failed:", err);
+  }
+}
+
+// === Initial Load ===
+fetchMainCoinData();
+renderBNBChart();
+renderTopCoins();
+
+// === Refresh every 60 seconds ===
+setInterval(() => {
+  fetchMainCoinData();
+  renderTopCoins();
+}, 60000);
+  </script>
       
 </body>
 </html>
