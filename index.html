@@ -496,8 +496,11 @@
     <button onclick="feedback(); logout()" style="background-color: transparent; color: red; font-weight: 900; font-size: 16px; padding: 14px; border: 1px solid red; border-radius: 12px; cursor: pointer;">
       🚪 Logout
     </button>
-  </div>
 
+  <button onclick="feedback(); showPage('page19')" style="background-color:#0b0e11;color:#f0b90b;font-weight:900;font-size:16px;padding:12px 24px;border-radius:12px;border:none;cursor:pointer;font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;transition:background-color 0.3s ease;" onmouseover="this.style.backgroundColor='#1e1f22'" onmouseout="this.style.backgroundColor='#0b0e11'">
+    🔗 FAQ</button>
+  </div>
+  
   <!-- Back to Homepage -->
   <div style="position: fixed; bottom: 20px; right: 20px;">
     <button onclick="feedback(); showPage('page4')" style="background-color: #333; color: #f0b90b; font-weight: 900; padding: 10px 20px; border-radius: 12px; border: none; cursor: pointer;">
@@ -586,32 +589,247 @@
   <button onclick="showPage(4)" style="margin-top: 30px; background-color: #f3ba2f; color: black; padding: 12px 24px; font-size: 1rem; font-weight: bold; border: none; border-radius: 8px; cursor: pointer;">Go to Dashboard</button>
 </div>
 
-  <!-- === PAGE 16: Trade === -->
-<div id="page16" class="page" style="background-color: #0b0e11; color: #f3ba2f; font-family: 'Arial Black', Arial, sans-serif; padding: 20px; min-height: 100vh; display: none;">
-  <h2>Trade Tokens</h2>
+<!-- === PAGE 16: Trade Menu and Subpages === -->
+<style>
+  /* Common styling */
+  #page16, #page16i, #page16ii, #page16iii, #page16iv, #page16v, #page16vi_stake, #page16vi_leaderboard, #page16vi_bot {
+    background-color: #0B0E11;
+    color: #f0b90b;
+    font-family: 'Segoe UI', sans-serif;
+    padding: 20px;
+    min-height: 100vh;
+    overflow-y: auto;
+  }
+  button {
+    cursor: pointer;
+    font-weight: 900;
+  }
+  button:focus {
+    outline: none;
+  }
+</style>
 
-  <label for="fromToken" style="font-weight: 900; margin-bottom: 8px; display: block;">From Token</label>
-  <select id="fromToken" style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #f3ba2f; background-color: #1e2329; color: #f3ba2f; font-weight: 900; font-family: monospace;">
-    <option value="USDT">USDT (Tether)</option>
-    <option value="BNB">BNB (Binance Coin)</option>
-  </select>
-
-  <label for="fromAmount" style="font-weight: 900; margin-top: 16px; margin-bottom: 8px; display: block;">Amount</label>
-  <input type="number" id="fromAmount" placeholder="Enter amount" min="0" step="any" />
-
-  <label for="toToken" style="font-weight: 900; margin-top: 16px; margin-bottom: 8px; display: block;">To Token</label>
-  <select id="toToken" style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #f3ba2f; background-color: #1e2329; color: #f3ba2f; font-weight: 900; font-family: monospace;">
-    <option value="BNB">BNB (Binance Coin)</option>
-    <option value="USDT">USDT (Tether)</option>
-  </select>
-
-  <div id="estimatedAmount" style="margin-top: 16px; font-weight: 900; font-size: 1.1rem;">
-    Estimated Receive: <span id="receiveAmount">0</span>
+<div id="page16" class="page">
+  <h1 style="font-weight:900; font-size:32px; margin-bottom:30px;">Trade Tokens</h1>
+  <h2 style="font-weight:900; font-size:28px; margin-bottom:30px;">Trading Options</h2>
+  <div style="display:flex; flex-direction:column; gap:20px; max-width:400px;">
+    <button onclick="showPage('page16i')" style="padding:15px; border:none; border-radius:10px; background:#f0b90b; color:#000;">📊 Spot Trading</button>
+    <button onclick="showPage('page16ii')" style="padding:15px; border:none; border-radius:10px; background:#f0b90b; color:#000;">👥 Copy Trading</button>
+    <button onclick="showPage('page16iii')" style="padding:15px; border:none; border-radius:10px; background:#f0b90b; color:#000;">📈 Futures Trading</button>
+    <button onclick="showPage('page16iv')" style="padding:15px; border:none; border-radius:10px; background:#f0b90b; color:#000;">🧾 Derivatives Trading</button>
+    <button onclick="showPage('page16v')" style="padding:15px; border:none; border-radius:10px; background:#f0b90b; color:#000;">⚙️ Trade Utilities</button>
   </div>
+  <br><br>
+  <button onclick="showPage('page4')" style="background:#1E2124; color:#fff; border:none; padding:10px 20px; border-radius:10px; font-weight:bold;">⬅ Back to Dashboard</button>
+</div>
 
-  <button style="margin-top: 24px;" onclick="handleTrade()">Swap</button>
+<!-- Spot Trading -->
+<div id="page16i" class="page" style="display:none;">
+  <h2 style="font-weight:900; font-size:28px; margin-bottom:20px;">Spot Trading</h2>
+  <div style="color:white; margin-bottom:10px;">
+    🪙 BTC: <span id="btcPrice">--</span> &nbsp;
+    🪙 ETH: <span id="ethPrice">--</span> &nbsp;
+    🪙 BNB: <span id="bnbPrice">--</span>
+  </div>
+  <iframe src="https://www.tradingview.com/widgetembed/?frameElementId=tradingview_93fe3&symbol=BINANCE:BTCUSDT&interval=1&hidesidetoolbar=1&symboledit=1&saveimage=1&toolbarbg=f1f3f6&studies=[]&theme=dark&style=1&timezone=Etc/UTC" width="100%" height="400" frameborder="0" allowtransparency="true" scrolling="no" style="border-radius:12px; margin-bottom:20px;"></iframe>
+  <div style="background:#1E2124; padding:20px; border-radius:12px; max-width:500px;">
+    <label style="display:block; margin-bottom:8px; font-weight:bold;">Token:</label>
+    <select id="spotToken" style="width:100%; padding:10px; border-radius:8px; border:none;">
+      <option value="BTC">BTC</option>
+      <option value="ETH">ETH</option>
+      <option value="BNB">BNB</option>
+    </select>
+    <label style="display:block; margin:15px 0 8px; font-weight:bold;">Amount:</label>
+    <input type="number" id="spotAmount" placeholder="0.00" style="width:100%; padding:10px; border-radius:8px; border:none;">
+    <div style="display:flex; justify-content:space-between; margin-top:20px;">
+      <button onclick="spotTrade('buy')" style="background:#00c853; color:white; padding:10px 20px; border:none; border-radius:8px;">Buy</button>
+      <button onclick="spotTrade('sell')" style="background:#d50000; color:white; padding:10px 20px; border:none; border-radius:8px;">Sell</button>
+    </div>
+    <p id="spotTradeResult" style="margin-top:15px; font-weight:bold;"></p>
+  </div>
+  <h3 style="margin-top:40px;">Open Positions</h3>
+  <div id="spotOpenPositions" style="background:#14171a; padding:15px; border-radius:12px; max-width:600px; max-height:200px; overflow-y:auto; color:#f0b90b; font-weight:bold;">
+    No open positions.
+  </div>
+  <h3 style="margin-top:40px;">Trade History</h3>
+  <div id="spotTradeHistory" style="background:#14171a; padding:15px; border-radius:12px; max-width:600px; max-height:200px; overflow-y:auto; color:#f0b90b; font-weight:bold;">
+    No trade history.
+  </div>
+  <br>
+  <button onclick="showPage('page16')" style="margin-top:30px; background:#f0b90b; color:#000; padding:10px 20px; border:none; border-radius:10px;">⬅ Back to Trade Menu</button>
+</div>
 
-  <button class="back-btn" style="margin-top: 20px;" onclick="showPage(4)">Back to Homepage</button>
+<!-- Copy Trading -->
+<div id="page16ii" class="page" style="display:none;">
+  <h2 style="font-weight:900; font-size:28px; margin-bottom:20px;">Copy Trading</h2>
+  <div id="expertsList" style="display:flex; flex-direction:column; gap:16px; max-width:700px; margin-bottom:40px;"></div>
+  <h3 style="margin-bottom:10px;">Your Portfolio</h3>
+  <div id="portfolioDisplay" style="background:#1E2124; padding:15px 20px; border-radius:12px; max-width:700px; margin-bottom:30px; font-size:16px; color:#ccc; display:flex; gap:20px; flex-wrap:wrap;"></div>
+  <h3 style="margin-bottom:10px;">Live Copied Trades</h3>
+  <div style="background:#1E2124; padding:20px; border-radius:12px; max-height:350px; overflow-y:auto; font-family: monospace; font-size:14px; color:#ccc;">
+    <ul id="copiedTrades" style="list-style:none; padding-left:0; margin:0;"></ul>
+  </div>
+  <br>
+  <button onclick="showPage('page16')" style="background:#f0b90b; color:#000; font-weight:900; padding:10px 20px; border:none; border-radius:10px; margin-top:20px;">
+    ⬅ Back to Trade Menu
+  </button>
+</div>
+
+<!-- Futures Trading -->
+<div id="page16iii" class="page" style="display:none;">
+  <h2 style="font-weight:900; font-size:28px; margin-bottom:20px;">Futures Trading</h2>
+  <div style="color:white; margin-bottom:10px;">
+    🪙 BTC: <span id="btcPriceFut">--</span> &nbsp;
+    🪙 ETH: <span id="ethPriceFut">--</span> &nbsp;
+    🪙 BNB: <span id="bnbPriceFut">--</span>
+  </div>
+  <div style="background:#1E2124; padding:20px; border-radius:12px; max-width:500px;">
+    <label style="display:block; margin-bottom:10px; font-weight:bold;">Select Token:</label>
+    <select id="futuresToken" style="width:100%; padding:10px; border-radius:8px;">
+      <option value="BTC">BTC</option>
+      <option value="ETH">ETH</option>
+      <option value="BNB">BNB</option>
+    </select>
+    <label style="display:block; margin:15px 0 8px; font-weight:bold;">Amount:</label>
+    <input type="number" id="futuresAmount" placeholder="0.00" style="width:100%; padding:10px; border-radius:8px; border:none;">
+    <label style="display:block; margin:15px 0 8px; font-weight:bold;">Leverage:</label>
+    <input type="range" id="leverage" min="1" max="20" value="5" style="width:100%;">
+    <p style="font-weight:bold; color:#f0b90b;">x<span id="leverageValue">5</span> Leverage</p>
+    <div style="display:flex; justify-content:space-between; margin-top:20px;">
+      <button onclick="futuresTrade('long')" style="background:#00e676; color:black; font-weight:bold; padding:10px 20px; border:none; border-radius:10px;">Long</button>
+      <button onclick="futuresTrade('short')" style="background:#ff1744; color:white; font-weight:bold; padding:10px 20px; border:none; border-radius:10px;">Short</button>
+    </div>
+    <p id="futuresTradeResult" style="margin-top:15px; font-weight:bold;"></p>
+  </div>
+  <h3 style="margin-top:40px;">Open Positions</h3>
+  <div id="futuresOpenPositions" style="background:#14171a; padding:15px; border-radius:12px; max-width:600px; max-height:200px; overflow-y:auto; color:#f0b90b; font-weight:bold;">
+    No open positions.
+  </div>
+  <h3 style="margin-top:40px;">Trade History</h3>
+  <div id="futuresTradeHistory" style="background:#14171a; padding:15px; border-radius:12px; max-width:600px; max-height:200px; overflow-y:auto; color:#f0b90b; font-weight:bold;">
+    No trade history.
+  </div>
+  <br>
+  <button onclick="showPage('page16')" style="margin-top:30px; background:#f0b90b; color:#000; padding:10px 20px; border:none; border-radius:10px; cursor:pointer;">⬅ Back to Trade Menu</button>
+</div>
+
+<!-- Derivatives Trading -->
+<div id="page16iv" class="page" style="display:none;">
+  <h2 style="font-weight:900; font-size:28px; margin-bottom:20px;">Derivatives Trading</h2>
+  <div style="color:white; margin-bottom:10px;">
+    🪙 BTC: <span id="btcPriceDeriv">--</span> &nbsp;
+    🪙 ETH: <span id="ethPriceDeriv">--</span> &nbsp;
+    🪙 BNB: <span id="bnbPriceDeriv">--</span>
+  </div>
+  <div style="background:#1E2124; padding:20px; border-radius:12px; max-width:500px;">
+    <label style="font-weight:bold;">Contract Type:</label>
+    <select id="derivType" style="width:100%; padding:10px; border-radius:8px; margin-bottom:15px;">
+      <option value="Perpetual">Perpetual</option>
+      <option value="Options">Options</option>
+    </select>
+    <label style="font-weight:bold;">Token:</label>
+    <select id="derivToken" style="width:100%; padding:10px; border-radius:8px; margin-bottom:15px;">
+      <option value="BTC">BTC</option>
+      <option value="ETH">ETH</option>
+    </select>
+    <label style="font-weight:bold;">Amount:</label>
+    <input type="number" id="derivAmount" placeholder="0.00" style="width:100%; padding:10px; border-radius:8px; border:none; margin-bottom:15px;">
+    <label style="font-weight:bold;">Leverage:</label>
+    <input type="range" id="derivLeverage" min="1" max="50" value="10" style="width:100%;">
+    <p style="font-weight:bold; color:#f0b90b;">x<span id="derivLeverageValue">10</span> Leverage</p>
+    <div style="display:flex; justify-content:space-between; margin-top:20px;">
+      <button onclick="openDeriv('long')" style="background:#00e676; color:black; font-weight:bold; padding:10px 20px; border:none; border-radius:10px;">Open Long</button>
+      <button onclick="openDeriv('short')" style="background:#ff1744; color:white; font-weight:bold; padding:10px 20px; border:none; border-radius:10px;">Open Short</button>
+    </div>
+    <p id="derivResult" style="margin-top:20px; font-weight:bold;"></p>
+  </div>
+  <h3 style="margin-top:40px;">Open Positions</h3>
+  <div id="derivOpenPositions" style="background:#14171a; padding:15px; border-radius:12px; max-width:600px; max-height:200px; overflow-y:auto; color:#f0b90b; font-weight:bold;">
+    No open positions.
+  </div>
+  <h3 style="margin-top:40px;">Trade History</h3>
+  <div id="derivTradeHistory" style="background:#14171a; padding:15px; border-radius:12px; max-width:600px; max-height:200px; overflow-y:auto; color:#f0b90b; font-weight:bold;">
+    No trade history.
+  </div>
+  <br>
+  <button onclick="showPage('page16')" style="margin-top:30px; background:#f0b90b; color:#000; padding:10px 20px; border:none; border-radius:10px; cursor:pointer;">⬅ Back to Trade Menu</button>
+</div>
+
+<!-- Trade Utilities -->
+<div id="page16v" class="page" style="display:none;">
+  <h2 style="font-weight:900; font-size:28px; margin-bottom:30px;">⚙️ Trade Utilities</h2>
+  <div style="display:flex; flex-direction:column; gap:20px; max-width:400px;">
+    <button onclick="showPage('page16vi_stake')" style="padding:15px; border:none; border-radius:10px; background:#f0b90b; color:#000;">💰 Staking</button>
+    <button onclick="showPage('page16vi_leaderboard')" style="padding:15px; border:none; border-radius:10px; background:#f0b90b; color:#000;">🏆 Leaderboard</button>
+    <button onclick="showPage('page16vi_bot')" style="padding:15px; border:none; border-radius:10px; background:#f0b90b; color:#000;">🤖 AI Trading Bot</button>
+  </div>
+  <br><br>
+  <button onclick="showPage('page16')" style="background:#1E2124; color:#fff; border:none; padding:10px 20px; border-radius:10px; font-weight:bold;">⬅ Back to Trade Menu</button>
+</div>
+
+<!-- Staking Page -->
+<div id="page16vi_stake" class="page" style="display:none;">
+  <h2 style="font-weight:900; font-size:28px;">💰 Staking</h2>
+  <p style="color:white; max-width:600px;">Earn passive income by staking your crypto assets. Select a token and staking period to begin.</p>
+  <div style="margin-top:20px; max-width:500px; background:#1E2124; padding:20px; border-radius:12px;">
+    <label style="font-weight:bold;">Token:</label>
+    <select id="stakeToken" style="width:100%; padding:10px; border-radius:8px;">
+      <option value="BNB">BNB</option>
+      <option value="USDT">USDT</option>
+    </select>
+    <label style="font-weight:bold; margin-top:15px; display:block;">Amount:</label>
+    <input id="stakeAmount" type="number" placeholder="0.00" style="width:100%; padding:10px; border-radius:8px; border:none;">
+    <label style="font-weight:bold; margin-top:15px; display:block;">Duration:</label>
+    <select id="stakeDuration" style="width:100%; padding:10px; border-radius:8px;">
+      <option value="7">7 Days</option>
+      <option value="30">30 Days</option>
+      <option value="90">90 Days</option>
+    </select>
+    <button onclick="stakeNow()" style="margin-top:20px; background:#f0b90b; color:black; font-weight:bold; padding:10px 20px; border:none; border-radius:10px;">Start Staking</button>
+    <p id="stakeResult" style="margin-top:10px; color:#fff; font-weight:bold;"></p>
+  </div>
+  <br>
+  <button onclick="showPage('page16v')" style="margin-top:30px; background:#f0b90b; color:#000; font-weight:bold; padding:10px 20px; border:none; border-radius:10px;">⬅ Back</button>
+</div>
+
+<!-- Leaderboard Page -->
+<div id="page16vi_leaderboard" class="page" style="display:none;">
+  <h2 style="font-weight:900; font-size:28px;">🏆 Trader Leaderboard</h2>
+  <p style="color:white;">Top 5 Traders (Simulated)</p>
+  <ol id="leaderboard" style="color:white; font-weight:bold; background:#1E2124; padding:20px; border-radius:12px; max-width:500px;">
+    <li>TraderX - $25,320 PnL</li>
+    <li>CryptoKing - $20,150 PnL</li>
+    <li>AltQueen - $18,405 PnL</li>
+    <li>ScalpBot - $15,100 PnL</li>
+    <li>DeFiDon - $12,300 PnL</li>
+  </ol>
+  <br>
+  <button onclick="showPage('page16v')" style="margin-top:30px; background:#f0b90b; color:#000; font-weight:bold; padding:10px 20px; border:none; border-radius:10px;">⬅ Back</button>
+</div>
+
+<!-- AI Trading Bot -->
+<div id="page16vi_bot" class="page" style="display:none;">
+  <h2 style="font-weight:900; font-size:28px; margin-bottom:20px;">🤖 AI Auto Trading Bot</h2>
+  <div style="background:#1E2124; padding:20px; border-radius:12px; max-width:700px;">
+    <label style="font-weight:bold;">Choose Strategy:</label>
+    <select id="botStrategy" style="width:100%; padding:10px; margin-bottom:15px; border-radius:8px;">
+      <option value="scalping">⚡ Scalping</option>
+      <option value="momentum">📊 Momentum</option>
+      <option value="reversal">🔁 Trend Reversal</option>
+    </select>
+    <div style="margin:15px 0; color:white; font-weight:bold;">
+      🤖 Bot Status: <span id="botStatus">Stopped</span><br>
+      💰 Bot Profit: <span id="botProfit">0.00</span> USDT
+    </div>
+    <div style="display:flex; gap:15px;">
+      <button onclick="startBot()" style="background:#00e676; color:#000; font-weight:bold; padding:10px 20px; border:none; border-radius:8px;">Start Bot</button>
+      <button onclick="stopBot()" style="background:#d50000; color:#fff; font-weight:bold; padding:10px 20px; border:none; border-radius:8px;">Stop Bot</button>
+    </div>
+  </div>
+  <h3 style="margin-top:40px;">Live Trade Logs</h3>
+  <div id="botLog" style="background:#14171a; color:#f0b90b; font-family:monospace; padding:15px; border-radius:12px; max-height:300px; overflow-y:auto; max-width:700px;"></div>
+  <br>
+  <button onclick="showPage('page16v')" style="margin-top:30px; background:#f0b90b; color:#000; font-weight:bold; padding:10px 20px; border:none; border-radius:10px;">⬅ Back</button>
 </div>
 
 <!-- === PAGE 18: View / Edit Profile === -->
@@ -685,6 +903,77 @@
     </button>
   </div>
 </div>
+
+  <!-- === PAGE 19: Binance FAQ (Multi-Language Support) === -->
+<div id="page19" class="page" style="background-color:#0B0E11; color:#f0b90b; font-family:'Segoe UI', sans-serif; padding:20px; min-height:100vh;">
+  <h2 data-i18n="faq_title" style="font-size:28px; font-weight:900; margin-bottom:20px;">Frequently Asked Questions (FAQ)</h2>
+
+  <h3 style="color:#ffffff;" data-i18n="account_security">🔐 Account & Security</h3>
+  <ul style="color:#ccc;">
+    <li><strong data-i18n="q1"></strong><br><span data-i18n="a1"></span></li>
+    <li><strong data-i18n="q2"></strong><br><span data-i18n="a2"></span></li>
+    <li><strong data-i18n="q3"></strong><br><span data-i18n="a3"></span></li>
+    <li><strong data-i18n="q4"></strong><br><span data-i18n="a4"></span></li>
+  </ul>
+
+  <h3 style="color:#ffffff;" data-i18n="deposits_withdrawals">💰 Deposits & Withdrawals</h3>
+  <ul style="color:#ccc;">
+    <li><strong data-i18n="q5"></strong><br><span data-i18n="a5"></span></li>
+    <li><strong data-i18n="q6"></strong><br><span data-i18n="a6"></span></li>
+    <li><strong data-i18n="q7"></strong><br><span data-i18n="a7"></span></li>
+    <li><strong data-i18n="q8"></strong><br><span data-i18n="a8"></span></li>
+  </ul>
+
+  <h3 style="color:#ffffff;" data-i18n="trading">📈 Trading</h3>
+  <ul style="color:#ccc;">
+    <li><strong data-i18n="q9"></strong><br><span data-i18n="a9"></span></li>
+    <li><strong data-i18n="q10"></strong><br><span data-i18n="a10"></span></li>
+    <li><strong data-i18n="q11"></strong><br><span data-i18n="a11"></span></li>
+  </ul>
+
+  <h3 style="color:#ffffff;" data-i18n="kyc_verification">🧾 KYC Verification</h3>
+  <ul style="color:#ccc;">
+    <li><strong data-i18n="q12"></strong><br><span data-i18n="a12"></span></li>
+    <li><strong data-i18n="q13"></strong><br><span data-i18n="a13"></span></li>
+    <li><strong data-i18n="q14"></strong><br><span data-i18n="a14"></span></li>
+  </ul>
+
+  <h3 style="color:#ffffff;" data-i18n="fees">🧮 Fees</h3>
+  <ul style="color:#ccc;">
+    <li><strong data-i18n="q15"></strong><br><span data-i18n="a15"></span></li>
+    <li><strong data-i18n="q16"></strong><br><span data-i18n="a16"></span></li>
+  </ul>
+
+  <h3 style="color:#ffffff;" data-i18n="technical">⚙️ Technical & App</h3>
+  <ul style="color:#ccc;">
+    <li><strong data-i18n="q17"></strong><br><span data-i18n="a17"></span></li>
+    <li><strong data-i18n="q18"></strong><br><span data-i18n="a18"></span></li>
+    <li><strong data-i18n="q19"></strong><br><span data-i18n="a19"></span></li>
+  </ul>
+
+  <h3 style="color:#ffffff;" data-i18n="general">🌍 General</h3>
+  <ul style="color:#ccc;">
+    <li><strong data-i18n="q20"></strong><br><span data-i18n="a20"></span></li>
+    <li><strong data-i18n="q21"></strong><br><span data-i18n="a21"></span></li>
+    <li><strong data-i18n="q22"></strong><br><span data-i18n="a22"></span></li>
+  </ul>
+
+  <br>
+  <button onclick="showPage(4)" style="margin-top:20px; background-color:#f0b90b; color:#000; padding:10px 20px; border:none; border-radius:10px; font-weight:bold;" data-i18n="back_dashboard">⬅ Back to Dashboard</button>
+</div>
+
+<!-- Language selector -->
+<select id="langSelector" style="position:fixed; top:20px; right:20px; padding:6px; border-radius:8px; background-color:#f0b90b; color:#000; font-weight:bold; z-index:10000;">
+  <option value="en">🇬🇧 English</option>
+  <option value="fr">🇫🇷 French</option>
+  <option value="es">🇪🇸 Spanish</option>
+  <option value="ar">🇸🇦 Arabic</option>
+  <option value="hi">🇮🇳 Hindi</option>
+  <option value="ur">🇵🇰 Urdu</option>
+  <option value="zh">🇨🇳 Chinese</option>
+</select>
+
+
   
 <!-- === SCRIPT === -->
 <script>
@@ -2060,6 +2349,453 @@ window.addEventListener("DOMContentLoaded", () => {
   updateBalances();
   setInterval(updateBalances, 60 * 1000); // refresh every minute
   </script>
+
+<script>
+  // Show and hide pages helper
+  function showPage(pageId) {
+    const pages = [
+      'page16', 'page16i', 'page16ii', 'page16iii', 'page16iv', 'page16v',
+      'page16vi_stake', 'page16vi_leaderboard', 'page16vi_bot'
+    ];
+    pages.forEach(id => {
+      document.getElementById(id).style.display = (id === pageId) ? 'block' : 'none';
+    });
+  }
+
+  // Update leverage display
+  const leverageSlider = document.getElementById('leverage');
+  const leverageValueSpan = document.getElementById('leverageValue');
+  if (leverageSlider) {
+    leverageSlider.addEventListener('input', () => {
+      leverageValueSpan.textContent = leverageSlider.value;
+    });
+  }
+
+  const derivLeverageSlider = document.getElementById('derivLeverage');
+  const derivLeverageValueSpan = document.getElementById('derivLeverageValue');
+  if (derivLeverageSlider) {
+    derivLeverageSlider.addEventListener('input', () => {
+      derivLeverageValueSpan.textContent = derivLeverageSlider.value;
+    });
+  }
+
+  // Prices storage
+  let prices = {
+    BTC: '--',
+    ETH: '--',
+    BNB: '--'
+  };
+
+  // Fetch crypto prices from CoinGecko
+  async function fetchPrices() {
+    try {
+      const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,binancecoin&vs_currencies=usd');
+      const data = await res.json();
+      prices.BTC = data.bitcoin.usd.toFixed(2);
+      prices.ETH = data.ethereum.usd.toFixed(2);
+      prices.BNB = data.binancecoin.usd.toFixed(2);
+
+      // Update all price elements
+      ['btcPrice', 'btcPriceFut', 'btcPriceDeriv'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = `$${prices.BTC}`;
+      });
+      ['ethPrice', 'ethPriceFut', 'ethPriceDeriv'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = `$${prices.ETH}`;
+      });
+      ['bnbPrice', 'bnbPriceFut', 'bnbPriceDeriv'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = `$${prices.BNB}`;
+      });
+    } catch (e) {
+      console.error('Failed to fetch prices', e);
+    }
+  }
+  fetchPrices();
+  setInterval(fetchPrices, 60000); // Refresh every 60s
+
+  // === Spot Trading Logic ===
+  let spotOpenPositions = [];
+  let spotTradeHistory = [];
+
+  function renderSpotPositions() {
+    const container = document.getElementById('spotOpenPositions');
+    if (!spotOpenPositions.length) {
+      container.textContent = 'No open positions.';
+      return;
+    }
+    container.innerHTML = spotOpenPositions.map((pos, i) =>
+      `<div>#${i+1}: ${pos.side.toUpperCase()} ${pos.amount} ${pos.token} at $${pos.price} (PnL: $${pos.pnl.toFixed(2)})</div>`
+    ).join('');
+  }
+
+  function renderSpotHistory() {
+    const container = document.getElementById('spotTradeHistory');
+    if (!spotTradeHistory.length) {
+      container.textContent = 'No trade history.';
+      return;
+    }
+    container.innerHTML = spotTradeHistory.map((trade, i) =>
+      `<div>#${i+1}: ${trade.side.toUpperCase()} ${trade.amount} ${trade.token} at $${trade.price}</div>`
+    ).join('');
+  }
+
+  function spotTrade(side) {
+    const token = document.getElementById('spotToken').value;
+    const amount = parseFloat(document.getElementById('spotAmount').value);
+    const resultEl = document.getElementById('spotTradeResult');
+
+    if (!amount || amount <= 0) {
+      resultEl.textContent = 'Enter a valid amount.';
+      return;
+    }
+
+    const price = parseFloat(prices[token]);
+    if (!price || isNaN(price)) {
+      resultEl.textContent = 'Price data not available.';
+      return;
+    }
+
+    // Add to trade history
+    spotTradeHistory.unshift({ side, token, amount, price });
+
+    // Update open positions (simplified)
+    if (side === 'buy') {
+      // Add position
+      spotOpenPositions.push({
+        token,
+        amount,
+        price,
+        side,
+        pnl: 0
+      });
+    } else {
+      // Sell: remove position(s) or reduce
+      let posIndex = spotOpenPositions.findIndex(p => p.token === token && p.side === 'buy');
+      if (posIndex !== -1) {
+        // Simplify: remove entire position for demo
+        spotOpenPositions.splice(posIndex, 1);
+      }
+    }
+    renderSpotPositions();
+    renderSpotHistory();
+    resultEl.textContent = `Successfully executed ${side.toUpperCase()} for ${amount} ${token} at $${price}`;
+  }
+
+  // === Futures Trading Logic ===
+  let futuresOpenPositions = [];
+  let futuresTradeHistory = [];
+
+  function renderFuturesPositions() {
+    const container = document.getElementById('futuresOpenPositions');
+    if (!futuresOpenPositions.length) {
+      container.textContent = 'No open positions.';
+      return;
+    }
+    container.innerHTML= futuresOpenPositions.map((pos, i) =>
+      `<div>#${i+1}: ${pos.side.toUpperCase()} ${pos.amount} ${pos.token} @ $${pos.price} leverage x${pos.leverage} (PnL: $${pos.pnl.toFixed(2)})</div>`
+    ).join('');
+  }
+
+  function renderFuturesHistory() {
+    const container = document.getElementById('futuresTradeHistory');
+    if (!futuresTradeHistory.length) {
+      container.textContent = 'No trade history.';
+      return;
+    }
+    container.innerHTML = futuresTradeHistory.map((trade, i) =>
+      `<div>#${i+1}: ${trade.side.toUpperCase()} ${trade.amount} ${trade.token} @ $${trade.price} leverage x${trade.leverage}</div>`
+    ).join('');
+  }
+
+  function futuresTrade(side) {
+    const token = document.getElementById('futuresToken').value;
+    const amount = parseFloat(document.getElementById('futuresAmount').value);
+    const leverage = parseInt(document.getElementById('leverage').value);
+    const resultEl = document.getElementById('futuresTradeResult');
+
+    if (!amount || amount <= 0) {
+      resultEl.textContent = 'Enter a valid amount.';
+      return;
+    }
+
+    const price = parseFloat(prices[token]);
+    if (!price || isNaN(price)) {
+      resultEl.textContent = 'Price data not available.';
+      return;
+    }
+
+    futuresTradeHistory.unshift({ side, token, amount, price, leverage });
+
+    futuresOpenPositions.push({
+      token,
+      amount,
+      price,
+      side,
+      leverage,
+      pnl: 0
+    });
+
+    renderFuturesPositions();
+    renderFuturesHistory();
+    resultEl.textContent = `Futures ${side.toUpperCase()} ${amount} ${token} @ $${price} x${leverage} executed.`;
+  }
+
+  // === Derivatives Trading Logic ===
+  let derivOpenPositions = [];
+  let derivTradeHistory = [];
+
+  function renderDerivPositions() {
+    const container = document.getElementById('derivOpenPositions');
+    if (!derivOpenPositions.length) {
+      container.textContent = 'No open positions.';
+      return;
+    }
+    container.innerHTML = derivOpenPositions.map((pos, i) =>
+      `<div>#${i+1}: ${pos.side.toUpperCase()} ${pos.amount} ${pos.token} (${pos.type}) @ $${pos.price} leverage x${pos.leverage} (PnL: $${pos.pnl.toFixed(2)})</div>`
+    ).join('');
+  }
+
+  function renderDerivHistory() {
+    const container = document.getElementById('derivTradeHistory');
+    if (!derivTradeHistory.length) {
+      container.textContent = 'No trade history.';
+      return;
+    }
+    container.innerHTML = derivTradeHistory.map((trade, i) =>
+      `<div>#${i+1}: ${trade.side.toUpperCase()} ${trade.amount} ${trade.token} (${trade.type}) @ $${trade.price} leverage x${trade.leverage}</div>`
+    ).join('');
+  }
+
+  function openDeriv(side) {
+    const type = document.getElementById('derivType').value;
+    const token = document.getElementById('derivToken').value;
+    const amount = parseFloat(document.getElementById('derivAmount').value);
+    const leverage = parseInt(document.getElementById('derivLeverage').value);
+    const resultEl = document.getElementById('derivResult');
+
+    if (!amount || amount <= 0) {
+      resultEl.textContent = 'Enter a valid amount.';
+      return;
+    }
+
+    const price = parseFloat(prices[token]);
+    if (!price || isNaN(price)) {
+      resultEl.textContent = 'Price data not available.';
+      return;
+    }
+
+    derivTradeHistory.unshift({ side, token, amount, price, leverage, type });
+
+    derivOpenPositions.push({
+      token,
+      amount,
+      price,
+      side,
+      leverage,
+      type,
+      pnl: 0
+    });
+
+    renderDerivPositions();
+    renderDerivHistory();
+
+    resultEl.textContent = `Opened ${side.toUpperCase()} ${type} ${amount} ${token} @ $${price} x${leverage}.`;
+  }
+
+  // === Staking Logic ===
+  function stakeNow() {
+    const token = document.getElementById('stakeToken').value;
+    const amount = parseFloat(document.getElementById('stakeAmount').value);
+    const duration = parseInt(document.getElementById('stakeDuration').value);
+    const resultEl = document.getElementById('stakeResult');
+
+    if (!amount || amount <= 0) {
+      resultEl.textContent = 'Enter a valid amount.';
+      return;
+    }
+
+    const apyMap = { BNB: 12, USDT: 8 }; // example APYs
+    const apy = apyMap[token] || 5;
+    const interest = ((amount * (apy / 100)) * (duration / 365)).toFixed(4);
+
+    resultEl.textContent = `Staked ${amount} ${token} for ${duration} days at ${apy}% APY. Estimated interest: ${interest} ${token}.`;
+  }
+
+  // === Copy Trading Logic ===
+  const experts = [
+    {
+      name: 'TraderX',
+      strategy: 'Momentum',
+      successRate: '78%',
+      followers: 5200,
+      trades: [
+        { action: 'buy', token: 'BTC', amount: 0.1, price: 35000 },
+        { action: 'sell', token: 'ETH', amount: 5, price: 2100 }
+      ]
+    },
+    {
+      name: 'CryptoKing',
+      strategy: 'Scalping',
+      successRate: '85%',
+      followers: 4300,
+      trades: [
+        { action: 'buy', token: 'BNB', amount: 50, price: 280 },
+        { action: 'sell', token: 'BTC', amount: 0.05, price: 34000 }
+      ]
+    }
+  ];
+
+  let portfolio = {};
+
+  function renderExperts() {
+    const container = document.getElementById('expertsList');
+    container.innerHTML = experts.map((expert, i) => `
+      <div style="background:#1E2124; padding:15px; border-radius:10px; color:#f0b90b;">
+        <b>${expert.name}</b> - Strategy: ${expert.strategy} - Success Rate: ${expert.successRate} - Followers: ${expert.followers}
+        <br>
+        <button onclick="copyExpertTrades(${i})" style="margin-top:8px; background:#f0b90b; color:#000; font-weight:bold; border:none; padding:6px 12px; border-radius:6px;">Copy Trades</button>
+      </div>
+    `).join('');
+  }
+
+  function copyExpertTrades(index) {
+    const expert = experts[index];
+    expert.trades.forEach(trade => {
+      portfolio[trade.token] = (portfolio[trade.token] || 0) + (trade.action === 'buy' ? trade.amount : -trade.amount);
+      addCopiedTradeLog(`${trade.action.toUpperCase()} ${trade.amount} ${trade.token} @ $${trade.price} from ${expert.name}`);
+    });
+    renderPortfolio();
+  }
+
+  function renderPortfolio() {
+    const container = document.getElementById('portfolioDisplay');
+    if (Object.keys(portfolio).length === 0) {
+      container.textContent = 'Your portfolio is empty.';
+      return;
+    }
+    container.innerHTML = Object.entries(portfolio).map(([token, amount]) =>
+      `<div>${token}: ${amount.toFixed(4)}</div>`
+    ).join('');
+  }
+
+  function addCopiedTradeLog(text) {
+    const ul = document.getElementById('copiedTrades');
+    const li = document.createElement('li');
+    li.textContent = `[${new Date().toLocaleTimeString()}] ${text}`;
+    ul.prepend(li);
+    if (ul.children.length > 20) {
+      ul.removeChild(ul.lastChild);
+    }
+  }
+
+  // === AI Trading Bot Logic ===
+  let botInterval = null;
+  let botProfit = 0;
+
+  function startBot() {
+    if (botInterval) return; // already running
+    document.getElementById('botStatus').textContent = 'Running';
+    const strategy = document.getElementById('botStrategy').value;
+    botInterval = setInterval(() => {
+      const profitChange = (Math.random() * 10 - 5).toFixed(2); // Random profit/loss -5 to +5
+      botProfit += parseFloat(profitChange);
+      botProfit = Math.max(botProfit, 0); // no negative profit display
+      document.getElementById('botProfit').textContent = botProfit.toFixed(2);
+      const log = document.getElementById('botLog');
+      const action = profitChange > 0 ? 'PROFIT' : 'LOSS';
+      const entry = document.createElement('div');
+      entry.textContent = `[${new Date().toLocaleTimeString()}] ${action} ${profitChange} USDT (${strategy} strategy)`;
+      log.prepend(entry);
+      if (log.children.length > 50) log.removeChild(log.lastChild);
+    }, 3000);
+  }
+
+  function stopBot() {
+    if (!botInterval) return;
+    clearInterval(botInterval);
+    botInterval = null;
+    document.getElementById('botStatus').textContent = 'Stopped';
+  }
+
+  // Initialize the experts list and portfolio display
+  renderExperts();
+  renderPortfolio();
+  renderSpotPositions();
+  renderSpotHistory();
+  renderFuturesPositions();
+  renderFuturesHistory();
+  renderDerivPositions();
+  renderDerivHistory();
+
+  // Show main trade menu on load
+  showPage('page16');
+  </script>
+  
+  <script>
+  const translations = {
+    en: {
+      faq_title: "Frequently Asked Questions (FAQ)",
+      account_security: "🔐 Account & Security",
+      deposits_withdrawals: "💰 Deposits & Withdrawals",
+      trading: "📈 Trading",
+      kyc_verification: "🧾 KYC Verification",
+      fees: "🧮 Fees",
+      technical: "⚙️ Technical & App",
+      general: "🌍 General",
+      back_dashboard: "⬅ Back to Dashboard",
+      q1: "How do I create a Binance account?", a1: "Visit binance.com, register with email or phone, and verify.",
+      q2: "How do I enable 2FA?", a2: "Go to Profile > Security and enable Google Authenticator or SMS.",
+      q3: "I forgot my password. What do I do?", a3: "Click 'Forgot Password?' and follow the reset instructions.",
+      q4: "I suspect unauthorized activity.", a4: "Freeze your account and contact Binance Support immediately.",
+      q5: "How to deposit crypto?", a5: "Go to Wallet > Deposit, select the coin and network, and copy your address.",
+      q6: "Why hasn't my deposit arrived?", a6: "Check the blockchain for confirmations; some require multiple.",
+      q7: "How to withdraw crypto?", a7: "Go to Wallet > Withdraw, input the address, choose network, and confirm.",
+      q8: "Why is my withdrawal delayed?", a8: "Could be due to security checks or network congestion.",
+      q9: "What is spot trading?", a9: "Buying or selling crypto at current market price.",
+      q10: "Difference between spot, margin, and futures?", a10: "Spot: Real-time. Margin: Borrowed funds. Futures: Derivatives.",
+      q11: "How to place an order?", a11: "Go to Trade > Spot, select a pair, choose order type, and confirm.",
+      q12: "Is KYC required?", a12: "Yes, to unlock full functionality.",
+      q13: "What documents are accepted?", a13: "Passport, ID, driver’s license, and selfie.",
+      q14: "How long does it take?", a14: "Usually a few minutes to 24 hours.",
+      q15: "What are trading fees?", a15: "0.1% standard, with 25% off if using BNB for fees.",
+      q16: "Are there withdrawal fees?", a16: "Yes, varies by token and network.",
+      q17: "Can’t log in?", a17: "Check connection or use Binance App.",
+      q18: "Order not executing?", a18: "May be pending as a limit order. Use Market order instead.",
+      q19: "Sent crypto to wrong address?", a19: "Usually unrecoverable. Contact support ASAP if internal transfer.",
+      q20: "Is Binance available in my country?", a20: "Check regulations. U.S. users must use Binance.US.",
+      q21: "How to contact Binance support?", a21: "Visit support.binance.com.",
+      q22: "Where can I download the Binance app?", a22: "Available on Google Play and Apple App Store."
+    }
+    // Add other language translations here if desired
+  };
+
+  async function updateTranslations(lang) {
+    const elements = document.querySelectorAll('[data-i18n]');
+    for (const el of elements) {
+      const key = el.getAttribute('data-i18n');
+      if (translations[lang] && translations[lang][key]) {
+        el.innerHTML = translations[lang][key];
+      } else if (translations['en'][key]) {
+        el.innerHTML = translations['en'][key];
+      }
+    }
+  }
+
+  document.getElementById("langSelector").addEventListener("change", function () {
+    updateTranslations(this.value);
+  });
+
+  window.onload = function () {
+    const browserLang = navigator.language.slice(0, 2).toLowerCase();
+    const supportedLangs = ["en", "fr", "es", "ar", "hi", "ur", "zh"];
+    const defaultLang = supportedLangs.includes(browserLang) ? browserLang : "en";
+    document.getElementById("langSelector").value = defaultLang;
+    updateTranslations(defaultLang);
+  }
+  </script>
+
 </body>
 </html>
     
