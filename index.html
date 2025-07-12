@@ -589,229 +589,254 @@
   <button onclick="showPage(4)" style="margin-top: 30px; background-color: #f3ba2f; color: black; padding: 12px 24px; font-size: 1rem; font-weight: bold; border: none; border-radius: 8px; cursor: pointer;">Go to Dashboard</button>
 </div>
 
-<!-- === PAGE 16: Trade Menu and Subpages === -->
-<div id="page16" class="page">
+<!-- === PAGE 16: Trade Menu === -->
+<div id="page16" class="page" style="background-color: #0b0e11; color: #f3ba2f; font-family: 'Arial Black', Arial, sans-serif; padding: 20px; min-height: 100vh;">
   <h1 style="font-weight:900; font-size:32px; margin-bottom:30px;">Trade Tokens</h1>
   <h2 style="font-weight:900; font-size:28px; margin-bottom:30px;">Trading Options</h2>
   <div style="display:flex; flex-direction:column; gap:20px; max-width:400px;">
-    <button onclick="showPage('page16i')" style="padding:15px; border:none; border-radius:10px; background:#f0b90b; color:#000;">📊 Spot Trading</button>
-    <button onclick="showPage('page16ii')" style="padding:15px; border:none; border-radius:10px; background:#f0b90b; color:#000;">👥 Copy Trading</button>
-    <button onclick="showPage('page16iii')" style="padding:15px; border:none; border-radius:10px; background:#f0b90b; color:#000;">📈 Futures Trading</button>
-    <button onclick="showPage('page16iv')" style="padding:15px; border:none; border-radius:10px; background:#f0b90b; color:#000;">🧾 Derivatives Trading</button>
-    <button onclick="showPage('page16v')" style="padding:15px; border:none; border-radius:10px; background:#f0b90b; color:#000;">⚙️ Trade Utilities</button>
+    <button onclick="showPage('page16i')" style="padding:15px; border:none; border-radius:10px; font-weight:bold; background:#f0b90b; color:#000; cursor:pointer;">📊 Spot Trading</button>
+    <button onclick="showPage('page16ii')" style="padding:15px; border:none; border-radius:10px; font-weight:bold; background:#f0b90b; color:#000; cursor:pointer;">👥 Copy Trading</button>
+    <button onclick="showPage('page16iii')" style="padding:15px; border:none; border-radius:10px; font-weight:bold; background:#f0b90b; color:#000; cursor:pointer;">📈 Futures Trading</button>
+    <button onclick="showPage('page16iv')" style="padding:15px; border:none; border-radius:10px; font-weight:bold; background:#f0b90b; color:#000; cursor:pointer;">🩾 Derivatives Trading</button>
+    <button onclick="showPage('page16vi')" style="padding:15px; border:none; border-radius:10px; font-weight:bold; background:#f0b90b; color:#000; cursor:pointer;">⚙️ Trade Utilities</button>
+  </div>
+  <br>
+  <div style="font-weight:900; font-size:1.2rem; margin-top:20px;">
+    Total Trading Balance (USD): <span id="totalTradingBalance">$0.00</span>
+  </div>
+  <br>
+  <!-- Swap Section -->
+  <div id="tradeSwap" style="background:#1e2329; color:#f3ba2f; max-width:400px; padding:20px; border-radius:12px; margin-top:40px; font-family:'Segoe UI', monospace; font-weight:900;">
+    <h3 style="margin-bottom:15px;">Token Swap</h3>
+    <label for="fromToken">From Token</label>
+    <select id="fromToken" style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #f3ba2f; background-color: #1e2329; color: #f3ba2f;">
+      <option value="USDT">USDT (Tether)</option>
+      <option value="BNB">BNB (Binance Coin)</option>
+    </select>
+    <label for="fromAmount" style="margin-top: 16px;">Amount</label>
+    <input type="number" id="fromAmount" placeholder="Enter amount" min="0" step="any" style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #f3ba2f; background-color: #1e2329; color: #f3ba2f; font-weight: 900;">
+    <label for="toToken" style="margin-top: 16px;">To Token</label>
+    <select id="toToken" style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #f3ba2f; background-color: #1e2329; color: #f3ba2f; font-weight: 900;">
+      <option value="BNB">BNB (Binance Coin)</option>
+      <option value="USDT">USDT (Tether)</option>
+    </select>
+    <div id="estimatedAmount" style="margin-top: 16px; font-weight: 900; font-size: 1.1rem;">
+      Estimated Receive: <span id="receiveAmount">0</span>
+    </div>
+    <button style="margin-top: 24px; background:#f0b90b; color:#000; font-weight:bold; padding:10px 20px; border:none; border-radius:10px; cursor:pointer;" onclick="handleTrade()">Swap</button>
   </div>
   <br><br>
-  <button onclick="showPage('page4')" style="background:#1E2124; color:#fff; border:none; padding:10px 20px; border-radius:10px; font-weight:bold;">⬅ Back to Dashboard</button>
+  <button onclick="showPage('page4')" style="background:#1E2124; color:#fff; border:none; padding:10px 20px; border-radius:10px; font-weight:bold; cursor:pointer;">⬅ Back to Dashboard</button>
 </div>
 
-<!-- Spot Trading -->
-<div id="page16i" class="page" style="display:none;">
-  <h2 style="font-weight:900; font-size:28px; margin-bottom:20px;">Spot Trading</h2>
-  <div style="color:white; margin-bottom:10px;">
-    🪙 BTC: <span id="btcPrice">--</span> &nbsp;
-    🪙 ETH: <span id="ethPrice">--</span> &nbsp;
-    🪙 BNB: <span id="bnbPrice">--</span>
-  </div>
-  <iframe src="https://www.tradingview.com/widgetembed/?frameElementId=tradingview_93fe3&symbol=BINANCE:BTCUSDT&interval=1&hidesidetoolbar=1&symboledit=1&saveimage=1&toolbarbg=f1f3f6&studies=[]&theme=dark&style=1&timezone=Etc/UTC" width="100%" height="400" frameborder="0" allowtransparency="true" scrolling="no" style="border-radius:12px; margin-bottom:20px;"></iframe>
-  <div style="background:#1E2124; padding:20px; border-radius:12px; max-width:500px;">
-    <label style="display:block; margin-bottom:8px; font-weight:bold;">Token:</label>
-    <select id="spotToken" style="width:100%; padding:10px; border-radius:8px; border:none;">
-      <option value="BTC">BTC</option>
-      <option value="ETH">ETH</option>
-      <option value="BNB">BNB</option>
-    </select>
-    <label style="display:block; margin:15px 0 8px; font-weight:bold;">Amount:</label>
-    <input type="number" id="spotAmount" placeholder="0.00" style="width:100%; padding:10px; border-radius:8px; border:none;">
-    <div style="display:flex; justify-content:space-between; margin-top:20px;">
-      <button onclick="spotTrade('buy')" style="background:#00c853; color:white; padding:10px 20px; border:none; border-radius:8px;">Buy</button>
-      <button onclick="spotTrade('sell')" style="background:#d50000; color:white; padding:10px 20px; border:none; border-radius:8px;">Sell</button>
-    </div>
-    <p id="spotTradeResult" style="margin-top:15px; font-weight:bold;"></p>
-  </div>
-  <h3 style="margin-top:40px;">Open Positions</h3>
-  <div id="spotOpenPositions" style="background:#14171a; padding:15px; border-radius:12px; max-width:600px; max-height:200px; overflow-y:auto; color:#f0b90b; font-weight:bold;">
-    No open positions.
-  </div>
-  <h3 style="margin-top:40px;">Trade History</h3>
-  <div id="spotTradeHistory" style="background:#14171a; padding:15px; border-radius:12px; max-width:600px; max-height:200px; overflow-y:auto; color:#f0b90b; font-weight:bold;">
-    No trade history.
-  </div>
-  <br>
-  <button onclick="showPage('page16')" style="margin-top:30px; background:#f0b90b; color:#000; padding:10px 20px; border:none; border-radius:10px;">⬅ Back to Trade Menu</button>
-</div>
-
-<!-- Copy Trading -->
-<div id="page16ii" class="page" style="display:none;">
-  <h2 style="font-weight:900; font-size:28px; margin-bottom:20px;">Copy Trading</h2>
-  <div id="expertsList" style="display:flex; flex-direction:column; gap:16px; max-width:700px; margin-bottom:40px;"></div>
-  <h3 style="margin-bottom:10px;">Your Portfolio</h3>
-  <div id="portfolioDisplay" style="background:#1E2124; padding:15px 20px; border-radius:12px; max-width:700px; margin-bottom:30px; font-size:16px; color:#ccc; display:flex; gap:20px; flex-wrap:wrap;"></div>
-  <h3 style="margin-bottom:10px;">Live Copied Trades</h3>
-  <div style="background:#1E2124; padding:20px; border-radius:12px; max-height:350px; overflow-y:auto; font-family: monospace; font-size:14px; color:#ccc;">
-    <ul id="copiedTrades" style="list-style:none; padding-left:0; margin:0;"></ul>
-  </div>
-  <br>
-  <button onclick="showPage('page16')" style="background:#f0b90b; color:#000; font-weight:900; padding:10px 20px; border:none; border-radius:10px; margin-top:20px;">
-    ⬅ Back to Trade Menu
-  </button>
-</div>
-
-<!-- Futures Trading -->
-<div id="page16iii" class="page" style="display:none;">
-  <h2 style="font-weight:900; font-size:28px; margin-bottom:20px;">Futures Trading</h2>
-  <div style="color:white; margin-bottom:10px;">
-    🪙 BTC: <span id="btcPriceFut">--</span> &nbsp;
-    🪙 ETH: <span id="ethPriceFut">--</span> &nbsp;
-    🪙 BNB: <span id="bnbPriceFut">--</span>
-  </div>
-  <div style="background:#1E2124; padding:20px; border-radius:12px; max-width:500px;">
-    <label style="display:block; margin-bottom:10px; font-weight:bold;">Select Token:</label>
-    <select id="futuresToken" style="width:100%; padding:10px; border-radius:8px;">
-      <option value="BTC">BTC</option>
-      <option value="ETH">ETH</option>
-      <option value="BNB">BNB</option>
-    </select>
-    <label style="display:block; margin:15px 0 8px; font-weight:bold;">Amount:</label>
-    <input type="number" id="futuresAmount" placeholder="0.00" style="width:100%; padding:10px; border-radius:8px; border:none;">
-    <label style="display:block; margin:15px 0 8px; font-weight:bold;">Leverage:</label>
-    <input type="range" id="leverage" min="1" max="20" value="5" style="width:100%;">
-    <p style="font-weight:bold; color:#f0b90b;">x<span id="leverageValue">5</span> Leverage</p>
-    <div style="display:flex; justify-content:space-between; margin-top:20px;">
-      <button onclick="futuresTrade('long')" style="background:#00e676; color:black; font-weight:bold; padding:10px 20px; border:none; border-radius:10px;">Long</button>
-      <button onclick="futuresTrade('short')" style="background:#ff1744; color:white; font-weight:bold; padding:10px 20px; border:none; border-radius:10px;">Short</button>
-    </div>
-    <p id="futuresTradeResult" style="margin-top:15px; font-weight:bold;"></p>
-  </div>
-  <h3 style="margin-top:40px;">Open Positions</h3>
-  <div id="futuresOpenPositions" style="background:#14171a; padding:15px; border-radius:12px; max-width:600px; max-height:200px; overflow-y:auto; color:#f0b90b; font-weight:bold;">
-    No open positions.
-  </div>
-  <h3 style="margin-top:40px;">Trade History</h3>
-  <div id="futuresTradeHistory" style="background:#14171a; padding:15px; border-radius:12px; max-width:600px; max-height:200px; overflow-y:auto; color:#f0b90b; font-weight:bold;">
-    No trade history.
-  </div>
-  <br>
-  <button onclick="showPage('page16')" style="margin-top:30px; background:#f0b90b; color:#000; padding:10px 20px; border:none; border-radius:10px; cursor:pointer;">⬅ Back to Trade Menu</button>
-</div>
-
-<!-- Derivatives Trading -->
-<div id="page16iv" class="page" style="display:none;">
-  <h2 style="font-weight:900; font-size:28px; margin-bottom:20px;">Derivatives Trading</h2>
-  <div style="color:white; margin-bottom:10px;">
-    🪙 BTC: <span id="btcPriceDeriv">--</span> &nbsp;
-    🪙 ETH: <span id="ethPriceDeriv">--</span> &nbsp;
-    🪙 BNB: <span id="bnbPriceDeriv">--</span>
-  </div>
-  <div style="background:#1E2124; padding:20px; border-radius:12px; max-width:500px;">
-    <label style="font-weight:bold;">Contract Type:</label>
-    <select id="derivType" style="width:100%; padding:10px; border-radius:8px; margin-bottom:15px;">
-      <option value="Perpetual">Perpetual</option>
-      <option value="Options">Options</option>
-    </select>
-    <label style="font-weight:bold;">Token:</label>
-    <select id="derivToken" style="width:100%; padding:10px; border-radius:8px; margin-bottom:15px;">
-      <option value="BTC">BTC</option>
-      <option value="ETH">ETH</option>
-    </select>
-    <label style="font-weight:bold;">Amount:</label>
-    <input type="number" id="derivAmount" placeholder="0.00" style="width:100%; padding:10px; border-radius:8px; border:none; margin-bottom:15px;">
-    <label style="font-weight:bold;">Leverage:</label>
-    <input type="range" id="derivLeverage" min="1" max="50" value="10" style="width:100%;">
-    <p style="font-weight:bold; color:#f0b90b;">x<span id="derivLeverageValue">10</span> Leverage</p>
-    <div style="display:flex; justify-content:space-between; margin-top:20px;">
-      <button onclick="openDeriv('long')" style="background:#00e676; color:black; font-weight:bold; padding:10px 20px; border:none; border-radius:10px;">Open Long</button>
-      <button onclick="openDeriv('short')" style="background:#ff1744; color:white; font-weight:bold; padding:10px 20px; border:none; border-radius:10px;">Open Short</button>
-    </div>
-    <p id="derivResult" style="margin-top:20px; font-weight:bold;"></p>
-  </div>
-  <h3 style="margin-top:40px;">Open Positions</h3>
-  <div id="derivOpenPositions" style="background:#14171a; padding:15px; border-radius:12px; max-width:600px; max-height:200px; overflow-y:auto; color:#f0b90b; font-weight:bold;">
-    No open positions.
-  </div>
-  <h3 style="margin-top:40px;">Trade History</h3>
-  <div id="derivTradeHistory" style="background:#14171a; padding:15px; border-radius:12px; max-width:600px; max-height:200px; overflow-y:auto; color:#f0b90b; font-weight:bold;">
-    No trade history.
-  </div>
-  <br>
-  <button onclick="showPage('page16')" style="margin-top:30px; background:#f0b90b; color:#000; padding:10px 20px; border:none; border-radius:10px; cursor:pointer;">⬅ Back to Trade Menu</button>
-</div>
-
-<!-- Trade Utilities -->
-<div id="page16v" class="page" style="display:none;">
-  <h2 style="font-weight:900; font-size:28px; margin-bottom:30px;">⚙️ Trade Utilities</h2>
-  <div style="display:flex; flex-direction:column; gap:20px; max-width:400px;">
-    <button onclick="showPage('page16vi_stake')" style="padding:15px; border:none; border-radius:10px; background:#f0b90b; color:#000;">💰 Staking</button>
-    <button onclick="showPage('page16vi_leaderboard')" style="padding:15px; border:none; border-radius:10px; background:#f0b90b; color:#000;">🏆 Leaderboard</button>
-    <button onclick="showPage('page16vi_bot')" style="padding:15px; border:none; border-radius:10px; background:#f0b90b; color:#000;">🤖 AI Trading Bot</button>
-  </div>
-  <br><br>
-  <button onclick="showPage('page16')" style="background:#1E2124; color:#fff; border:none; padding:10px 20px; border-radius:10px; font-weight:bold;">⬅ Back to Trade Menu</button>
-</div>
-
-<!-- Staking Page -->
-<div id="page16vi_stake" class="page" style="display:none;">
-  <h2 style="font-weight:900; font-size:28px;">💰 Staking</h2>
-  <p style="color:white; max-width:600px;">Earn passive income by staking your crypto assets. Select a token and staking period to begin.</p>
-  <div style="margin-top:20px; max-width:500px; background:#1E2124; padding:20px; border-radius:12px;">
-    <label style="font-weight:bold;">Token:</label>
-    <select id="stakeToken" style="width:100%; padding:10px; border-radius:8px;">
-      <option value="BNB">BNB</option>
-      <option value="USDT">USDT</option>
-    </select>
-    <label style="font-weight:bold; margin-top:15px; display:block;">Amount:</label>
-    <input id="stakeAmount" type="number" placeholder="0.00" style="width:100%; padding:10px; border-radius:8px; border:none;">
-    <label style="font-weight:bold; margin-top:15px; display:block;">Duration:</label>
-    <select id="stakeDuration" style="width:100%; padding:10px; border-radius:8px;">
-      <option value="7">7 Days</option>
-      <option value="30">30 Days</option>
-      <option value="90">90 Days</option>
-    </select>
-    <button onclick="stakeNow()" style="margin-top:20px; background:#f0b90b; color:black; font-weight:bold; padding:10px 20px; border:none; border-radius:10px;">Start Staking</button>
-    <p id="stakeResult" style="margin-top:10px; color:#fff; font-weight:bold;"></p>
-  </div>
-  <br>
-  <button onclick="showPage('page16v')" style="margin-top:30px; background:#f0b90b; color:#000; font-weight:bold; padding:10px 20px; border:none; border-radius:10px;">⬅ Back</button>
-</div>
-
-<!-- Leaderboard Page -->
-<div id="page16vi_leaderboard" class="page" style="display:none;">
-  <h2 style="font-weight:900; font-size:28px;">🏆 Trader Leaderboard</h2>
-  <p style="color:white;">Top 5 Traders (Simulated)</p>
-  <ol id="leaderboard" style="color:white; font-weight:bold; background:#1E2124; padding:20px; border-radius:12px; max-width:500px;">
-    <li>TraderX - $25,320 PnL</li>
-    <li>CryptoKing - $20,150 PnL</li>
-    <li>AltQueen - $18,405 PnL</li>
-    <li>ScalpBot - $15,100 PnL</li>
-    <li>DeFiDon - $12,300 PnL</li>
-  </ol>
-  <br>
-  <button onclick="showPage('page16v')" style="margin-top:30px; background:#f0b90b; color:#000; font-weight:bold; padding:10px 20px; border:none; border-radius:10px;">⬅ Back</button>
-</div>
-
-<!-- AI Trading Bot -->
-<div id="page16vi_bot" class="page" style="display:none;">
-  <h2 style="font-weight:900; font-size:28px; margin-bottom:20px;">🤖 AI Auto Trading Bot</h2>
-  <div style="background:#1E2124; padding:20px; border-radius:12px; max-width:700px;">
-    <label style="font-weight:bold;">Choose Strategy:</label>
-    <select id="botStrategy" style="width:100%; padding:10px; margin-bottom:15px; border-radius:8px;">
-      <option value="scalping">⚡ Scalping</option>
-      <option value="momentum">📊 Momentum</option>
-      <option value="reversal">🔁 Trend Reversal</option>
-    </select>
-    <div style="margin:15px 0; color:white; font-weight:bold;">
-      🤖 Bot Status: <span id="botStatus">Stopped</span><br>
-      💰 Bot Profit: <span id="botProfit">0.00</span> USDT
-    </div>
-    <div style="display:flex; gap:15px;">
-      <button onclick="startBot()" style="background:#00e676; color:#000; font-weight:bold; padding:10px 20px; border:none; border-radius:8px;">Start Bot</button>
-      <button onclick="stopBot()" style="background:#d50000; color:#fff; font-weight:bold; padding:10px 20px; border:none; border-radius:8px;">Stop Bot</button>
-    </div>
-  </div>
-  <h3 style="margin-top:40px;">Live Trade Logs</h3>
-  <div id="botLog" style="background:#14171a; color:#f0b90b; font-family:monospace; padding:15px; border-radius:12px; max-height:300px; overflow-y:auto; max-width:700px;"></div>
-  <br>
-  <button onclick="showPage('page16v')" style="margin-top:30px; background:#f0b90b; color:#000; font-weight:bold; padding:10px 20px; border:none; border-radius:10px;">⬅ Back</button>
-</div>
+<!-- Spot Trading -->  
+<div id="page16i" class="page" style="display:none;">  
+  <h2 style="font-weight:900; font-size:28px; margin-bottom:20px;">Spot Trading</h2>  
+  <div style="color:white; margin-bottom:10px;">  
+    🪙 BTC: <span id="btcPrice">--</span> &nbsp;  
+    🪙 ETH: <span id="ethPrice">--</span> &nbsp;  
+    🪙 BNB: <span id="bnbPrice">--</span>  
+  </div>  
+  <iframe src="https://www.tradingview.com/widgetembed/?frameElementId=tradingview_93fe3&symbol=BINANCE:BTCUSDT&interval=1&hidesidetoolbar=1&symboledit=1&saveimage=1&toolbarbg=f1f3f6&studies=[]&theme=dark&style=1&timezone=Etc/UTC" width="100%" height="400" frameborder="0" allowtransparency="true" scrolling="no" style="border-radius:12px; margin-bottom:20px;"></iframe>  
+  <div style="background:#1E2124; padding:20px; border-radius:12px; max-width:500px;">  
+    <label style="display:block; margin-bottom:8px; font-weight:bold;">Token:</label>  
+    <select id="spotToken" style="width:100%; padding:10px; border-radius:8px; border:none;">  
+      <option value="BTC">BTC</option>  
+      <option value="ETH">ETH</option>  
+      <option value="BNB">BNB</option>  
+    </select>  
+    <label style="display:block; margin:15px 0 8px; font-weight:bold;">Amount:</label>  
+    <input type="number" id="spotAmount" placeholder="0.00" style="width:100%; padding:10px; border-radius:8px; border:none;">  
+    <div style="display:flex; justify-content:space-between; margin-top:20px;">  
+      <button onclick="spotTrade('buy')" style="background:#00c853; color:white; padding:10px 20px; border:none; border-radius:8px;">Buy</button>  
+      <button onclick="spotTrade('sell')" style="background:#d50000; color:white; padding:10px 20px; border:none; border-radius:8px;">Sell</button>  
+    </div>  
+    <p id="spotTradeResult" style="margin-top:15px; font-weight:bold;"></p>  
+  </div>  
+  <h3 style="margin-top:40px;">Open Positions</h3>  
+  <div id="spotOpenPositions" style="background:#14171a; padding:15px; border-radius:12px; max-width:600px; max-height:200px; overflow-y:auto; color:#f0b90b; font-weight:bold;">  
+    No open positions.  
+  </div>  
+  <h3 style="margin-top:40px;">Trade History</h3>  
+  <div id="spotTradeHistory" style="background:#14171a; padding:15px; border-radius:12px; max-width:600px; max-height:200px; overflow-y:auto; color:#f0b90b; font-weight:bold;">  
+    No trade history.  
+  </div>  
+  <br>  
+  <button onclick="showPage('page16')" style="margin-top:30px; background:#f0b90b; color:#000; padding:10px 20px; border:none; border-radius:10px;">⬅ Back to Trade Menu</button>  
+</div>  
+  
+<!-- Copy Trading -->  
+<div id="page16ii" class="page" style="display:none;">  
+  <h2 style="font-weight:900; font-size:28px; margin-bottom:20px;">Copy Trading</h2>  
+  <div id="expertsList" style="display:flex; flex-direction:column; gap:16px; max-width:700px; margin-bottom:40px;"></div>  
+  <h3 style="margin-bottom:10px;">Your Portfolio</h3>  
+  <div id="portfolioDisplay" style="background:#1E2124; padding:15px 20px; border-radius:12px; max-width:700px; margin-bottom:30px; font-size:16px; color:#ccc; display:flex; gap:20px; flex-wrap:wrap;"></div>  
+  <h3 style="margin-bottom:10px;">Live Copied Trades</h3>  
+  <div style="background:#1E2124; padding:20px; border-radius:12px; max-height:350px; overflow-y:auto; font-family: monospace; font-size:14px; color:#ccc;">  
+    <ul id="copiedTrades" style="list-style:none; padding-left:0; margin:0;"></ul>  
+  </div>  
+  <br>  
+  <button onclick="showPage('page16')" style="background:#f0b90b; color:#000; font-weight:900; padding:10px 20px; border:none; border-radius:10px; margin-top:20px;">  
+    ⬅ Back to Trade Menu  
+  </button>  
+</div>  
+  
+<!-- Futures Trading -->  
+<div id="page16iii" class="page" style="display:none;">  
+  <h2 style="font-weight:900; font-size:28px; margin-bottom:20px;">Futures Trading</h2>  
+  <div style="color:white; margin-bottom:10px;">  
+    🪙 BTC: <span id="btcPriceFut">--</span> &nbsp;  
+    🪙 ETH: <span id="ethPriceFut">--</span> &nbsp;  
+    🪙 BNB: <span id="bnbPriceFut">--</span>  
+  </div>  
+  <div style="background:#1E2124; padding:20px; border-radius:12px; max-width:500px;">  
+    <label style="display:block; margin-bottom:10px; font-weight:bold;">Select Token:</label>  
+    <select id="futuresToken" style="width:100%; padding:10px; border-radius:8px;">  
+      <option value="BTC">BTC</option>  
+      <option value="ETH">ETH</option>  
+      <option value="BNB">BNB</option>  
+    </select>  
+    <label style="display:block; margin:15px 0 8px; font-weight:bold;">Amount:</label>  
+    <input type="number" id="futuresAmount" placeholder="0.00" style="width:100%; padding:10px; border-radius:8px; border:none;">  
+    <label style="display:block; margin:15px 0 8px; font-weight:bold;">Leverage:</label>  
+    <input type="range" id="leverage" min="1" max="20" value="5" style="width:100%;">  
+    <p style="font-weight:bold; color:#f0b90b;">x<span id="leverageValue">5</span> Leverage</p>  
+    <div style="display:flex; justify-content:space-between; margin-top:20px;">  
+      <button onclick="futuresTrade('long')" style="background:#00e676; color:black; font-weight:bold; padding:10px 20px; border:none; border-radius:10px;">Long</button>  
+      <button onclick="futuresTrade('short')" style="background:#ff1744; color:white; font-weight:bold; padding:10px 20px; border:none; border-radius:10px;">Short</button>  
+    </div>  
+    <p id="futuresTradeResult" style="margin-top:15px; font-weight:bold;"></p>  
+  </div>  
+  <h3 style="margin-top:40px;">Open Positions</h3>  
+  <div id="futuresOpenPositions" style="background:#14171a; padding:15px; border-radius:12px; max-width:600px; max-height:200px; overflow-y:auto; color:#f0b90b; font-weight:bold;">  
+    No open positions.  
+  </div>  
+  <h3 style="margin-top:40px;">Trade History</h3>  
+  <div id="futuresTradeHistory" style="background:#14171a; padding:15px; border-radius:12px; max-width:600px; max-height:200px; overflow-y:auto; color:#f0b90b; font-weight:bold;">  
+    No trade history.  
+  </div>  
+  <br>  
+  <button onclick="showPage('page16')" style="margin-top:30px; background:#f0b90b; color:#000; padding:10px 20px; border:none; border-radius:10px; cursor:pointer;">⬅ Back to Trade Menu</button>  
+</div>  
+  
+<!-- Derivatives Trading -->  
+<div id="page16iv" class="page" style="display:none;">  
+  <h2 style="font-weight:900; font-size:28px; margin-bottom:20px;">Derivatives Trading</h2>  
+  <div style="color:white; margin-bottom:10px;">  
+    🪙 BTC: <span id="btcPriceDeriv">--</span> &nbsp;  
+    🪙 ETH: <span id="ethPriceDeriv">--</span> &nbsp;  
+    🪙 BNB: <span id="bnbPriceDeriv">--</span>  
+  </div>  
+  <div style="background:#1E2124; padding:20px; border-radius:12px; max-width:500px;">  
+    <label style="font-weight:bold;">Contract Type:</label>  
+    <select id="derivType" style="width:100%; padding:10px; border-radius:8px; margin-bottom:15px;">  
+      <option value="Perpetual">Perpetual</option>  
+      <option value="Options">Options</option>  
+    </select>  
+    <label style="font-weight:bold;">Token:</label>  
+    <select id="derivToken" style="width:100%; padding:10px; border-radius:8px; margin-bottom:15px;">  
+      <option value="BTC">BTC</option>  
+      <option value="ETH">ETH</option>  
+    </select>  
+    <label style="font-weight:bold;">Amount:</label>  
+    <input type="number" id="derivAmount" placeholder="0.00" style="width:100%; padding:10px; border-radius:8px; border:none; margin-bottom:15px;">  
+    <label style="font-weight:bold;">Leverage:</label>  
+    <input type="range" id="derivLeverage" min="1" max="50" value="10" style="width:100%;">  
+    <p style="font-weight:bold; color:#f0b90b;">x<span id="derivLeverageValue">10</span> Leverage</p>  
+    <div style="display:flex; justify-content:space-between; margin-top:20px;">  
+      <button onclick="openDeriv('long')" style="background:#00e676; color:black; font-weight:bold; padding:10px 20px; border:none; border-radius:10px;">Open Long</button>  
+      <button onclick="openDeriv('short')" style="background:#ff1744; color:white; font-weight:bold; padding:10px 20px; border:none; border-radius:10px;">Open Short</button>  
+    </div>  
+    <p id="derivResult" style="margin-top:20px; font-weight:bold;"></p>  
+  </div>  
+  <h3 style="margin-top:40px;">Open Positions</h3>  
+  <div id="derivOpenPositions" style="background:#14171a; padding:15px; border-radius:12px; max-width:600px; max-height:200px; overflow-y:auto; color:#f0b90b; font-weight:bold;">  
+    No open positions.  
+  </div>  
+  <h3 style="margin-top:40px;">Trade History</h3>  
+  <div id="derivTradeHistory" style="background:#14171a; padding:15px; border-radius:12px; max-width:600px; max-height:200px; overflow-y:auto; color:#f0b90b; font-weight:bold;">  
+    No trade history.  
+  </div>  
+  <br>  
+  <button onclick="showPage('page16')" style="margin-top:30px; background:#f0b90b; color:#000; padding:10px 20px; border:none; border-radius:10px; cursor:pointer;">⬅ Back to Trade Menu</button>  
+</div>  
+  
+<!-- Trade Utilities -->  
+<div id="page16v" class="page" style="display:none;">  
+  <h2 style="font-weight:900; font-size:28px; margin-bottom:30px;">⚙️ Trade Utilities</h2>  
+  <div style="display:flex; flex-direction:column; gap:20px; max-width:400px;">  
+    <button onclick="showPage('page16vi_stake')" style="padding:15px; border:none; border-radius:10px; background:#f0b90b; color:#000;">💰 Staking</button>  
+    <button onclick="showPage('page16vi_leaderboard')" style="padding:15px; border:none; border-radius:10px; background:#f0b90b; color:#000;">🏆 Leaderboard</button>  
+    <button onclick="showPage('page16vi_bot')" style="padding:15px; border:none; border-radius:10px; background:#f0b90b; color:#000;">🤖 AI Trading Bot</button>  
+  </div>  
+  <br><br>  
+  <button onclick="showPage('page16')" style="background:#1E2124; color:#fff; border:none; padding:10px 20px; border-radius:10px; font-weight:bold;">⬅ Back to Trade Menu</button>  
+</div>  
+  
+<!-- Staking Page -->  
+<div id="page16vi_stake" class="page" style="display:none;">  
+  <h2 style="font-weight:900; font-size:28px;">💰 Staking</h2>  
+  <p style="color:white; max-width:600px;">Earn passive income by staking your crypto assets. Select a token and staking period to begin.</p>  
+  <div style="margin-top:20px; max-width:500px; background:#1E2124; padding:20px; border-radius:12px;">  
+    <label style="font-weight:bold;">Token:</label>  
+    <select id="stakeToken" style="width:100%; padding:10px; border-radius:8px;">  
+      <option value="BNB">BNB</option>  
+      <option value="USDT">USDT</option>  
+    </select>  
+    <label style="font-weight:bold; margin-top:15px; display:block;">Amount:</label>  
+    <input id="stakeAmount" type="number" placeholder="0.00" style="width:100%; padding:10px; border-radius:8px; border:none;">  
+    <label style="font-weight:bold; margin-top:15px; display:block;">Duration:</label>  
+    <select id="stakeDuration" style="width:100%; padding:10px; border-radius:8px;">  
+      <option value="7">7 Days</option>  
+      <option value="30">30 Days</option>  
+      <option value="90">90 Days</option>  
+    </select>  
+    <button onclick="stakeNow()" style="margin-top:20px; background:#f0b90b; color:black; font-weight:bold; padding:10px 20px; border:none; border-radius:10px;">Start Staking</button>  
+    <p id="stakeResult" style="margin-top:10px; color:#fff; font-weight:bold;"></p>  
+  </div>  
+  <br>  
+  <button onclick="showPage('page16v')" style="margin-top:30px; background:#f0b90b; color:#000; font-weight:bold; padding:10px 20px; border:none; border-radius:10px;">⬅ Back</button>  
+</div>  
+  
+<!-- Leaderboard Page -->  
+<div id="page16vi_leaderboard" class="page" style="display:none;">  
+  <h2 style="font-weight:900; font-size:28px;">🏆 Trader Leaderboard</h2>  
+  <p style="color:white;">Top 5 Traders (Simulated)</p>  
+  <ol id="leaderboard" style="color:white; font-weight:bold; background:#1E2124; padding:20px; border-radius:12px; max-width:500px;">  
+    <li>TraderX - $25,320 PnL</li>  
+    <li>CryptoKing - $20,150 PnL</li>  
+    <li>AltQueen - $18,405 PnL</li>  
+    <li>ScalpBot - $15,100 PnL</li>  
+    <li>DeFiDon - $12,300 PnL</li>  
+  </ol>  
+  <br>  
+  <button onclick="showPage('page16v')" style="margin-top:30px; background:#f0b90b; color:#000; font-weight:bold; padding:10px 20px; border:none; border-radius:10px;">⬅ Back</button>  
+</div>  
+  
+<!-- AI Trading Bot -->  
+<div id="page16vi_bot" class="page" style="display:none;">  
+  <h2 style="font-weight:900; font-size:28px; margin-bottom:20px;">🤖 AI Auto Trading Bot</h2>  
+  <div style="background:#1E2124; padding:20px; border-radius:12px; max-width:700px;">  
+    <label style="font-weight:bold;">Choose Strategy:</label>  
+    <select id="botStrategy" style="width:100%; padding:10px; margin-bottom:15px; border-radius:8px;">  
+      <option value="scalping">⚡ Scalping</option>  
+      <option value="momentum">📊 Momentum</option>  
+      <option value="reversal">🔁 Trend Reversal</option>  
+    </select>  
+    <div style="margin:15px 0; color:white; font-weight:bold;">  
+      🤖 Bot Status: <span id="botStatus">Stopped</span><br>  
+      💰 Bot Profit: <span id="botProfit">0.00</span> USDT  
+    </div>  
+    <div style="display:flex; gap:15px;">  
+      <button onclick="startBot()" style="background:#00e676; color:#000; font-weight:bold; padding:10px 20px; border:none; border-radius:8px;">Start Bot</button>  
+      <button onclick="stopBot()" style="background:#d50000; color:#fff; font-weight:bold; padding:10px 20px; border:none; border-radius:8px;">Stop Bot</button>  
+    </div>  
+  </div>  
+  <h3 style="margin-top:40px;">Live Trade Logs</h3>  
+  <div id="botLog" style="background:#14171a; color:#f0b90b; font-family:monospace; padding:15px; border-radius:12px; max-height:300px; overflow-y:auto; max-width:700px;"></div>  
+  <br>  
+  <button onclick="showPage('page16v')" style="margin-top:30px; background:#f0b90b; color:#000; font-weight:bold; padding:10px 20px; border:none; border-radius:10px;">⬅ Back</button>  
+                                                                                             </div>
 
 <!-- === PAGE 18: View / Edit Profile === -->
 <div id="page18" class="page" style="background-color: #0b0e11; color: #f0b90b; font-family: 'Segoe UI', sans-serif; padding: 24px; min-height: 100vh;">
@@ -906,6 +931,9 @@
     <li><strong data-i18n="q6"></strong><br><span data-i18n="a6"></span></li>
     <li><strong data-i18n="q7"></strong><br><span data-i18n="a7"></span></li>
     <li><strong data-i18n="q8"></strong><br><span data-i18n="a8"></span></li>
+   <li><strong data-i18n="q26"></strong><br><span data-i18n="a26"></span></li>
+   <li><strong data-i18n="q27"></strong><br><span data-i18n="a27"></span></li>
+   <li><strong data-i18n="q28"></strong><br><span data-i18n="a28"></span></li>
   </ul>
 
   <!-- Trading -->
@@ -945,6 +973,9 @@
     <li><strong data-i18n="q20"></strong><br><span data-i18n="a20"></span></li>
     <li><strong data-i18n="q21"></strong><br><span data-i18n="a21"></span></li>
     <li><strong data-i18n="q22"></strong><br><span data-i18n="a22"></span></li>
+    <li><strong data-i18n="q23"></strong><br><span data-i18n="a23"></span></li>
+    <li><strong data-i18n="q24"></strong><br><span data-i18n="a24"></span></li>
+   <li><strong data-i18n="q25"></strong><br><span data-i18n="a25"></span></li>
   </ul>
 
   <!-- Back Button -->
@@ -952,21 +983,6 @@
     <button onclick="showPage(4)" style="background-color:#f0b90b; color:#000; padding:12px 24px; border:none; border-radius:12px; font-weight:900; font-size:16px;" data-i18n="back_dashboard">⬅ Back to Dashboard</button>
   </div>
 </div>
-
-  <!-- About This Platform -->
-<h3 style="color:#ffffff; font-size:20px; margin-top:20px;" data-i18n="about_platform">🌐 About This Platform</h3>
-<ul style="color:#ccc; margin-left:20px;">
-  <li><strong data-i18n="q23"></strong><br><span data-i18n="a23"></span></li>
-  <li><strong data-i18n="q24"></strong><br><span data-i18n="a24"></span></li>
-  <li><strong data-i18n="q25"></strong><br><span data-i18n="a25"></span></li>
-</ul>
-  
-  <h3 style="color:#ffffff;" data-i18n="transfers_topup">💸 Transfers, Top-Up & Add Funds</h3>
-<ul style="color:#ccc; margin-left:20px;">
-  <li><strong data-i18n="q26"></strong><br><span data-i18n="a26"></span></li>
-  <li><strong data-i18n="q27"></strong><br><span data-i18n="a27"></span></li>
-  <li><strong data-i18n="q28"></strong><br><span data-i18n="a28"></span></li>
-</ul>
   
 <!-- Language Selector (Top Right) -->
 <select id="langSelector" style="position:fixed; top:20px; right:20px; padding:8px 10px; border:none; border-radius:8px; background-color:#f0b90b; color:#000; font-weight:bold; z-index:1000;">
