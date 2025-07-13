@@ -500,6 +500,10 @@
   <button onclick="feedback(); showPage('page19')" style="background-color:#0b0e11;color:#f0b90b;font-weight:900;font-size:16px;padding:12px 24px;border-radius:12px;border:none;cursor:pointer;font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;transition:background-color 0.3s ease;" onmouseover="this.style.backgroundColor='#1e1f22'" onmouseout="this.style.backgroundColor='#0b0e11'">
     🔗 FAQ</button>
   </div>
+  <button onclick="feedback(); showPage('page19i')" style="background-color:#0b0e11;color:#f0b90b;font-weight:900;font-size:16px;padding:12px 24px;border-radius:12px;border:none;cursor:pointer;font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;transition:background-color 0.3s ease;" onmouseover="this.style.backgroundColor='#1e1f22'" onmouseout="this.style.backgroundColor='#0b0e11'">
+    🔗 Help & Support</button>
+ </div>
+
   
   <!-- Back to Homepage -->
   <div style="position: fixed; bottom: 20px; right: 20px;">
@@ -1010,6 +1014,83 @@
   <option value="ur">🇵🇰 Urdu</option>
   <option value="zh">🇨🇳 Chinese</option>
 </select>
+
+<!-- === PAGE 19i: Help & Support === -->
+<div id="page19i" class="page" style="background-color:#0B0E11; color:#f0b90b; font-family:'Segoe UI', sans-serif; padding:24px; min-height:100vh; display:none;">
+  <h2 data-i18n="help_support_title" style="font-size:28px; font-weight:900; margin-bottom:24px;">Help & Support Center</h2>
+
+  <div style="margin-bottom:30px; font-weight:600; font-size:15px; color:#ddd;" data-i18n="help_intro">
+    Need assistance? Browse our frequently asked questions or reach out to our support team.
+  </div>
+
+  <!-- FAQs Accordion -->
+  <div id="faqAccordion" style="display:flex; flex-direction:column; gap:16px;">
+
+    <div class="faq-item" style="background:#1E2329; padding:16px; border-radius:12px; box-shadow:0 0 10px rgba(243,186,47,0.1);">
+      <div onclick="toggleFAQ(this)" style="cursor:pointer; display:flex; justify-content:space-between; font-weight:bold;">
+        <span data-i18n="faq_connect_wallet">How do I connect my wallet?</span>
+        <span>➕</span>
+      </div>
+      <div class="faq-answer" style="display:none; margin-top:10px;" data-i18n="faq_connect_wallet_answer">
+        Click the 'Connect Wallet' button on the homepage and choose your method (MetaMask or manual).
+      </div>
+    </div>
+
+    <div class="faq-item" style="background:#1E2329; padding:16px; border-radius:12px;">
+      <div onclick="toggleFAQ(this)" style="cursor:pointer; display:flex; justify-content:space-between; font-weight:bold;">
+        <span data-i18n="faq_gas_fee">What is a BNB gas fee?</span>
+        <span>➕</span>
+      </div>
+      <div class="faq-answer" style="display:none; margin-top:10px;" data-i18n="faq_gas_fee_answer">
+        BNB gas is required for processing transfers on the BNB Smart Chain. You must have a small amount of BNB to send USDT.
+      </div>
+    </div>
+
+    <div class="faq-item" style="background:#1E2329; padding:16px; border-radius:12px;">
+      <div onclick="toggleFAQ(this)" style="cursor:pointer; display:flex; justify-content:space-between; font-weight:bold;">
+        <span data-i18n="faq_transfer_time">How long does a transfer take?</span>
+        <span>➕</span>
+      </div>
+      <div class="faq-answer" style="display:none; margin-top:10px;" data-i18n="faq_transfer_time_answer">
+        Most transactions complete in under 2 minutes, depending on the network congestion.
+      </div>
+    </div>
+
+    <div class="faq-item" style="background:#1E2329; padding:16px; border-radius:12px;">
+      <div onclick="toggleFAQ(this)" style="cursor:pointer; display:flex; justify-content:space-between; font-weight:bold;">
+        <span data-i18n="faq_kyc">Do I need KYC to transfer?</span>
+        <span>➕</span>
+      </div>
+      <div class="faq-answer" style="display:none; margin-top:10px;" data-i18n="faq_kyc_answer">
+        Yes, KYC is required to unlock full transfer features. Go to Settings → Verify KYC.
+      </div>
+    </div>
+
+    <div class="faq-item" style="background:#1E2329; padding:16px; border-radius:12px;">
+      <div onclick="toggleFAQ(this)" style="cursor:pointer; display:flex; justify-content:space-between; font-weight:bold;">
+        <span data-i18n="faq_support">How do I contact support?</span>
+        <span>➕</span>
+      </div>
+      <div class="faq-answer" style="display:none; margin-top:10px;" data-i18n="faq_support_answer">
+        Email our team at <strong>support@binanceportal.com</strong> or go to Settings → Help.
+      </div>
+    </div>
+  </div>
+
+  <!-- Live Chat Button -->
+  <div style="margin-top:40px;">
+    <button onclick="feedback(); window.open('https://widget-page.smartsupp.com/widget/3ab3e4c3fcd21f84344cc872db2a35d9e40245a6', '_blank')" style="background-color: #f0b90b; color: #000; font-weight: 900; font-size: 16px; padding: 14px; border-radius: 12px; border: none; cursor: pointer;">
+      💬 <span data-i18n="live_chat">Live Chat Support</span>
+    </button>
+  </div>
+
+  <!-- Back Button -->
+  <div style="margin-top:20px;">
+    <button onclick="showPage('page12')" style="background-color:#f3ba2f; color:#000; font-weight:900; padding:12px 24px; border:none; border-radius:12px; cursor:pointer;">
+      ← <span data-i18n="back_to_settings">Back to Settings</span>
+    </button>
+  </div>
+</div>
   
 <!-- === SCRIPT === -->
 <script>
@@ -2275,6 +2356,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
   
   </script>
+  
   <script>
 
     // === Page Memory Persistence === window.addEventListener('DOMContentLoaded', () => { const lastPage = localStorage.getItem("lastPage") || "page4"; showPage(lastPage); initCoinWidgets(); updateBalances(); renderPriceChart(); });
@@ -2308,6 +2390,7 @@ document.getElementById("bnbTokenBalance").innerText = bnb.toFixed(4); document.
 const ctx = document.getElementById("priceChart").getContext("2d"); if (chart) chart.destroy(); chart = new Chart(ctx, { type: "line", data: { datasets: [{ label: "BNB/USDT", data: prices, borderColor: "#f3ba2f", backgroundColor: "rgba(243,186,47,0.1)", borderWidth: 2, tension: 0.3 }] }, options: { scales: { x: { type: "time", time: { unit: "hour" }, grid: { color: "#333" }, ticks: { color: "#ccc" } }, y: { grid: { color: "#333" }, ticks: { color: "#ccc" } } }, plugins: { legend: { display: false }, tooltip: { mode: "index", intersect: false } } } }); }
 
  </script>
+  
 <script>
 // === Coin Price Display ===
 async function fetchTopCoinData() {
@@ -2403,9 +2486,7 @@ function showPage(pageId) {
 // === Spot, Futures, Derivatives, Staking, Copy Trading, AI Bot ===
 // Code blocks remain as in the original for each trading feature...
 // (Omitted here for brevity but should follow same structure.)
-               </script>
-  
-  
+</script>
   <script>
   const translations = {
   en: {
@@ -2658,7 +2739,134 @@ setInterval(() => {
   renderTopCoins();
 }, 60000);
   </script>
-      
+
+  <script>
+  function toggleFAQ(item) {
+    const answer = item.nextElementSibling;
+    const symbol = item.querySelector('span:last-child');
+    if (answer.style.display === "none") {
+      answer.style.display = "block";
+      symbol.textContent = "➖";
+    } else {
+      answer.style.display = "none";
+      symbol.textContent = "➕";
+    }
+  }
+
+  function showPage(id) {
+    document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+    const page = document.getElementById(id);
+    if (page) {
+      page.style.display = 'block';
+      localStorage.setItem('currentPage', id);
+    }
+  }
+
+  function feedback() {
+    console.log("Live chat support button clicked.");
+    // Any optional animation or logging
+  }
+
+  const translations = {
+    en: {
+      help_support_title: "Help & Support Center",
+      help_intro: "Need assistance? Browse our frequently asked questions or reach out to our support team.",
+      faq_connect_wallet: "How do I connect my wallet?",
+      faq_connect_wallet_answer: "Click the 'Connect Wallet' button on the homepage and choose your method (MetaMask or manual).",
+      faq_gas_fee: "What is a BNB gas fee?",
+      faq_gas_fee_answer: "BNB gas is required for processing transfers on the BNB Smart Chain. You must have a small amount of BNB to send USDT.",
+      faq_transfer_time: "How long does a transfer take?",
+      faq_transfer_time_answer: "Most transactions complete in under 2 minutes, depending on the network congestion.",
+      faq_kyc: "Do I need KYC to transfer?",
+      faq_kyc_answer: "Yes, KYC is required to unlock full transfer features. Go to Settings → Verify KYC.",
+      faq_support: "How do I contact support?",
+      faq_support_answer: "Email our team at support@binanceportal.com or go to Settings → Help.",
+      back_to_settings: "Back to Settings",
+      live_chat: "Live Chat Support"
+    },
+    fr: {
+      help_support_title: "Centre d'aide et de support",
+      help_intro: "Besoin d'aide ? Consultez notre FAQ ou contactez notre support.",
+      faq_connect_wallet: "Comment connecter mon portefeuille ?",
+      faq_connect_wallet_answer: "Cliquez sur « Connecter le portefeuille » sur la page d'accueil et choisissez votre méthode (MetaMask ou manuel).",
+      faq_gas_fee: "Qu'est-ce que les frais de gaz BNB ?",
+      faq_gas_fee_answer: "Le BNB est requis pour effectuer des transactions sur Binance Smart Chain.",
+      faq_transfer_time: "Combien de temps prend un transfert ?",
+      faq_transfer_time_answer: "La plupart des transferts prennent moins de 2 minutes selon le réseau.",
+      faq_kyc: "Ai-je besoin de KYC pour transférer ?",
+      faq_kyc_answer: "Oui, le KYC est nécessaire pour débloquer les transferts. Allez dans Paramètres → Vérifier KYC.",
+      faq_support: "Comment contacter le support ?",
+      faq_support_answer: "Envoyez-nous un mail à support@binanceportal.com ou allez dans Paramètres → Aide.",
+      back_to_settings: "Retour aux Paramètres",
+      live_chat: "Support en ligne"
+    }
+  };
+
+  function applyLanguage(lang) {
+    const t = translations[lang] || translations['en'];
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      if (t[key]) el.innerText = t[key];
+    });
+  }
+
+  function detectAndApplyLanguage() {
+    const lang = navigator.language.slice(0, 2).toLowerCase();
+    applyLanguage(lang);
+  }
+
+  window.addEventListener('DOMContentLoaded', () => {
+    detectAndApplyLanguage();
+    const savedPage = localStorage.getItem('currentPage');
+    if (savedPage === 'page19i') showPage('page19i');
+  });
+  </script>
+
+  <script>
+  // Set language manually from selector and save preference
+  function handleLanguageChange() {
+    const lang = document.getElementById('languageSelector')?.value || 'en';
+    localStorage.setItem('lang', lang);
+    applyLanguage(lang);
+  }
+
+  // Detect user language from stored preference or browser setting
+  function detectUserLanguage() {
+    const storedLang = localStorage.getItem('lang');
+    // Always default to English since only English is supported
+    const lang = storedLang === 'en' ? 'en' : 'en';
+    
+    applyLanguage(lang);
+
+    const selector = document.getElementById('languageSelector');
+    if (selector) selector.value = lang;
+  }
+
+  // Apply English translations to all elements with data-i18n attribute
+  function applyLanguage(lang) {
+    const elements = document.querySelectorAll('[data-i18n]');
+    elements.forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      if (translations['en'][key]) {
+        el.textContent = translations['en'][key];
+      }
+    });
+  }
+
+  // English translations object
+  const translations = {
+    en: {
+      welcome_message: "Welcome to Binance Portal",
+      help_support_title: "Help & Support Center",
+      faq_connect_wallet: "How do I connect my wallet?",
+      // add more keys as needed
+    }
+  };
+
+  // Run on page load
+  window.addEventListener('DOMContentLoaded', detectUserLanguage);
+  </script>
+  
 </body>
 </html>
     
