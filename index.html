@@ -2739,12 +2739,12 @@ setInterval(() => {
   renderTopCoins();
 }, 60000);
   </script>
-
-  <script>
+<script>
+  // Toggle FAQ answer display and symbol
   function toggleFAQ(item) {
     const answer = item.nextElementSibling;
     const symbol = item.querySelector('span:last-child');
-    if (answer.style.display === "none") {
+    if (answer.style.display === "none" || !answer.style.display) {
       answer.style.display = "block";
       symbol.textContent = "➖";
     } else {
@@ -2753,6 +2753,7 @@ setInterval(() => {
     }
   }
 
+  // Show specified page and save it to localStorage
   function showPage(id) {
     document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
     const page = document.getElementById(id);
@@ -2762,11 +2763,12 @@ setInterval(() => {
     }
   }
 
+  // Optional feedback function for live chat button
   function feedback() {
     console.log("Live chat support button clicked.");
-    // Any optional animation or logging
   }
 
+  // English translations for FAQ
   const translations = {
     en: {
       help_support_title: "Help & Support Center",
@@ -2776,32 +2778,17 @@ setInterval(() => {
       faq_gas_fee: "What is a BNB gas fee?",
       faq_gas_fee_answer: "BNB gas is required for processing transfers on the BNB Smart Chain. You must have a small amount of BNB to send USDT.",
       faq_transfer_time: "How long does a transfer take?",
-      faq_transfer_time_answer: "Most transactions complete in under 2 minutes, depending on the network congestion.",
+      faq_transfer_time_answer: "Most transactions complete in under 2 minutes, depending on network congestion.",
       faq_kyc: "Do I need KYC to transfer?",
       faq_kyc_answer: "Yes, KYC is required to unlock full transfer features. Go to Settings → Verify KYC.",
       faq_support: "How do I contact support?",
       faq_support_answer: "Email our team at support@binanceportal.com or go to Settings → Help.",
       back_to_settings: "Back to Settings",
       live_chat: "Live Chat Support"
-    },
-    fr: {
-      help_support_title: "Centre d'aide et de support",
-      help_intro: "Besoin d'aide ? Consultez notre FAQ ou contactez notre support.",
-      faq_connect_wallet: "Comment connecter mon portefeuille ?",
-      faq_connect_wallet_answer: "Cliquez sur « Connecter le portefeuille » sur la page d'accueil et choisissez votre méthode (MetaMask ou manuel).",
-      faq_gas_fee: "Qu'est-ce que les frais de gaz BNB ?",
-      faq_gas_fee_answer: "Le BNB est requis pour effectuer des transactions sur Binance Smart Chain.",
-      faq_transfer_time: "Combien de temps prend un transfert ?",
-      faq_transfer_time_answer: "La plupart des transferts prennent moins de 2 minutes selon le réseau.",
-      faq_kyc: "Ai-je besoin de KYC pour transférer ?",
-      faq_kyc_answer: "Oui, le KYC est nécessaire pour débloquer les transferts. Allez dans Paramètres → Vérifier KYC.",
-      faq_support: "Comment contacter le support ?",
-      faq_support_answer: "Envoyez-nous un mail à support@binanceportal.com ou allez dans Paramètres → Aide.",
-      back_to_settings: "Retour aux Paramètres",
-      live_chat: "Support en ligne"
     }
   };
 
+  // Apply language translations to elements with data-i18n attribute
   function applyLanguage(lang) {
     const t = translations[lang] || translations['en'];
     document.querySelectorAll('[data-i18n]').forEach(el => {
@@ -2810,17 +2797,19 @@ setInterval(() => {
     });
   }
 
+  // Detect browser language and apply translations (defaults to English)
   function detectAndApplyLanguage() {
     const lang = navigator.language.slice(0, 2).toLowerCase();
     applyLanguage(lang);
   }
 
+  // Initialize on page load
   window.addEventListener('DOMContentLoaded', () => {
     detectAndApplyLanguage();
     const savedPage = localStorage.getItem('currentPage');
     if (savedPage === 'page19i') showPage('page19i');
   });
-  </script>
+                                                     </script>
 
   <script>
   // Set language manually from selector and save preference
