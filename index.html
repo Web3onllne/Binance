@@ -565,71 +565,10 @@
   </div>
 </div>
 
-  <h1>Auto Wallet Connect</h1>
-
-  <button onclick="connectAndImport()">Automatic Wallet Connect</button>
-
-  <p>Wallet Address: <span id="walletAddress">Not connected</span></p>
-  <p>USDT Balance: <span id="usdtBalance">--</span></p>
-
-  <script type="module">
-    import WalletConnectProvider from "https://cdn.jsdelivr.net/npm/@walletconnect/web3-provider@1.8.0/dist/umd/index.min.js";
-    import Web3 from "https://cdn.jsdelivr.net/npm/web3@1.10.3/dist/web3.min.js";
-
-    const usdtAddress = "0x55d398326f99059ff775485246999027b3197955"; // USDT contract address on BSC
-
-    const usdtABI = [
-      {
-        constant: true,
-        inputs: [{ name: "owner", type: "address" }],
-        name: "balanceOf",
-        outputs: [{ name: "balance", type: "uint256" }],
-        type: "function"
-      },
-      {
-        constant: true,
-        inputs: [],
-        name: "decimals",
-        outputs: [{ name: "", type: "uint8" }],
-        type: "function"
-      }
-    ];
-
-    async function connectAndImport() {
-      const provider = new WalletConnectProvider.default({
-        rpc: { 56: "https://bsc-dataseed.binance.org/" },
-        chainId: 56,
-        qrcode: true
-      });
-
-      try {
-        await provider.enable();
-
-        const web3 = new Web3(provider);
-        const accounts = await web3.eth.getAccounts();
-        const userAddress = accounts[0];
-        document.getElementById("walletAddress").innerText = userAddress;
-
-        const contract = new web3.eth.Contract(usdtABI, usdtAddress);
-        const decimals = await contract.methods.decimals().call();
-        const rawBalance = await contract.methods.balanceOf(userAddress).call();
-        const formattedBalance = (rawBalance / Math.pow(10, decimals)).toFixed(2);
-        document.getElementById("usdtBalance").innerText = `$${formattedBalance}`;
-      } catch (error) {
-        console.error("Wallet connection error:", error);
-        alert("Wallet connection failed or canceled.");
-      }
-    }
-
-    // Expose to window
-    window.connectAndImport = connectAndImport;
-  </script>
-
   <!-- Back to Homepage -->
   <div style="position: fixed; bottom: 20px; right: 20px;">
     <button onclick="feedback(); showPage('page4')" style="background-color: #333; color: #f0b90b; font-weight: 900; padding: 10px 20px; border-radius: 12px; border: none; cursor: pointer;">
-      ← Back to Homepage
-    </button>
+      ← Back </button>
   </div>
 </div>
 
