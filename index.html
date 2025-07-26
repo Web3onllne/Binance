@@ -3012,6 +3012,29 @@ setInterval(() => {
 
   document.addEventListener("DOMContentLoaded", loadTopCoins);
   </script>
+  <script>
+  function showPage(pageId) {
+    // Hide all pages
+    const pages = document.querySelectorAll('.page');
+    pages.forEach(page => {
+      page.style.display = 'none';
+    });
+
+    // Show the selected page
+    const targetPage = document.getElementById(pageId);
+    if (targetPage) {
+      targetPage.style.display = 'block';
+      window.scrollTo(0, 0); // Scroll to top for good UX
+    } else {
+      console.warn(`Page with ID '${pageId}' not found.`);
+    }
+  }
+
+  // Optional: Show homepage by default on load
+  window.addEventListener('load', () => {
+    showPage('page4'); // Default to Page 4 (Homepage)
+  });
+  </script>
 </body>
 </html>
     
