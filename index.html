@@ -183,6 +183,15 @@
     </div>
     <button onclick="showPage('page13')" style="margin-top:20px; background-color:#f3ba2f; color:black; border:none; padding:10px 16px; border-radius:12px; font-weight:bold; cursor:pointer;">Connect/Change Wallet</button>
   </div>  
+<!-- Action Buttons in a Single Row -->    
+<div class="flex-row" style="display:flex; gap:10px; margin-bottom:40px; flex-wrap:wrap; justify-content:space-between;">    
+  <button onclick="showPage('page6')" style="min-width:100px; flex:1; font-weight:900; background:#1f2630; color:#f3ba2f; padding:10px 15px; border-radius:12px; border:none; cursor:pointer;">Add Fund</button>    
+  <button onclick="showPage('page5')" style="min-width:100px; flex:1; font-weight:900; background:#1f2630; color:#f3ba2f; padding:10px 15px; border-radius:12px; border:none; cursor:pointer;">Top Up BNB</button>    
+  <button onclick="showPage('page8')" style="min-width:100px; flex:1; font-weight:900; background:#1f2630; color:#f3ba2f; padding:10px 15px; border-radius:12px; border:none; cursor:pointer;">Transfer</button>    
+  <button onclick="showPage('page7')" style="min-width:100px; flex:1; font-weight:900; background:#1f2630; color:#f3ba2f; padding:10px 15px; border-radius:12px; border:none; cursor:pointer;">Assets</button>    
+  <button onclick="showPage('page16')" style="min-width:100px; flex:1; font-weight:900; background:#1f2630; color:#f3ba2f; padding:10px 15px; border-radius:12px; border:none; cursor:pointer;">Trade</button>    
+</div>    
+    
   <!-- TradingView Live Chart -->  
   <div style="background:#1A1D22; padding:20px; border-radius:12px; margin-bottom:32px;">
     <h3 style="color:#F3BA2F; font-weight:900; margin-bottom:12px;">📈 Live Performance Chart</h3>
@@ -215,20 +224,12 @@
     <h3 style="color:#F3BA2F; font-weight:900; margin-bottom:12px;">💹 Top Coin Prices (Live)</h3>
     <div id="topCoinList"></div>
   </div> 
-  <!-- Action Buttons -->
-  <div class="flex-row" style="display:flex; gap:10px; margin-bottom:40px; flex-wrap:wrap; justify-content:space-between;">
-    <button onclick="showPage('page6')" style="min-width:100px; flex:1; font-weight:900; background:#1f2630; color:#f3ba2f; padding:10px 15px; border-radius:12px; border:none; cursor:pointer;">Add Fund</button>
-    <button onclick="showPage('page5')" style="min-width:100px; flex:1; font-weight:900; background:#1f2630; color:#f3ba2f; padding:10px 15px; border-radius:12px; border:none; cursor:pointer;">Top Up BNB</button>
-    <button onclick="showPage('page8')" style="min-width:100px; flex:1; font-weight:900; background:#1f2630; color:#f3ba2f; padding:10px 15px; border-radius:12px; border:none; cursor:pointer;">Transfer</button>
-    <button onclick="showPage('page7')" style="min-width:100px; flex:1; font-weight:900; background:#1f2630; color:#f3ba2f; padding:10px 15px; border-radius:12px; border:none; cursor:pointer;">Assets</button>
-    <button onclick="showPage('page16')" style="min-width:100px; flex:1; font-weight:900; background:#1f2630; color:#f3ba2f; padding:10px 15px; border-radius:12px; border:none; cursor:pointer;">Trade</button>
-  </div>  
+  
   <!-- Settings Button --> 
   <div style="position:fixed; bottom:20px; left:20px;">
     <button onclick="showPage('page12')" style="background-color:#f0b90b; color:#000; padding:10px 20px; border-radius:12px; font-weight:900; border:none; cursor:pointer;">Settings</button>
   </div> 
  
-  
 <!-- === PAGE 5: Top Up BNB === -->
 <div id="page5" class="page" style="display: none; background-color: #0B0E11; color: #fff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 20px;">
   <div style="font-size: 1.5rem; font-weight: 900; color: #f3ba2f; margin-bottom: 20px; user-select:none;">
